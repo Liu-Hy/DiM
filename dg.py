@@ -287,10 +287,11 @@ def train(args, epoch, generator, discriminator, optim_g, optim_d, trainloader, 
     disc_losses = AverageMeter()
     top1 = AverageMeter()
     top5 = AverageMeter()
-    model = define_model(args, args.num_classes).cuda()
-    model.train()
-    optim_model = torch.optim.SGD(model.parameters(), args.eval_lr, momentum=args.momentum,
-                                  weight_decay=args.weight_decay)
+    if epoch >= args.pretrain_epochs:
+        model = define_model(args, args.num_classes).cuda()
+        model.train()
+        optim_model = torch.optim.SGD(model.parameters(), args.eval_lr, momentum=args.momentum,
+                                      weight_decay=args.weight_decay)
 
     for batch_idx, (img_real, lab_real) in enumerate(trainloader):
         img_real = img_real.cuda()
@@ -313,16 +314,16 @@ def train(args, epoch, generator, discriminator, optim_g, optim_d, trainloader, 
         gen_class = criterion(gen_class, lab_real)
 
         gen_loss = - gen_source + gen_class
-
-        # update the match model to obtain more various matching signals
-        train_match_model(args, model, optim_model, trainloader, criterion, aug_rand)
-        # calculate the matching loss
-        if args.match_aug:
-            img_aug = aug(torch.cat([img_real, img_syn]))
-            match_loss = matchloss(args, img_aug[:args.batch_size], img_aug[args.batch_size:], lab_real, lab_real, model)# * args.match_coeff
-        else:
-            match_loss = matchloss(args, img_real, img_syn, lab_real, lab_real, model)# * args.match_coeff
-        gen_loss = gen_loss + match_loss
+        if epoch >= args.pretrain_epochs:
+            # update the match model to obtain more various matching signals
+            train_match_model(args, model, optim_model, trainloader, criterion, aug_rand)
+            # calculate the matching loss
+            if args.match_aug:
+                img_aug = aug(torch.cat([img_real, img_syn]))
+                match_loss = matchloss(args, img_aug[:args.batch_size], img_aug[args.batch_size:], lab_real, lab_real, model)# * args.match_coeff
+            else:
+                match_loss = matchloss(args, img_real, img_syn, lab_real, lab_real, model)# * args.match_coeff
+            gen_loss = gen_loss + match_loss
 
         gen_loss.backward()
         optim_g.step()
@@ -479,24 +480,26 @@ def validate(args, generator, testloader, criterion, aug_rand):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--ipc', type=int, default=50)
-    parser.add_argument('--batch-size', type=int, default=64)
-    parser.add_argument('--epochs', type=int, default=100)
+    parser.add_argument('--ipc', type=int, default=1) #50
+    parser.add_argument('--batch-size', type=int, default=128)
+    parser.add_argument('--epochs', type=int, default=50) #250
+    parser.add_argument('--pretrain-epochs', type=int, default=30) #150
     parser.add_argument('--epochs-eval', type=int, default=1000)
     parser.add_argument('--epochs-match', type=int, default=100)
     parser.add_argument('--epochs-match-train', type=int, default=16)
-    parser.add_argument('--lr', type=float, default=5e-6)
+    parser.add_argument('--lr1', type=float, default=1e-4)
+    parser.add_argument('--lr2', type=float, default=5e-6)
     parser.add_argument('--eval-lr', type=float, default=0.01)
     parser.add_argument('--momentum', type=float, default=0.9)
     parser.add_argument('--weight-decay', type=float, default=5e-4)
     parser.add_argument('--match-coeff', type=float, default=0.001)
     parser.add_argument('--match-model', type=str, default='convnet')
-    parser.add_argument('--match', type=str, default='grad')
+    parser.add_argument('--match', type=str, default='logit')
     parser.add_argument('--eval-model', type=str, nargs='+', default=['convnet'])
     parser.add_argument('--dim-noise', type=int, default=100)
     parser.add_argument('--num-workers', type=int, default=4)
     parser.add_argument('--print-freq', type=int, default=50)
-    parser.add_argument('--eval-interval', type=int, default=10)
+    parser.add_argument('--eval-interval', type=int, default=10) #10
     parser.add_argument('--test-interval', type=int, default=200)
     parser.add_argument('--fix-disc', action='store_true', default=False)
 
@@ -514,7 +517,7 @@ if __name__ == '__main__':
     parser.add_argument('--fc', type=str2bool, default=False)
     parser.add_argument('--mix-p', type=float, default=-1.0)
     parser.add_argument('--beta', type=float, default=1.0)
-    parser.add_argument('--tag', type=str, default='test')
+    parser.add_argument('--tag', type=str, default='all')
     parser.add_argument('--seed', type=int, default=3407)
     args = parser.parse_args()
 
@@ -545,18 +548,8 @@ if __name__ == '__main__':
     generator = Generator(args).cuda()
     discriminator = Discriminator(args).cuda()
 
-    optim_g = torch.optim.Adam(generator.parameters(), lr=args.lr, betas=(0, 0.9))
-    optim_d = torch.optim.Adam(discriminator.parameters(), lr=args.lr, betas=(0, 0.9))
-
-    model_dict = torch.load(args.weight)
-    generator.load_state_dict(model_dict['generator'])
-    discriminator.load_state_dict(model_dict['discriminator'])
-    optim_g.load_state_dict(model_dict['optim_g'])
-    optim_d.load_state_dict(model_dict['optim_d'])
-    for g in optim_g.param_groups:
-        g['lr'] = args.lr
-    for g in optim_d.param_groups:
-        g['lr'] = args.lr
+    optim_g = torch.optim.Adam(generator.parameters(), lr=args.lr1, betas=(0, 0.9))
+    optim_d = torch.optim.Adam(discriminator.parameters(), lr=args.lr1, betas=(0, 0.9))
     criterion = nn.CrossEntropyLoss()
 
     aug, aug_rand = diffaug(args)
@@ -565,6 +558,17 @@ if __name__ == '__main__':
     best_top5s = np.zeros((len(args.eval_model),))
     best_epochs = np.zeros((len(args.eval_model),))
     for epoch in range(args.epochs):
+        if epoch == args.pretrain_epochs:
+            model_dict = torch.load(os.path.join(args.output_dir, 'model_dict_{}.pth'.format(args.eval_model[0])))
+            generator.load_state_dict(model_dict['generator'])
+            discriminator.load_state_dict(model_dict['discriminator'])
+            optim_g.load_state_dict(model_dict['optim_g'])
+            optim_d.load_state_dict(model_dict['optim_d'])
+            for g in optim_g.param_groups:
+                g['lr'] = args.lr2
+            for g in optim_d.param_groups:
+                g['lr'] = args.lr2
+
         generator.train()
         discriminator.train()
         train(args, epoch, generator, discriminator, optim_g, optim_d, trainloader, criterion, aug, aug_rand)
@@ -597,7 +601,7 @@ if __name__ == '__main__':
                     torch.save(
                         model_dict,
                         os.path.join(args.output_dir, 'model_dict_{}.pth'.format(e_model)))
-                    print('Save model for {}'.format(e_model))
+                    print('Save best model for {}'.format(e_model))
 
                 print('Current Best Epoch for {}: {}, Top1: {:.3f}, Top5: {:.3f}'.format(e_model, best_epochs[e_idx], best_top1s[e_idx], best_top5s[e_idx]))
 
