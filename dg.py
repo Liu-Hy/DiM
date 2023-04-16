@@ -9,7 +9,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torchvision
-import torchvision.datasets as datasets
+# import torchvision.datasets as datasets
+from utils import load_data
 import torchvision.transforms as transforms
 from torchvision.utils import save_image, make_grid
 
@@ -35,7 +36,7 @@ def str2bool(v):
         raise argparse.ArgumentTypeError('Boolean value expected.')
 
 
-def load_data(args):
+"""def load_data(args):
     '''Obtain data
     '''
     transform_train = transforms.Compose([
@@ -102,7 +103,7 @@ def load_data(args):
         num_workers=args.num_workers
     )
 
-    return trainloader, testloader
+    return trainloader, testloader"""
 
 
 def define_model(args, num_classes, e_model=None):
@@ -117,10 +118,7 @@ def define_model(args, num_classes, e_model=None):
         model = random.choice(model_pool)
         print('Random model: {}'.format(model))
 
-    if args.data == 'mnist' or args.data == 'fashion':
-        nch = 1
-    else:
-        nch = 3
+    nch = args.channel
 
     if model == 'convnet':
         return CN.ConvNet(num_classes, channel=nch)
@@ -216,6 +214,9 @@ def matchloss(args, img_real, img_syn, lab_real, lab_syn, model):
 
         for i in range(len(feat)):
             loss = add_loss(loss, dist(feat_tg[i].mean(0), feat[i].mean(0), method=args.metric) * 0.001)
+        """for i in range(args.num_classes):
+            print(len(feat_tg[lab_real==i]), feat_tg[lab_real==i].mean(0).shape)
+            loss = add_loss(loss, dist(feat_tg[lab_real==i].mean(0), feat[lab_real==i].mean(0), method=args.metric) * 0.001)"""
 
     elif 'grad' in args.match:
         criterion = nn.CrossEntropyLoss()
@@ -238,9 +239,16 @@ def matchloss(args, img_real, img_syn, lab_real, lab_syn, model):
             loss = add_loss(loss, dist(g_real[i], g_syn[i], method=args.metric) * 0.001)
 
     elif 'logit' in args.match:
-        output_real = F.log_softmax(model(img_real), dim=1)
-        output_syn = F.log_softmax(model(img_syn), dim=1)
-        loss = add_loss(loss, ((output_real - output_syn) ** 2).mean() * 0.01)
+        #output_real = F.log_softmax(model(img_real), dim=1)
+        #output_syn = F.log_softmax(model(img_syn), dim=1)
+        #loss = add_loss(loss, ((output_real - output_syn) ** 2).mean() * 0.01)
+        output_real = F.softmax(model(img_real), dim=1)
+        output_syn = F.softmax(model(img_syn), dim=1)
+        diff = output_real - output_syn
+        for i in range(args.num_classes):
+            #print(diff.shape, diff[lab_real==i].shape, diff[lab_real==i].mean(0).shape)
+            loss = add_loss(loss, (diff[lab_real==i].mean(0) ** 2).mean() * 0.1)
+
 
     return loss
 
@@ -258,14 +266,15 @@ def diffaug(args, device='cuda'):
     """Differentiable augmentation for condensation
     """
     aug_type = args.aug_type
-    if args.data == 'cifar10':
+    """if args.data == 'cifar10':
         normalize = Normalize((0.491, 0.482, 0.447), (0.202, 0.199, 0.201), device='cuda')
     elif args.data == 'svhn':
         normalize = Normalize((0.437, 0.444, 0.473), (0.198, 0.201, 0.197), device='cuda')
     elif args.data == 'fashion':
         normalize = Normalize((0.286,), (0.353,), device='cuda')
     elif args.data == 'mnist':
-        normalize = Normalize((0.131,), (0.308,), device='cuda')
+        normalize = Normalize((0.131,), (0.308,), device='cuda')"""
+    normalize = Normalize(args.mean, args.std, device='cuda')
     print("Augmentataion Matching: ", aug_type)
     augment = DiffAug(strategy=aug_type, batch=True)
     aug_batch = transforms.Compose([normalize, augment])
@@ -293,7 +302,9 @@ def train(args, epoch, generator, discriminator, optim_g, optim_d, trainloader, 
         optim_model = torch.optim.SGD(model.parameters(), args.eval_lr, momentum=args.momentum,
                                       weight_decay=args.weight_decay)
 
+    normalize = Normalize([0.5]*args.channel, [0.5]*args.channel, device='cpu')
     for batch_idx, (img_real, lab_real) in enumerate(trainloader):
+        img_real = normalize(img_real)
         img_real = img_real.cuda()
         lab_real = lab_real.cuda()
 
@@ -302,7 +313,7 @@ def train(args, epoch, generator, discriminator, optim_g, optim_d, trainloader, 
         optim_g.zero_grad()
 
         # obtain the noise with one-hot class labels
-        noise = torch.normal(0, 1, (args.batch_size, args.dim_noise))
+        noise = torch.normal(0, 1, (args.batch_size, (args.num_classes + args.dim_noise)))
         lab_onehot = torch.zeros((args.batch_size, args.num_classes))
         lab_onehot[torch.arange(args.batch_size), lab_real] = 1
         noise[torch.arange(args.batch_size), :args.num_classes] = lab_onehot[torch.arange(args.batch_size)]
@@ -332,7 +343,7 @@ def train(args, epoch, generator, discriminator, optim_g, optim_d, trainloader, 
         discriminator.train()
         optim_d.zero_grad()
         lab_syn = torch.randint(args.num_classes, (args.batch_size,))
-        noise = torch.normal(0, 1, (args.batch_size, args.dim_noise))
+        noise = torch.normal(0, 1, (args.batch_size, (args.num_classes + args.dim_noise)))
         lab_onehot = torch.zeros((args.batch_size, args.num_classes))
         lab_onehot[torch.arange(args.batch_size), lab_syn] = 1
         noise[torch.arange(args.batch_size), :args.num_classes] = lab_onehot[torch.arange(args.batch_size)]
@@ -371,10 +382,11 @@ def train(args, epoch, generator, discriminator, optim_g, optim_d, trainloader, 
 def train_match_model(args, model, optim_model, trainloader, criterion, aug_rand):
     '''The training function for the match model
     '''
+    normalize = Normalize([0.5] * args.channel, [0.5] * args.channel, device='cpu')
     for batch_idx, (img, lab) in enumerate(trainloader):
         if batch_idx == args.epochs_match_train:
             break
-
+        img = normalize(img)
         img = img.cuda()
         lab = lab.cuda()
 
@@ -392,7 +404,9 @@ def test(args, model, testloader, criterion):
     losses = AverageMeter()
     top1 = AverageMeter()
     top5 = AverageMeter()
+    normalize = Normalize(args.mean, args.std, device='cpu')
     for batch_idx, (img, lab) in enumerate(testloader):
+        img = normalize(img)
         img = img.cuda()
         lab = lab.cuda()
 
@@ -429,7 +443,7 @@ def validate(args, generator, testloader, criterion, aug_rand):
             for batch_idx in range(10 * args.ipc // args.batch_size + 1):
                 # obtain pseudo samples with the generator
                 lab_syn = torch.randint(args.num_classes, (args.batch_size,))
-                noise = torch.normal(0, 1, (args.batch_size, args.dim_noise))
+                noise = torch.normal(0, 1, (args.batch_size, (args.num_classes + args.dim_noise)))
                 lab_onehot = torch.zeros((args.batch_size, args.num_classes))
                 lab_onehot[torch.arange(args.batch_size), lab_syn] = 1
                 noise[torch.arange(args.batch_size), :args.num_classes] = lab_onehot[torch.arange(args.batch_size)]
@@ -496,16 +510,16 @@ if __name__ == '__main__':
     parser.add_argument('--match-model', type=str, default='convnet')
     parser.add_argument('--match', type=str, default='logit')
     parser.add_argument('--eval-model', type=str, nargs='+', default=['convnet'])
-    parser.add_argument('--dim-noise', type=int, default=100)
+    parser.add_argument('--dim-noise', type=int, default=90)
     parser.add_argument('--num-workers', type=int, default=4)
     parser.add_argument('--print-freq', type=int, default=50)
     parser.add_argument('--eval-interval', type=int, default=10) #10
     parser.add_argument('--test-interval', type=int, default=200)
     parser.add_argument('--fix-disc', action='store_true', default=False)
 
-    parser.add_argument('--data', type=str, default='cifar10')
+    parser.add_argument('--data', type=str, default='pacs')
     parser.add_argument('--num-classes', type=int, default=10)
-    parser.add_argument('--data-dir', type=str, default='./data')
+    parser.add_argument('--data-dir', type=str, default='/var/lib/data')
     parser.add_argument('--output-dir', type=str, default='./results/')
     parser.add_argument('--logs-dir', type=str, default='./logs/')
     parser.add_argument('--weight', type=str, default='')
@@ -517,7 +531,7 @@ if __name__ == '__main__':
     parser.add_argument('--fc', type=str2bool, default=False)
     parser.add_argument('--mix-p', type=float, default=-1.0)
     parser.add_argument('--beta', type=float, default=1.0)
-    parser.add_argument('--tag', type=str, default='all')
+    # parser.add_argument('--tag', type=str, default='all')
     parser.add_argument('--seed', type=int, default=3407)
     args = parser.parse_args()
 
@@ -526,13 +540,14 @@ if __name__ == '__main__':
     torch.manual_seed(args.seed)
     torch.backends.cudnn.deterministic = True
 
+    args.tag = args.data
     if not os.path.exists(args.output_dir):
         os.makedirs(args.output_dir)
     args.output_dir = args.output_dir + args.tag
     if not os.path.exists(args.output_dir):
         os.makedirs(args.output_dir)
-    if not os.path.exists(args.output_dir + '/outputs'):
-        os.makedirs(args.output_dir + '/outputs')
+    #if not os.path.exists(args.output_dir + '/outputs'):
+        #os.makedirs(args.output_dir + '/outputs')
 
     if not os.path.exists(args.logs_dir):
         os.makedirs(args.logs_dir)
@@ -541,67 +556,93 @@ if __name__ == '__main__':
         os.makedirs(args.logs_dir)
     sys.stdout = Logger(os.path.join(args.logs_dir, 'logs.txt'))
 
+    # torch.utils.data.ConcatDataset([train_set, dev_set])
+    channel, im_size, num_classes, class_names, mean, std, dsts = load_data(args)
+    args.num_classes = num_classes
+    args.channel = channel
+    args.mean = mean
+    args.std = std
+
     print(args)
 
-    trainloader, testloader = load_data(args)
+    num_folds = len(dsts) if len(dsts) > 2 else 1
+    all_best_top1s = np.zeros((len(args.eval_model), num_folds))
+    all_best_top5s = np.zeros((len(args.eval_model), num_folds))
+    for fold in range(0, num_folds):
+        test_fold = fold if len(dsts) > 2 else 1
+        print("\n" + '*'*10 + f' Test env: {test_fold}\n')
+        if not os.path.exists(os.path.join(args.output_dir, str(fold), 'outputs')):
+            os.makedirs(os.path.join(args.output_dir, str(fold), 'outputs'))
+        testloader = torch.utils.data.DataLoader(dsts[test_fold], batch_size=args.batch_size, shuffle=False,
+                                                num_workers=args.num_workers)
+        dst_trains = [d for j, d in enumerate(dsts) if j != test_fold]
+        trainset = torch.utils.data.ConcatDataset(dst_trains)
+        trainloader = torch.utils.data.DataLoader(trainset, batch_size=args.batch_size, shuffle=True,
+                                                num_workers=args.num_workers, drop_last=True)
 
-    generator = Generator(args).cuda()
-    discriminator = Discriminator(args).cuda()
 
-    optim_g = torch.optim.Adam(generator.parameters(), lr=args.lr1, betas=(0, 0.9))
-    optim_d = torch.optim.Adam(discriminator.parameters(), lr=args.lr1, betas=(0, 0.9))
-    criterion = nn.CrossEntropyLoss()
+        generator = Generator(args).cuda()
+        discriminator = Discriminator(args).cuda()
 
-    aug, aug_rand = diffaug(args)
+        optim_g = torch.optim.Adam(generator.parameters(), lr=args.lr1, betas=(0, 0.9))
+        optim_d = torch.optim.Adam(discriminator.parameters(), lr=args.lr1, betas=(0, 0.9))
+        criterion = nn.CrossEntropyLoss()
 
-    best_top1s = np.zeros((len(args.eval_model),))
-    best_top5s = np.zeros((len(args.eval_model),))
-    best_epochs = np.zeros((len(args.eval_model),))
-    for epoch in range(args.epochs):
-        if epoch == args.pretrain_epochs:
-            model_dict = torch.load(os.path.join(args.output_dir, 'model_dict_{}.pth'.format(args.eval_model[0])))
-            generator.load_state_dict(model_dict['generator'])
-            discriminator.load_state_dict(model_dict['discriminator'])
-            optim_g.load_state_dict(model_dict['optim_g'])
-            optim_d.load_state_dict(model_dict['optim_d'])
-            for g in optim_g.param_groups:
-                g['lr'] = args.lr2
-            for g in optim_d.param_groups:
-                g['lr'] = args.lr2
+        aug, aug_rand = diffaug(args)
 
-        generator.train()
-        discriminator.train()
-        train(args, epoch, generator, discriminator, optim_g, optim_d, trainloader, criterion, aug, aug_rand)
+        best_top1s = np.zeros((len(args.eval_model),))
+        best_top5s = np.zeros((len(args.eval_model),))
+        best_epochs = np.zeros((len(args.eval_model),))
+        for epoch in range(args.epochs):
+            if epoch == args.pretrain_epochs:
+                print("-"*5, f' Start fine-tuning with {args.match} matching')
+                model_dict = torch.load(os.path.join(args.output_dir, str(fold), 'model_dict_{}.pth'.format(args.eval_model[0])))
+                generator.load_state_dict(model_dict['generator'])
+                discriminator.load_state_dict(model_dict['discriminator'])
+                optim_g.load_state_dict(model_dict['optim_g'])
+                optim_d.load_state_dict(model_dict['optim_d'])
+                for g in optim_g.param_groups:
+                    g['lr'] = args.lr2
+                for g in optim_d.param_groups:
+                    g['lr'] = args.lr2
 
-        # save image for visualization
-        generator.eval()
-        test_label = torch.tensor(list(range(10)) * 10)
-        test_noise = torch.normal(0, 1, (100, 100))
-        lab_onehot = torch.zeros((100, args.num_classes))
-        lab_onehot[torch.arange(100), test_label] = 1
-        test_noise[torch.arange(100), :args.num_classes] = lab_onehot[torch.arange(100)]
-        test_noise = test_noise.cuda()
-        test_img_syn = (generator(test_noise) + 1.0) / 2.0
-        test_img_syn = make_grid(test_img_syn, nrow=10)
-        save_image(test_img_syn, os.path.join(args.output_dir, 'outputs/img_{}.png'.format(epoch)))
-        generator.train()
+            generator.train()
+            discriminator.train()
+            train(args, epoch, generator, discriminator, optim_g, optim_d, trainloader, criterion, aug, aug_rand)
 
-        if (epoch + 1) % args.eval_interval == 0:
-            top1s, top5s = validate(args, generator, testloader, criterion, aug_rand)
-            for e_idx, e_model in enumerate(args.eval_model):
-                if top1s[e_idx] > best_top1s[e_idx]:
-                    best_top1s[e_idx] = top1s[e_idx]
-                    best_top5s[e_idx] = top5s[e_idx]
-                    best_epochs[e_idx] = epoch
+            # save image for visualization
+            generator.eval()
+            test_label = torch.tensor(list(range(args.num_classes)) * 10)
+            num_images = args.num_classes * 10
+            test_noise = torch.normal(0, 1, (num_images, args.num_classes + args.dim_noise))
+            lab_onehot = torch.zeros((num_images, args.num_classes))
+            lab_onehot[torch.arange(num_images), test_label] = 1
+            test_noise[torch.arange(num_images), :args.num_classes] = lab_onehot[torch.arange(num_images)]
+            test_noise = test_noise.cuda()
+            test_img_syn = (generator(test_noise) + 1.0) / 2.0
+            test_img_syn = make_grid(test_img_syn, nrow=args.num_classes) # Is it?
+            save_image(test_img_syn, os.path.join(args.output_dir, str(fold), 'outputs/img_{}.png'.format(epoch)))
+            generator.train()
 
-                    model_dict = {'generator': generator.state_dict(),
-                                  'discriminator': discriminator.state_dict(),
-                                  'optim_g': optim_g.state_dict(),
-                                  'optim_d': optim_d.state_dict()}
-                    torch.save(
-                        model_dict,
-                        os.path.join(args.output_dir, 'model_dict_{}.pth'.format(e_model)))
-                    print('Save best model for {}'.format(e_model))
+            if (epoch + 1) % args.eval_interval == 0:
+                top1s, top5s = validate(args, generator, testloader, criterion, aug_rand)
+                for e_idx, e_model in enumerate(args.eval_model):
+                    if top1s[e_idx] > best_top1s[e_idx] + 1.0:
+                        best_top1s[e_idx] = top1s[e_idx]
+                        best_top5s[e_idx] = top5s[e_idx]
+                        best_epochs[e_idx] = epoch
 
-                print('Current Best Epoch for {}: {}, Top1: {:.3f}, Top5: {:.3f}'.format(e_model, best_epochs[e_idx], best_top1s[e_idx], best_top5s[e_idx]))
+                        model_dict = {'generator': generator.state_dict(),
+                                      'discriminator': discriminator.state_dict(),
+                                      'optim_g': optim_g.state_dict(),
+                                      'optim_d': optim_d.state_dict()}
+                        torch.save(
+                            model_dict,
+                            os.path.join(args.output_dir, str(fold), 'model_dict_{}.pth'.format(e_model)))
+                        print('Save best model for {}'.format(e_model))
 
+                    print('Current Best Epoch for {}: {}, Top1: {:.3f}, Top5: {:.3f}'.format(e_model, best_epochs[e_idx], best_top1s[e_idx], best_top5s[e_idx]))
+        all_best_top1s[:, fold] = best_top1s
+        all_best_top5s[:, fold] = best_top5s
+    dg_top1s = np.mean(all_best_top1s, axis=1)[0].item()
+    print('Leave-one-domain-out accuracy: {:.3f}'.format(dg_top1s))

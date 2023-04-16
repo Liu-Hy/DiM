@@ -6,10 +6,146 @@ import sys
 import time
 import matplotlib
 import matplotlib.pyplot as plt
+from torch.utils.data import Dataset
+import DGdatasets
+from torchvision import datasets, transforms
+
 
 matplotlib.use('Agg')
 
 __all__ = ["Compose", "Lighting", "ColorJitter"]
+
+def load_data(args):
+    dsts = None
+    if args.data.lower() == 'mnist':
+        channel = 1
+        im_size = (28, 28)
+        num_classes = 10
+        mean = [0.1307]
+        std = [0.3081]
+        transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize(mean=mean, std=std)])
+        dst_train = datasets.MNIST(args.data_dir, train=True, download=True, transform=transform) # no augmentation
+        dst_test = datasets.MNIST(args.data_dir, train=False, download=True, transform=transform)
+        class_names = [str(c) for c in range(num_classes)]
+
+    elif args.data.lower() == 'cmnist':
+        channel = 2
+        im_size = (28, 28)
+        num_classes = 2
+        mean = [0.1307, 0.1307]
+        std = [0.3081, 0.3081]
+        transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize(mean=mean, std=std)])
+        dsts = DGdatasets.ColoredMNIST(args.data_dir).datasets
+        class_names = [str(c) for c in range(num_classes)]
+
+    elif args.data.lower() == 'pacs':
+        channel = 3
+        im_size = (32, 32)
+        num_classes = 7
+        mean = [0.485, 0.456, 0.406]
+        std = [0.229, 0.224, 0.225]
+        transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize(mean=mean, std=std)])
+        dsts = DGdatasets.PACS(args.data_dir).datasets
+        class_names = dsts[1].classes
+
+    elif args.data.lower() == 'vlcs':
+        channel = 3
+        im_size = (32, 32)
+        num_classes = 5
+        mean = [0.485, 0.456, 0.406]
+        std = [0.229, 0.224, 0.225]
+        transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize(mean=mean, std=std)])
+        dsts = DGdatasets.VLCS(args.data_dir).datasets
+        class_names = dsts[1].classes
+        print(class_names)
+
+    elif args.data.lower() == 'officehome':
+        channel = 3
+        im_size = (64, 64)
+        num_classes = 65
+        mean = [0.485, 0.456, 0.406]
+        std = [0.229, 0.224, 0.225]
+        transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize(mean=mean, std=std)])
+        dsts = DGdatasets.OfficeHome(args.data_dir).datasets
+        class_names = dsts[1].classes
+        print(class_names)
+
+    elif args.data.lower() == 'fashionmnist':
+        channel = 1
+        im_size = (28, 28)
+        num_classes = 10
+        mean = [0.2861]
+        std = [0.3530]
+        transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize(mean=mean, std=std)])
+        dst_train = datasets.FashionMNIST(args.data_dir, train=True, download=True, transform=transform) # no augmentation
+        dst_test = datasets.FashionMNIST(args.data_dir, train=False, download=True, transform=transform)
+        class_names = dst_train.classes
+
+    elif args.data.lower() == 'svhn':
+        channel = 3
+        im_size = (32, 32)
+        num_classes = 10
+        mean = [0.4377, 0.4438, 0.4728]
+        std = [0.1980, 0.2010, 0.1970]
+        transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize(mean=mean, std=std)])
+        dst_train = datasets.SVHN(args.data_dir, split='train', download=True, transform=transform)  # no augmentation
+        dst_test = datasets.SVHN(args.data_dir, split='test', download=True, transform=transform)
+        class_names = [str(c) for c in range(num_classes)]
+
+    elif args.data.lower() == 'cifar10':
+        channel = 3
+        im_size = (32, 32)
+        num_classes = 10
+        mean = [0.4914, 0.4822, 0.4465]
+        std = [0.2023, 0.1994, 0.2010]
+        transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize(mean=mean, std=std)])
+        dst_train = datasets.CIFAR10(args.data_dir, train=True, download=True, transform=transform) # no augmentation
+        dst_test = datasets.CIFAR10(args.data_dir, train=False, download=True, transform=transform)
+        class_names = dst_train.classes
+
+    elif args.data.lower() == 'cifar100':
+        channel = 3
+        im_size = (32, 32)
+        num_classes = 100
+        mean = [0.5071, 0.4866, 0.4409]
+        std = [0.2673, 0.2564, 0.2762]
+        transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize(mean=mean, std=std)])
+        dst_train = datasets.CIFAR100(args.data_dir, train=True, download=True, transform=transform) # no augmentation
+        dst_test = datasets.CIFAR100(args.data_dir, train=False, download=True, transform=transform)
+        class_names = dst_train.classes
+
+    elif args.data.lower() == 'tinyimagenet':
+        channel = 3
+        im_size = (64, 64)
+        num_classes = 200
+        mean = [0.485, 0.456, 0.406]
+        std = [0.229, 0.224, 0.225]
+
+        transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize(mean=mean, std=std)])
+        d_path = os.path.join(args.data_dir, "tiny-imagenet")
+        dst_train = datasets.ImageFolder(os.path.join(d_path, "train"), transform=transform)
+        dst_test = datasets.ImageFolder(os.path.join(d_path, "val"), transform=transform)
+        class_names = dst_train.classes
+    else:
+        exit('unknown dataset: %s'%args.data)
+
+    # testloader = torch.utils.data.DataLoader(dst_test, batch_size=256, shuffle=False, num_workers=0)
+    if dsts is None:
+        dsts = dst_train, dst_test
+    return channel, im_size, num_classes, class_names, mean, std, dsts
+
+
+
+class TensorDataset(Dataset):
+    def __init__(self, images, labels): # images: n x c x h x w tensor
+        self.images = images.detach().float()
+        self.labels = labels.detach()
+
+    def __getitem__(self, index):
+        return self.images[index], self.labels[index]
+
+    def __len__(self):
+        return self.images.shape[0]
 
 
 def dist_l2(data, target):

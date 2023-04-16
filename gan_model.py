@@ -136,7 +136,7 @@ class Generator(nn.Module):
 
     def __init__(self, args):
         super(Generator, self).__init__()
-        self.fc1 = nn.Linear(100, 196*4*4)
+        self.fc1 = nn.Linear(args.num_classes+args.dim_noise, 196*4*4)
         self.bn0 = nn.BatchNorm1d(196*4*4)
         self.relu0 = nn.ReLU()
 
