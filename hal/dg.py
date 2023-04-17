@@ -165,7 +165,7 @@ def calc_gradient_penalty(args, discriminator, img_real, img_syn):
     interpolates = interpolates.cuda()
     interpolates.requires_grad_(True)
 
-    disc_interpolates, _, _ = discriminator(interpolates)
+    disc_interpolates, _ = discriminator(interpolates)
 
     gradients = torch.autograd.grad(outputs=disc_interpolates, inputs=interpolates,
                                     grad_outputs=torch.ones(disc_interpolates.size()).cuda(),
@@ -209,8 +209,8 @@ def matchloss(args, img_real, img_syn, lab_real, lab_syn, model):
 
     if 'feat' in args.match:
         with torch.no_grad():
-            feat_tg = model.get_feature(img_real, args.idx_from, args.idx_to)
-        feat = model.get_feature(img_syn, args.idx_from, args.idx_to)
+            feat_tg = model.module.get_feature(img_real, args.idx_from, args.idx_to)
+        feat = model.module.get_feature(img_syn, args.idx_from, args.idx_to)
 
         for i in range(len(feat)):
             loss = add_loss(loss, dist(feat_tg[i].mean(0), feat[i].mean(0), method=args.metric) * 0.001)
@@ -239,13 +239,14 @@ def matchloss(args, img_real, img_syn, lab_real, lab_syn, model):
             loss = add_loss(loss, dist(g_real[i], g_syn[i], method=args.metric) * 0.001)
 
     elif 'logit' in args.match:
-        #output_real = F.log_softmax(model(img_real, gt=lab_real, debias_mode=args.debias_mode), dim=1)
+        #output_real = F.log_softmax(model(img_real), dim=1)
         #output_syn = F.log_softmax(model(img_syn), dim=1)
         #loss = add_loss(loss, ((output_real - output_syn) ** 2).mean() * 0.01)
         output_real = F.softmax(model(img_real), dim=1)
         output_syn = F.softmax(model(img_syn), dim=1)
         diff = output_real - output_syn
         for i in range(args.num_classes):
+            #print(diff.shape, diff[lab_real==i].shape, diff[lab_real==i].mean(0).shape)
             loss = add_loss(loss, (diff[lab_real==i].mean(0) ** 2).mean() * 0.1)
 
 
@@ -297,6 +298,7 @@ def train(args, epoch, generator, discriminator, optim_g, optim_d, trainloader, 
     top5 = AverageMeter()
     if epoch >= args.pretrain_epochs:
         model = define_model(args, args.num_classes).cuda()
+        model = nn.DataParallel(model)
         model.train()
         optim_model = torch.optim.SGD(model.parameters(), args.eval_lr, momentum=args.momentum,
                                       weight_decay=args.weight_decay)
@@ -319,7 +321,7 @@ def train(args, epoch, generator, discriminator, optim_g, optim_d, trainloader, 
         noise = noise.cuda()
 
         img_syn = generator(noise)
-        gen_source, gen_class, _ = discriminator(img_syn)
+        gen_source, gen_class = discriminator(img_syn)
         gen_source = gen_source.mean()
         gen_class = criterion(gen_class, lab_real)
 
@@ -352,11 +354,11 @@ def train(args, epoch, generator, discriminator, optim_g, optim_d, trainloader, 
         with torch.no_grad():
             img_syn = generator(noise)
 
-        disc_fake_source, disc_fake_class, _ = discriminator(img_syn)
+        disc_fake_source, disc_fake_class = discriminator(img_syn)
         disc_fake_source = disc_fake_source.mean()
         disc_fake_class = criterion(disc_fake_class, lab_syn)
 
-        disc_real_source, disc_real_class, _ = discriminator(img_real)
+        disc_real_source, disc_real_class = discriminator(img_real)
         acc1, acc5 = accuracy(disc_real_class.data, lab_real, topk=(1, 5))
         disc_real_source = disc_real_source.mean()
         disc_real_class = criterion(disc_real_class, lab_real)
@@ -428,6 +430,7 @@ def validate(args, generator, testloader, criterion, aug_rand):
     for e_model in args.eval_model:
         print('Evaluating {}'.format(e_model))
         model = define_model(args, args.num_classes, e_model).cuda()
+        model = nn.DataParallel(model)
         model.train()
         optim_model = torch.optim.SGD(model.parameters(), args.eval_lr, momentum=args.momentum,
                                       weight_decay=args.weight_decay)
@@ -515,13 +518,12 @@ if __name__ == '__main__':
     parser.add_argument('--eval-interval', type=int, default=10) #10
     parser.add_argument('--test-interval', type=int, default=200)
     parser.add_argument('--fix-disc', action='store_true', default=False)
-    parser.add_argument('--debias-mode', type=str, default='none')
 
     parser.add_argument('--data', type=str, default='pacs')
     parser.add_argument('--num-classes', type=int, default=10)
-    parser.add_argument('--data-dir', type=str, default='/var/lib/data')
-    parser.add_argument('--output-dir', type=str, default='./results/')
-    parser.add_argument('--logs-dir', type=str, default='./logs/')
+    parser.add_argument('--data-dir', type=str, default='../../data')
+    parser.add_argument('--output-dir', type=str, default='../results/')
+    parser.add_argument('--logs-dir', type=str, default='../logs/')
     parser.add_argument('--weight', type=str, default='')
     parser.add_argument('--match-aug', action='store_true', default=False)
     parser.add_argument('--aug-type', type=str, default='color_crop_cutout')
@@ -562,7 +564,6 @@ if __name__ == '__main__':
     args.channel = channel
     args.mean = mean
     args.std = std
-    args.num_envs = len(dsts)
 
     print(args)
 
@@ -584,6 +585,8 @@ if __name__ == '__main__':
 
         generator = Generator(args).cuda()
         discriminator = Discriminator(args).cuda()
+        generator = nn.DataParallel(generator)
+        discriminator = nn.DataParallel(discriminator)
 
         optim_g = torch.optim.Adam(generator.parameters(), lr=args.lr1, betas=(0, 0.9))
         optim_d = torch.optim.Adam(discriminator.parameters(), lr=args.lr1, betas=(0, 0.9))
@@ -598,8 +601,8 @@ if __name__ == '__main__':
             if epoch == args.pretrain_epochs:
                 print("-"*5, f' Start fine-tuning with {args.match} matching')
                 model_dict = torch.load(os.path.join(args.output_dir, str(fold), 'model_dict_{}.pth'.format(args.eval_model[0])))
-                generator.load_state_dict(model_dict['generator'])
-                discriminator.load_state_dict(model_dict['discriminator'])
+                generator.module.load_state_dict(model_dict['generator'])
+                discriminator.module.load_state_dict(model_dict['discriminator'])
                 optim_g.load_state_dict(model_dict['optim_g'])
                 optim_d.load_state_dict(model_dict['optim_d'])
                 for g in optim_g.param_groups:
@@ -633,8 +636,8 @@ if __name__ == '__main__':
                         best_top5s[e_idx] = top5s[e_idx]
                         best_epochs[e_idx] = epoch
 
-                        model_dict = {'generator': generator.state_dict(),
-                                      'discriminator': discriminator.state_dict(),
+                        model_dict = {'generator': generator.module.state_dict(),
+                                      'discriminator': discriminator.module.state_dict(),
                                       'optim_g': optim_g.state_dict(),
                                       'optim_d': optim_d.state_dict()}
                         torch.save(

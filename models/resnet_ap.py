@@ -2,6 +2,7 @@ import torch.nn.functional as F
 import torch.nn as nn
 import math
 from torch.nn.utils import spectral_norm
+import torch
 
 
 def conv_stride1(in_planes, out_planes, kernel_size=3, norm_type='instance'):
@@ -246,7 +247,7 @@ class ResNetAP(nn.Module):
 
         return nn.Sequential(*layers)
 
-    def forward(self, x):
+    def forward(self, x, gt=None, debias_mode='none'):
         x = self.layer0(x)
         x = self.layer1(x)
         x = self.layer2(x)
@@ -254,6 +255,76 @@ class ResNetAP(nn.Module):
         x = self.layer4(x)
 
         x = F.avg_pool2d(x, x.shape[-1])
+
+        num_rois = x.shape[0]
+        num_channel = x.shape[1]
+        H = x.shape[2]
+        W = x.shape[3]  # H * H
+        HW = H * W
+
+        if debias_mode in ["w2d", "rsc"]:
+            drop_f = 1 / 3.0
+            drop_b = 1 / 3.0
+            self.eval()
+            x_new = x.detach().clone().requires_grad_()
+            x_new_view = x_new.view(x_new.size(0), -1)
+            # print(x_new_view.shape)
+            output = self.fc(x_new_view)
+            class_num = output.shape[1]
+            index = gt
+            sp_i = torch.ones([2, num_rois]).long()
+            sp_i[0, :] = torch.arange(num_rois)
+            sp_i[1, :] = index
+            sp_v = torch.ones([num_rois])
+            one_hot_sparse = torch.sparse.FloatTensor(sp_i, sp_v,
+                                                      torch.Size([num_rois, class_num])).to_dense().requires_grad_(
+                requires_grad=False).cuda()
+            # one_hot_sparse = Variable(one_hot_sparse, requires_grad=False)
+            one_hot = torch.sum(output * one_hot_sparse)
+            self.zero_grad()
+            one_hot.backward()
+            grads_val = x_new.grad.clone().detach()
+            grad_channel_mean = torch.mean(grads_val.view(num_rois, num_channel, -1), dim=2)
+            grad_channel_mean = grad_channel_mean.view(num_rois, num_channel, 1, 1)
+            spatial_mean = torch.sum(x_new * grad_channel_mean, 1)
+            spatial_mean = spatial_mean.view(num_rois, HW)
+            self.zero_grad()
+
+            spatial_drop_num = int(HW * drop_f)
+            th_mask_value = torch.sort(spatial_mean, dim=1, descending=True)[0][:, spatial_drop_num]
+            th_mask_value = th_mask_value.view(num_rois, 1).expand(num_rois, HW)
+            mask_all_cuda = torch.where(spatial_mean > th_mask_value, torch.zeros(spatial_mean.shape).cuda(),
+                                        torch.ones(spatial_mean.shape).cuda())
+            mask_all = mask_all_cuda.reshape(num_rois, H, H).view(num_rois, 1, H, H)
+
+            cls_prob_before = F.softmax(output, dim=1)
+            x_new_view_after = x_new * mask_all
+            # x_new_view_after = self.avgpool(x_new_view_after)
+            # x_new_view_after = x_new_view_after.view(x_new_view_after.size(0), -1)
+            # x_new_view_after = self.fc(x_new_view_after)
+            x_new_view_after = x_new_view_after.view(x_new_view_after.size(0), -1)
+            x_new_view_after = self.fc(x_new_view_after)
+            cls_prob_after = F.softmax(x_new_view_after, dim=1)
+            sp_i = torch.ones([2, num_rois]).long()
+            sp_i[0, :] = torch.arange(num_rois)
+            sp_i[1, :] = index
+            sp_v = torch.ones([num_rois])
+            one_hot_sparse = torch.sparse.FloatTensor(sp_i, sp_v, torch.Size([num_rois, class_num])).to_dense().cuda()
+            before_vector = torch.sum(one_hot_sparse * cls_prob_before, dim=1)
+            after_vector = torch.sum(one_hot_sparse * cls_prob_after, dim=1)
+            change_vector = before_vector - after_vector - 0.0001
+            change_vector = torch.where(change_vector > 0, change_vector, torch.zeros(change_vector.shape).cuda())
+            th_fg_value = torch.sort(change_vector, dim=0, descending=True)[0][
+                int(round(float(num_rois) * drop_b))]
+            drop_index_fg = change_vector.gt(th_fg_value).long()
+            ignore_index_fg = 1 - drop_index_fg
+            not_01_ignore_index_fg = ignore_index_fg.nonzero()[:, 0]
+            mask_all[not_01_ignore_index_fg.long(), :] = 1
+            self.train()
+            # mask_all = Variable(mask_all, requires_grad=True)
+            mask_all.requires_grad_()
+            x = x * mask_all
+
         x = x.view(x.size(0), -1)
         x = self.fc(x)
 

@@ -50,7 +50,8 @@ class Discriminator(nn.Module):
 
         self.pool = nn.MaxPool2d(kernel_size=4, stride=4, padding=0)
         self.fc1 = nn.Linear(196, 1)
-        self.fc10 = nn.Linear(196, 10)
+        self.fcc = nn.Linear(196, args.num_classes)
+        self.fcd = nn.Linear(196, args.num_envs)  # domain classifier
 
     def forward(self, x, print_size=False):
         if print_size:
@@ -123,13 +124,15 @@ class Discriminator(nn.Module):
             print(x.size())
 
         fc1_out = self.fc1(x)
-        fc10_out = self.fc10(x)
+        fcc_out = self.fcc(x)
+        fcd_out = self.fcd(x)
 
         if print_size:
             print("fc1_out size: {}".format(fc1_out.size()))
-            print("fc10_out size: {}".format(fc10_out.size()))
+            print("fcc_out size: {}".format(fcc_out.size()))
+            print("fcd_out size: {}".format(fcd_out.size()))
 
-        return fc1_out, fc10_out
+        return fc1_out, fcc_out, fcd_out
 
 
 class Generator(nn.Module):
@@ -265,7 +268,7 @@ if __name__ == '__main__':
     net1 = Discriminator()
     print(net1)
     x = torch.randn(10,3,32,32)
-    fc1_out, fc10_out = net1(x, print_size=True)
+    fc1_out, fcc_out, fcd_out = net1(x, print_size=True)
 
     net2 = Generator()
     print(net2)

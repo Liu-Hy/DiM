@@ -1,0 +1,2487 @@
+(lc) ➜  DiM git:(main) ✗ CUDA_VISIBLE_DEVICES=0 python dg.py --data PACS  --match-aug;
+CUDA_VISIBLE_DEVICES=0 python dg.py --data PACS  --match-aug  --debias-mode rsc
+Namespace(aug_type='color_crop_cutout', batch_size=128, beta=1.0, bias=False, channel=3, data='PACS', data_dir='/var/lib/data', debias_mode='none', dim_noise=90, epochs=50, epochs_eval=1000, epochs_match=100, epochs_match_train=16, eval_interval=10, eval_lr=0.01, eval_model=['convnet'], fc=False, fix_disc=False, ipc=1, logs_dir='./logs/PACS', lr1=0.0001, lr2=5e-06, match='logit', match_aug=True, match_coeff=0.001, match_model='convnet', mean=[0.485, 0.456, 0.406], metric='l1', mix_p=-1.0, mixup_net='cut', momentum=0.9, num_classes=7, num_envs=4, num_workers=4, output_dir='./results/PACS', pretrain_epochs=30, print_freq=50, seed=3407, std=[0.229, 0.224, 0.225], tag='PACS', test_interval=200, weight='', weight_decay=0.0005)
+
+********** Test env: 0
+
+Augmentataion Matching:  color_crop_cutout
+Augmentataion Net update:  color_crop
+[Train Epoch 0 Iter 50] G Loss: 1.696(1.698) D Loss: 3.717(4.000) D Acc: 25.781(18.812)
+[Train Epoch 1 Iter 50] G Loss: 2.890(1.922) D Loss: 4.030(4.001) D Acc: 30.469(28.250)
+[Train Epoch 2 Iter 50] G Loss: 4.142(2.569) D Loss: 4.465(3.554) D Acc: 39.844(35.094)
+[Train Epoch 3 Iter 50] G Loss: 1.729(2.954) D Loss: 4.598(3.459) D Acc: 42.188(42.172)
+[Train Epoch 4 Iter 50] G Loss: 5.105(3.506) D Loss: 2.714(3.119) D Acc: 44.531(44.906)
+[Train Epoch 5 Iter 50] G Loss: 4.889(3.704) D Loss: 3.589(3.011) D Acc: 43.750(47.156)
+[Train Epoch 6 Iter 50] G Loss: 3.735(3.511) D Loss: 3.155(2.688) D Acc: 48.438(48.109)
+[Train Epoch 7 Iter 50] G Loss: 2.408(3.038) D Loss: 2.303(2.575) D Acc: 50.000(50.031)
+[Train Epoch 8 Iter 50] G Loss: 2.364(2.628) D Loss: 2.171(2.261) D Acc: 49.219(51.344)
+[Train Epoch 9 Iter 50] G Loss: 2.415(2.629) D Loss: 1.281(1.883) D Acc: 53.906(52.188)
+Evaluating convnet
+/home/techt/anaconda3/envs/lc/lib/python3.8/site-packages/torch/functional.py:478: UserWarning: torch.meshgrid: in an upcoming release, it will be required to pass the indexing argument. (Triggered internally at  /opt/conda/conda-bld/pytorch_1659484810403/work/aten/src/ATen/native/TensorShape.cpp:2894.)
+  return _VF.meshgrid(tensors, **kwargs)  # type: ignore[attr-defined]
+[Test Epoch 200] Top1: 17.627 Top5: 73.877
+[Test Epoch 400] Top1: 18.066 Top5: 74.219
+[Test Epoch 600] Top1: 17.480 Top5: 72.949
+[Test Epoch 800] Top1: 18.018 Top5: 74.707
+[Test Epoch 1000] Top1: 17.090 Top5: 73.828
+Save best model for convnet
+Current Best Epoch for convnet: 9.0, Top1: 18.066, Top5: 74.219
+[Train Epoch 10 Iter 50] G Loss: -0.225(2.192) D Loss: 2.084(1.576) D Acc: 50.781(52.922)
+[Train Epoch 11 Iter 50] G Loss: -0.298(2.153) D Loss: 1.747(1.410) D Acc: 65.625(52.469)
+[Train Epoch 12 Iter 50] G Loss: -0.460(1.594) D Loss: 1.590(1.277) D Acc: 50.781(55.422)
+[Train Epoch 13 Iter 50] G Loss: 1.828(1.757) D Loss: 0.688(1.024) D Acc: 50.000(55.500)
+[Train Epoch 14 Iter 50] G Loss: 1.744(1.520) D Loss: 1.187(0.902) D Acc: 61.719(55.734)
+[Train Epoch 15 Iter 50] G Loss: 0.038(1.205) D Loss: 0.754(0.883) D Acc: 58.594(57.188)
+[Train Epoch 16 Iter 50] G Loss: 0.618(0.765) D Loss: 1.033(0.782) D Acc: 63.281(57.578)
+[Train Epoch 17 Iter 50] G Loss: 1.394(1.109) D Loss: 0.839(0.719) D Acc: 57.031(57.531)
+[Train Epoch 18 Iter 50] G Loss: 0.267(1.128) D Loss: 0.183(0.647) D Acc: 55.469(58.672)
+[Train Epoch 19 Iter 50] G Loss: -2.026(0.883) D Loss: 0.435(0.526) D Acc: 53.906(60.859)
+Evaluating convnet
+[Test Epoch 200] Top1: 20.459 Top5: 75.244
+[Test Epoch 400] Top1: 19.873 Top5: 76.709
+[Test Epoch 600] Top1: 20.605 Top5: 75.781
+[Test Epoch 800] Top1: 20.166 Top5: 77.441
+[Test Epoch 1000] Top1: 19.922 Top5: 75.879
+Save best model for convnet
+Current Best Epoch for convnet: 19.0, Top1: 20.605, Top5: 75.781
+[Train Epoch 20 Iter 50] G Loss: 2.909(0.787) D Loss: 0.556(0.546) D Acc: 58.594(60.844)
+[Train Epoch 21 Iter 50] G Loss: 1.466(1.024) D Loss: 0.746(0.453) D Acc: 54.688(62.281)
+[Train Epoch 22 Iter 50] G Loss: 2.683(0.861) D Loss: 1.001(0.335) D Acc: 61.719(62.734)
+[Train Epoch 23 Iter 50] G Loss: -0.885(0.645) D Loss: 0.123(0.351) D Acc: 65.625(62.891)
+[Train Epoch 24 Iter 50] G Loss: -0.968(0.731) D Loss: -0.321(0.270) D Acc: 71.094(63.875)
+[Train Epoch 25 Iter 50] G Loss: 1.600(0.603) D Loss: -0.324(0.231) D Acc: 70.312(64.391)
+[Train Epoch 26 Iter 50] G Loss: 0.554(0.692) D Loss: 0.333(0.189) D Acc: 55.469(64.375)
+[Train Epoch 27 Iter 50] G Loss: 0.602(0.428) D Loss: 0.534(0.165) D Acc: 67.188(65.141)
+[Train Epoch 28 Iter 50] G Loss: -3.043(0.423) D Loss: 0.392(0.051) D Acc: 71.094(65.453)
+[Train Epoch 29 Iter 50] G Loss: 2.761(0.506) D Loss: -0.258(0.064) D Acc: 68.750(65.750)
+Evaluating convnet
+[Test Epoch 200] Top1: 21.533 Top5: 79.736
+[Test Epoch 400] Top1: 20.947 Top5: 79.590
+[Test Epoch 600] Top1: 21.631 Top5: 80.615
+[Test Epoch 800] Top1: 20.361 Top5: 79.004
+[Test Epoch 1000] Top1: 21.875 Top5: 81.201
+Save best model for convnet
+Current Best Epoch for convnet: 29.0, Top1: 21.875, Top5: 81.201
+-----  Start fine-tuning with logit matching
+Random model: convnet
+[Train Epoch 30 Iter 50] G Loss: -0.132(-0.573) D Loss: -0.987(-0.878) D Acc: 71.875(70.875)
+Random model: resnet10_ap
+[Train Epoch 31 Iter 50] G Loss: 0.200(-0.305) D Loss: -0.980(-0.989) D Acc: 75.000(72.266)
+Random model: resnet10
+[Train Epoch 32 Iter 50] G Loss: -0.002(0.056) D Loss: -0.704(-0.990) D Acc: 80.469(72.875)
+Random model: resnet18
+[Train Epoch 33 Iter 50] G Loss: -0.366(0.069) D Loss: -1.124(-0.930) D Acc: 73.438(72.734)
+Random model: resnet10
+[Train Epoch 34 Iter 50] G Loss: 0.347(0.163) D Loss: -0.724(-1.000) D Acc: 64.062(71.875)
+Random model: resnet10_ap
+[Train Epoch 35 Iter 50] G Loss: 0.145(0.093) D Loss: -1.048(-0.977) D Acc: 71.875(72.453)
+Random model: resnet18
+[Train Epoch 36 Iter 50] G Loss: 0.529(0.232) D Loss: -1.005(-1.035) D Acc: 80.469(72.797)
+Random model: resnet18_ap
+[Train Epoch 37 Iter 50] G Loss: 0.102(0.423) D Loss: -1.340(-1.015) D Acc: 76.562(72.688)
+Random model: resnet18
+[Train Epoch 38 Iter 50] G Loss: 0.590(0.443) D Loss: -1.162(-1.060) D Acc: 76.562(73.156)
+Random model: resnet10
+[Train Epoch 39 Iter 50] G Loss: 0.458(0.544) D Loss: -0.902(-1.088) D Acc: 73.438(73.422)
+Evaluating convnet
+[Test Epoch 200] Top1: 22.705 Top5: 77.588
+[Test Epoch 400] Top1: 22.266 Top5: 77.637
+[Test Epoch 600] Top1: 22.168 Top5: 78.906
+[Test Epoch 800] Top1: 22.900 Top5: 78.711
+[Test Epoch 1000] Top1: 22.559 Top5: 78.418
+Save best model for convnet
+Current Best Epoch for convnet: 39.0, Top1: 22.900, Top5: 78.711
+Random model: resnet10_ap
+[Train Epoch 40 Iter 50] G Loss: 1.129(0.441) D Loss: -0.443(-1.049) D Acc: 75.000(73.328)
+Random model: resnet18_ap
+[Train Epoch 41 Iter 50] G Loss: 0.224(0.456) D Loss: -1.026(-1.075) D Acc: 69.531(73.609)
+Random model: resnet10_ap
+[Train Epoch 42 Iter 50] G Loss: 0.705(0.368) D Loss: -0.911(-1.030) D Acc: 64.844(73.984)
+Random model: resnet18
+[Train Epoch 43 Iter 50] G Loss: 0.904(0.502) D Loss: -0.969(-1.062) D Acc: 66.406(73.688)
+Random model: resnet18
+[Train Epoch 44 Iter 50] G Loss: 0.665(0.406) D Loss: -1.355(-1.018) D Acc: 78.125(73.312)
+Random model: resnet10
+[Train Epoch 45 Iter 50] G Loss: 0.622(0.623) D Loss: -1.047(-1.077) D Acc: 70.312(73.594)
+Random model: convnet
+[Train Epoch 46 Iter 50] G Loss: 0.547(0.689) D Loss: -0.859(-1.014) D Acc: 73.438(73.312)
+Random model: resnet18
+[Train Epoch 47 Iter 50] G Loss: 0.516(0.663) D Loss: -1.069(-1.033) D Acc: 73.438(73.469)
+Random model: resnet10
+[Train Epoch 48 Iter 50] G Loss: 0.040(0.785) D Loss: -0.756(-1.045) D Acc: 77.344(73.844)
+Random model: resnet18
+[Train Epoch 49 Iter 50] G Loss: 0.555(0.879) D Loss: -0.879(-1.074) D Acc: 73.438(74.297)
+Evaluating convnet
+[Test Epoch 200] Top1: 21.826 Top5: 79.395
+[Test Epoch 400] Top1: 21.826 Top5: 79.248
+[Test Epoch 600] Top1: 21.240 Top5: 77.393
+[Test Epoch 800] Top1: 23.486 Top5: 79.248
+[Test Epoch 1000] Top1: 22.705 Top5: 78.271
+Current Best Epoch for convnet: 39.0, Top1: 22.900, Top5: 78.711
+
+********** Test env: 1
+
+Augmentataion Matching:  color_crop_cutout
+Augmentataion Net update:  color_crop
+[Train Epoch 0 Iter 50] G Loss: 4.926(2.374) D Loss: 3.399(3.487) D Acc: 21.094(19.547)
+[Train Epoch 1 Iter 50] G Loss: 0.211(1.169) D Loss: 4.357(4.013) D Acc: 18.750(27.031)
+[Train Epoch 2 Iter 50] G Loss: 2.480(0.085) D Loss: 2.372(3.614) D Acc: 31.250(30.891)
+[Train Epoch 3 Iter 50] G Loss: -0.692(-0.574) D Loss: 2.459(3.555) D Acc: 46.094(34.391)
+[Train Epoch 4 Iter 50] G Loss: 0.789(0.388) D Loss: 3.427(3.123) D Acc: 39.062(37.578)
+[Train Epoch 5 Iter 50] G Loss: -0.533(-0.504) D Loss: 1.846(3.132) D Acc: 44.531(39.438)
+[Train Epoch 6 Iter 50] G Loss: -2.023(-1.313) D Loss: 2.779(3.170) D Acc: 40.625(39.828)
+[Train Epoch 7 Iter 50] G Loss: -0.055(-1.423) D Loss: 3.416(3.057) D Acc: 35.938(41.578)
+[Train Epoch 8 Iter 50] G Loss: -2.508(-1.750) D Loss: 2.295(2.950) D Acc: 51.562(43.562)
+[Train Epoch 9 Iter 50] G Loss: -3.254(-1.824) D Loss: 1.791(2.850) D Acc: 49.219(44.125)
+Evaluating convnet
+[Test Epoch 200] Top1: 19.923 Top5: 76.621
+[Test Epoch 400] Top1: 17.833 Top5: 77.560
+[Test Epoch 600] Top1: 15.742 Top5: 75.043
+[Test Epoch 800] Top1: 17.235 Top5: 79.991
+[Test Epoch 1000] Top1: 20.392 Top5: 79.309
+Save best model for convnet
+Current Best Epoch for convnet: 9.0, Top1: 20.392, Top5: 79.309
+[Train Epoch 10 Iter 50] G Loss: -0.593(-1.884) D Loss: 2.470(2.743) D Acc: 39.844(45.469)
+[Train Epoch 11 Iter 50] G Loss: -4.875(-2.247) D Loss: 1.590(2.433) D Acc: 46.875(46.609)
+[Train Epoch 12 Iter 50] G Loss: -0.331(-2.277) D Loss: 2.529(2.391) D Acc: 49.219(47.156)
+[Train Epoch 13 Iter 50] G Loss: -4.817(-2.471) D Loss: 1.932(2.131) D Acc: 60.938(48.438)
+[Train Epoch 14 Iter 50] G Loss: -0.413(-2.766) D Loss: 1.618(2.081) D Acc: 50.000(47.125)
+[Train Epoch 15 Iter 50] G Loss: -5.452(-2.293) D Loss: 1.405(1.777) D Acc: 55.469(48.156)
+[Train Epoch 16 Iter 50] G Loss: -2.404(-2.937) D Loss: 3.170(1.679) D Acc: 51.562(47.391)
+[Train Epoch 17 Iter 50] G Loss: -1.608(-2.765) D Loss: 1.283(1.447) D Acc: 52.344(47.484)
+[Train Epoch 18 Iter 50] G Loss: -0.806(-3.091) D Loss: 0.618(1.297) D Acc: 50.000(47.969)
+[Train Epoch 19 Iter 50] G Loss: -6.494(-3.503) D Loss: 1.100(1.214) D Acc: 50.781(48.562)
+Evaluating convnet
+[Test Epoch 200] Top1: 22.440 Top5: 82.338
+[Test Epoch 400] Top1: 18.686 Top5: 78.413
+[Test Epoch 600] Top1: 20.734 Top5: 81.698
+[Test Epoch 800] Top1: 19.881 Top5: 80.887
+[Test Epoch 1000] Top1: 20.392 Top5: 80.205
+Save best model for convnet
+Current Best Epoch for convnet: 19.0, Top1: 22.440, Top5: 82.338
+[Train Epoch 20 Iter 50] G Loss: -4.305(-3.534) D Loss: 0.348(1.101) D Acc: 52.344(49.078)
+[Train Epoch 21 Iter 50] G Loss: -6.574(-3.647) D Loss: 1.413(1.114) D Acc: 52.344(49.578)
+[Train Epoch 22 Iter 50] G Loss: -4.981(-3.341) D Loss: 0.842(0.974) D Acc: 60.156(50.688)
+[Train Epoch 23 Iter 50] G Loss: -4.363(-4.043) D Loss: 1.325(0.941) D Acc: 47.656(51.156)
+[Train Epoch 24 Iter 50] G Loss: -5.347(-3.783) D Loss: 1.512(1.027) D Acc: 49.219(51.016)
+[Train Epoch 25 Iter 50] G Loss: -2.687(-3.732) D Loss: 1.240(0.904) D Acc: 53.906(52.078)
+[Train Epoch 26 Iter 50] G Loss: -3.256(-3.819) D Loss: 0.520(0.800) D Acc: 46.875(53.141)
+[Train Epoch 27 Iter 50] G Loss: -4.030(-3.916) D Loss: 1.318(0.785) D Acc: 52.344(53.406)
+[Train Epoch 28 Iter 50] G Loss: -5.333(-3.910) D Loss: 0.306(0.793) D Acc: 49.219(54.391)
+[Train Epoch 29 Iter 50] G Loss: -3.534(-3.700) D Loss: 0.211(0.736) D Acc: 64.844(55.719)
+Evaluating convnet
+[Test Epoch 200] Top1: 23.891 Top5: 82.935
+[Test Epoch 400] Top1: 20.265 Top5: 82.210
+[Test Epoch 600] Top1: 20.137 Top5: 81.826
+[Test Epoch 800] Top1: 24.104 Top5: 83.063
+[Test Epoch 1000] Top1: 22.654 Top5: 83.063
+Save best model for convnet
+Current Best Epoch for convnet: 29.0, Top1: 24.104, Top5: 83.063
+-----  Start fine-tuning with logit matching
+Random model: resnet18_ap
+[Train Epoch 30 Iter 50] G Loss: -3.814(-4.537) D Loss: -0.350(-0.131) D Acc: 60.938(59.781)
+Random model: convnet
+[Train Epoch 31 Iter 50] G Loss: -4.433(-4.511) D Loss: -0.143(-0.260) D Acc: 59.375(60.500)
+Random model: convnet
+[Train Epoch 32 Iter 50] G Loss: -3.895(-4.110) D Loss: -0.455(-0.313) D Acc: 55.469(61.422)
+Random model: resnet18_ap
+[Train Epoch 33 Iter 50] G Loss: -3.942(-4.277) D Loss: 0.139(-0.241) D Acc: 57.031(61.719)
+Random model: resnet10
+[Train Epoch 34 Iter 50] G Loss: -3.559(-3.838) D Loss: -0.144(-0.226) D Acc: 60.156(61.391)
+Random model: resnet18
+[Train Epoch 35 Iter 50] G Loss: -3.474(-3.616) D Loss: -0.317(-0.262) D Acc: 65.625(61.703)
+Random model: convnet
+[Train Epoch 36 Iter 50] G Loss: -3.355(-3.266) D Loss: 0.057(-0.247) D Acc: 60.156(61.625)
+Random model: convnet
+[Train Epoch 37 Iter 50] G Loss: -2.950(-3.566) D Loss: 0.180(-0.222) D Acc: 60.938(62.141)
+Random model: resnet18
+[Train Epoch 38 Iter 50] G Loss: -3.196(-3.362) D Loss: -0.044(-0.249) D Acc: 60.156(61.750)
+Random model: resnet18_ap
+[Train Epoch 39 Iter 50] G Loss: -3.979(-3.560) D Loss: -0.514(-0.274) D Acc: 64.844(62.266)
+Evaluating convnet
+[Test Epoch 200] Top1: 24.829 Top5: 85.111
+[Test Epoch 400] Top1: 26.578 Top5: 86.135
+[Test Epoch 600] Top1: 21.630 Top5: 83.575
+[Test Epoch 800] Top1: 22.696 Top5: 83.959
+[Test Epoch 1000] Top1: 26.664 Top5: 83.874
+Save best model for convnet
+Current Best Epoch for convnet: 39.0, Top1: 26.664, Top5: 83.874
+Random model: convnet
+[Train Epoch 40 Iter 50] G Loss: -3.357(-3.702) D Loss: 0.078(-0.259) D Acc: 54.688(62.516)
+Random model: convnet
+[Train Epoch 41 Iter 50] G Loss: -3.569(-3.425) D Loss: -0.381(-0.280) D Acc: 62.500(61.516)
+Random model: resnet10
+[Train Epoch 42 Iter 50] G Loss: -3.539(-3.557) D Loss: -0.144(-0.233) D Acc: 60.938(62.766)
+Random model: resnet18_ap
+[Train Epoch 43 Iter 50] G Loss: -4.187(-3.524) D Loss: -0.402(-0.231) D Acc: 67.969(62.781)
+Random model: resnet10
+[Train Epoch 44 Iter 50] G Loss: -3.319(-3.514) D Loss: -0.024(-0.226) D Acc: 60.938(62.750)
+Random model: resnet10_ap
+[Train Epoch 45 Iter 50] G Loss: -3.214(-3.453) D Loss: -0.257(-0.266) D Acc: 64.062(62.844)
+Random model: resnet18_ap
+[Train Epoch 46 Iter 50] G Loss: -3.860(-3.466) D Loss: -0.342(-0.254) D Acc: 64.844(62.750)
+Random model: resnet18
+[Train Epoch 47 Iter 50] G Loss: -3.562(-3.617) D Loss: -0.389(-0.292) D Acc: 67.969(63.000)
+Random model: resnet18_ap
+[Train Epoch 48 Iter 50] G Loss: -2.894(-3.324) D Loss: -0.177(-0.301) D Acc: 64.062(63.109)
+Random model: resnet10
+[Train Epoch 49 Iter 50] G Loss: -3.362(-3.131) D Loss: -0.122(-0.343) D Acc: 61.719(63.422)
+Evaluating convnet
+[Test Epoch 200] Top1: 27.432 Top5: 80.802
+[Test Epoch 400] Top1: 25.768 Top5: 81.826
+[Test Epoch 600] Top1: 28.328 Top5: 82.338
+[Test Epoch 800] Top1: 27.218 Top5: 83.020
+[Test Epoch 1000] Top1: 25.000 Top5: 82.082
+Save best model for convnet
+Current Best Epoch for convnet: 49.0, Top1: 28.328, Top5: 82.338
+
+********** Test env: 2
+
+Augmentataion Matching:  color_crop_cutout
+Augmentataion Net update:  color_crop
+[Train Epoch 0 Iter 50] G Loss: 1.739(0.318) D Loss: 4.185(4.691) D Acc: 31.250(18.953)
+[Train Epoch 1 Iter 50] G Loss: 1.314(1.270) D Loss: 3.569(3.694) D Acc: 34.375(27.016)
+[Train Epoch 2 Iter 50] G Loss: 3.859(1.568) D Loss: 3.475(3.833) D Acc: 39.844(31.156)
+[Train Epoch 3 Iter 50] G Loss: 0.171(1.019) D Loss: 3.396(3.612) D Acc: 38.281(34.891)
+[Train Epoch 4 Iter 50] G Loss: 3.577(0.913) D Loss: 3.614(3.215) D Acc: 36.719(39.906)
+[Train Epoch 5 Iter 50] G Loss: -4.012(0.510) D Loss: 5.383(3.161) D Acc: 29.688(40.156)
+[Train Epoch 6 Iter 50] G Loss: -0.692(0.439) D Loss: 2.607(2.711) D Acc: 53.125(42.625)
+[Train Epoch 7 Iter 50] G Loss: 2.257(0.392) D Loss: 2.377(2.430) D Acc: 47.656(42.672)
+[Train Epoch 8 Iter 50] G Loss: -2.693(-0.266) D Loss: 2.018(2.211) D Acc: 48.438(44.688)
+[Train Epoch 9 Iter 50] G Loss: -0.502(-0.885) D Loss: 2.810(2.126) D Acc: 42.188(44.766)
+Evaluating convnet
+[Test Epoch 200] Top1: 16.766 Top5: 81.317
+[Test Epoch 400] Top1: 15.210 Top5: 78.623
+[Test Epoch 600] Top1: 16.587 Top5: 79.461
+[Test Epoch 800] Top1: 17.904 Top5: 78.443
+[Test Epoch 1000] Top1: 16.108 Top5: 78.922
+Save best model for convnet
+Current Best Epoch for convnet: 9.0, Top1: 17.904, Top5: 78.443
+[Train Epoch 10 Iter 50] G Loss: -0.964(-1.530) D Loss: 1.891(1.984) D Acc: 53.906(45.906)
+[Train Epoch 11 Iter 50] G Loss: -2.932(-1.850) D Loss: 2.149(1.850) D Acc: 41.406(45.719)
+[Train Epoch 12 Iter 50] G Loss: -1.650(-1.958) D Loss: 1.119(1.486) D Acc: 50.781(46.844)
+[Train Epoch 13 Iter 50] G Loss: -2.264(-2.228) D Loss: 1.451(1.372) D Acc: 39.844(47.109)
+[Train Epoch 14 Iter 50] G Loss: -2.876(-2.471) D Loss: 1.151(1.278) D Acc: 53.125(48.734)
+[Train Epoch 15 Iter 50] G Loss: -4.286(-2.464) D Loss: 1.671(1.260) D Acc: 48.438(49.094)
+[Train Epoch 16 Iter 50] G Loss: -1.949(-2.769) D Loss: 1.234(1.122) D Acc: 49.219(51.047)
+[Train Epoch 17 Iter 50] G Loss: -2.648(-2.843) D Loss: 0.956(0.953) D Acc: 50.000(51.562)
+[Train Epoch 18 Iter 50] G Loss: -3.951(-2.700) D Loss: 1.269(0.979) D Acc: 46.094(51.938)
+[Train Epoch 19 Iter 50] G Loss: -3.102(-2.920) D Loss: 0.603(0.836) D Acc: 55.469(53.141)
+Evaluating convnet
+[Test Epoch 200] Top1: 22.216 Top5: 82.335
+[Test Epoch 400] Top1: 25.988 Top5: 83.234
+[Test Epoch 600] Top1: 26.467 Top5: 83.234
+[Test Epoch 800] Top1: 26.886 Top5: 82.275
+[Test Epoch 1000] Top1: 30.719 Top5: 82.994
+Save best model for convnet
+Current Best Epoch for convnet: 19.0, Top1: 30.719, Top5: 82.994
+[Train Epoch 20 Iter 50] G Loss: -2.724(-2.475) D Loss: 1.255(0.807) D Acc: 59.375(53.719)
+[Train Epoch 21 Iter 50] G Loss: -2.596(-2.804) D Loss: 0.748(0.798) D Acc: 53.125(54.234)
+[Train Epoch 22 Iter 50] G Loss: -1.774(-2.814) D Loss: 0.380(0.687) D Acc: 57.812(55.266)
+[Train Epoch 23 Iter 50] G Loss: -2.624(-2.742) D Loss: 0.679(0.667) D Acc: 64.844(56.578)
+[Train Epoch 24 Iter 50] G Loss: -0.713(-2.699) D Loss: 1.663(0.592) D Acc: 57.031(56.531)
+[Train Epoch 25 Iter 50] G Loss: -2.346(-3.152) D Loss: 0.268(0.540) D Acc: 64.062(57.062)
+[Train Epoch 26 Iter 50] G Loss: -2.800(-2.999) D Loss: 1.582(0.571) D Acc: 54.688(57.203)
+[Train Epoch 27 Iter 50] G Loss: -2.847(-2.853) D Loss: 0.333(0.420) D Acc: 60.156(59.141)
+[Train Epoch 28 Iter 50] G Loss: -3.955(-3.046) D Loss: 0.319(0.449) D Acc: 55.469(58.922)
+[Train Epoch 29 Iter 50] G Loss: -6.396(-3.275) D Loss: 0.544(0.369) D Acc: 57.812(59.797)
+Evaluating convnet
+[Test Epoch 200] Top1: 29.042 Top5: 83.473
+[Test Epoch 400] Top1: 27.006 Top5: 84.072
+[Test Epoch 600] Top1: 27.066 Top5: 84.731
+[Test Epoch 800] Top1: 24.671 Top5: 84.192
+[Test Epoch 1000] Top1: 27.246 Top5: 83.892
+Current Best Epoch for convnet: 19.0, Top1: 30.719, Top5: 82.994
+-----  Start fine-tuning with logit matching
+Random model: resnet10
+[Train Epoch 30 Iter 50] G Loss: -3.054(-2.636) D Loss: 0.018(-0.264) D Acc: 62.500(55.953)
+Random model: resnet10_ap
+[Train Epoch 31 Iter 50] G Loss: -3.225(-2.973) D Loss: -0.133(-0.126) D Acc: 55.469(58.500)
+Random model: resnet18_ap
+[Train Epoch 32 Iter 50] G Loss: -2.607(-3.261) D Loss: -0.184(-0.128) D Acc: 60.938(58.188)
+Random model: resnet18_ap
+[Train Epoch 33 Iter 50] G Loss: -2.768(-3.082) D Loss: -0.229(-0.221) D Acc: 62.500(58.562)
+Random model: resnet18_ap
+[Train Epoch 34 Iter 50] G Loss: -2.753(-2.848) D Loss: -0.430(-0.272) D Acc: 61.719(58.641)
+Random model: resnet10_ap
+[Train Epoch 35 Iter 50] G Loss: -3.041(-2.813) D Loss: -0.381(-0.157) D Acc: 63.281(58.406)
+Random model: convnet
+[Train Epoch 36 Iter 50] G Loss: -3.021(-3.042) D Loss: -0.176(-0.215) D Acc: 48.438(58.453)
+Random model: resnet10_ap
+[Train Epoch 37 Iter 50] G Loss: -2.865(-2.891) D Loss: 0.080(-0.202) D Acc: 63.281(58.656)
+Random model: resnet10_ap
+[Train Epoch 38 Iter 50] G Loss: -2.841(-2.938) D Loss: -0.254(-0.150) D Acc: 60.156(59.156)
+Random model: resnet18
+[Train Epoch 39 Iter 50] G Loss: -2.850(-2.721) D Loss: -0.254(-0.264) D Acc: 61.719(59.453)
+Evaluating convnet
+[Test Epoch 200] Top1: 35.090 Top5: 85.749
+[Test Epoch 400] Top1: 35.928 Top5: 84.251
+[Test Epoch 600] Top1: 38.683 Top5: 85.629
+[Test Epoch 800] Top1: 37.844 Top5: 85.749
+[Test Epoch 1000] Top1: 38.862 Top5: 86.108
+Save best model for convnet
+Current Best Epoch for convnet: 39.0, Top1: 38.862, Top5: 86.108
+Random model: resnet18
+[Train Epoch 40 Iter 50] G Loss: -2.706(-2.839) D Loss: -0.028(-0.311) D Acc: 48.438(59.609)
+Random model: convnet
+[Train Epoch 41 Iter 50] G Loss: -3.125(-2.931) D Loss: -0.484(-0.301) D Acc: 57.812(60.016)
+Random model: resnet10
+[Train Epoch 42 Iter 50] G Loss: -2.388(-2.630) D Loss: -0.217(-0.319) D Acc: 55.469(60.312)
+Random model: resnet10_ap
+[Train Epoch 43 Iter 50] G Loss: -3.036(-3.167) D Loss: -0.191(-0.280) D Acc: 60.938(59.922)
+Random model: convnet
+[Train Epoch 44 Iter 50] G Loss: -2.768(-2.766) D Loss: -0.486(-0.280) D Acc: 59.375(60.453)
+Random model: convnet
+[Train Epoch 45 Iter 50] G Loss: -3.217(-2.906) D Loss: -0.708(-0.324) D Acc: 64.844(60.469)
+Random model: convnet
+[Train Epoch 46 Iter 50] G Loss: -2.443(-2.990) D Loss: 0.231(-0.261) D Acc: 58.594(60.312)
+Random model: convnet
+[Train Epoch 47 Iter 50] G Loss: -2.755(-2.645) D Loss: -0.068(-0.255) D Acc: 49.219(61.250)
+Random model: resnet18
+[Train Epoch 48 Iter 50] G Loss: -2.397(-2.993) D Loss: -0.102(-0.253) D Acc: 57.812(60.312)
+Random model: resnet10
+[Train Epoch 49 Iter 50] G Loss: -3.084(-3.087) D Loss: -0.486(-0.312) D Acc: 63.281(60.922)
+Evaluating convnet
+[Test Epoch 200] Top1: 34.790 Top5: 86.946
+[Test Epoch 400] Top1: 42.335 Top5: 86.467
+[Test Epoch 600] Top1: 41.617 Top5: 85.808
+[Test Epoch 800] Top1: 43.054 Top5: 85.090
+[Test Epoch 1000] Top1: 40.359 Top5: 87.605
+Save best model for convnet
+Current Best Epoch for convnet: 49.0, Top1: 43.054, Top5: 85.090
+
+********** Test env: 3
+
+Augmentataion Matching:  color_crop_cutout
+Augmentataion Net update:  color_crop
+Evaluating convnet
+[Test Epoch 200] Top1: 15.424 Top5: 85.034
+[Test Epoch 400] Top1: 17.969 Top5: 81.471
+[Test Epoch 600] Top1: 8.526 Top5: 83.991
+[Test Epoch 800] Top1: 13.489 Top5: 82.260
+[Test Epoch 1000] Top1: 12.599 Top5: 79.613
+Save best model for convnet
+Current Best Epoch for convnet: 9.0, Top1: 17.969, Top5: 81.471
+Evaluating convnet
+[Test Epoch 200] Top1: 18.096 Top5: 86.612
+[Test Epoch 400] Top1: 25.325 Top5: 87.198
+[Test Epoch 600] Top1: 26.190 Top5: 87.554
+[Test Epoch 800] Top1: 20.794 Top5: 83.813
+[Test Epoch 1000] Top1: 24.612 Top5: 87.427
+Save best model for convnet
+Current Best Epoch for convnet: 19.0, Top1: 26.190, Top5: 87.554
+Evaluating convnet
+[Test Epoch 200] Top1: 18.274 Top5: 70.934
+[Test Epoch 400] Top1: 18.376 Top5: 73.759
+[Test Epoch 600] Top1: 19.852 Top5: 87.936
+[Test Epoch 800] Top1: 18.274 Top5: 77.857
+[Test Epoch 1000] Top1: 23.187 Top5: 77.959
+Current Best Epoch for convnet: 19.0, Top1: 26.190, Top5: 87.554
+-----  Start fine-tuning with logit matching
+Random model: resnet10
+Random model: resnet18_ap
+Random model: resnet10
+Random model: resnet18
+Random model: resnet18_ap
+Random model: convnet
+Random model: convnet
+Random model: resnet18_ap
+Random model: convnet
+Random model: convnet
+Evaluating convnet
+[Test Epoch 200] Top1: 11.097 Top5: 84.474
+[Test Epoch 400] Top1: 10.232 Top5: 84.958
+[Test Epoch 600] Top1: 14.762 Top5: 85.543
+[Test Epoch 800] Top1: 9.035 Top5: 85.467
+[Test Epoch 1000] Top1: 13.413 Top5: 84.602
+Current Best Epoch for convnet: 19.0, Top1: 26.190, Top5: 87.554
+Random model: convnet
+Random model: resnet10_ap
+Random model: resnet10
+Random model: resnet10
+Random model: resnet18
+Random model: resnet10_ap
+Random model: resnet10
+Random model: resnet18_ap
+Random model: resnet18_ap
+Random model: resnet10
+Evaluating convnet
+[Test Epoch 200] Top1: 13.948 Top5: 88.241
+[Test Epoch 400] Top1: 14.202 Top5: 87.401
+[Test Epoch 600] Top1: 19.114 Top5: 86.511
+[Test Epoch 800] Top1: 14.049 Top5: 86.332
+[Test Epoch 1000] Top1: 20.183 Top5: 86.154
+Current Best Epoch for convnet: 19.0, Top1: 26.190, Top5: 87.554
+Leave-one-domain-out accuracy: 30.118
+
+
+
+
+
+
+
+(lc) ➜  DiM git:(main) ✗ CUDA_VISIBLE_DEVICES=0 python dg.py --data PACS  --match-aug  --debias-mode rsc
+Namespace(aug_type='color_crop_cutout', batch_size=128, beta=1.0, bias=False, channel=3, data='PACS', data_dir='/var/lib/data', debias_mode='rsc', dim_noise=90, epochs=50, epochs_eval=1000, epochs_match=100, epochs_match_train=16, eval_interval=10, eval_lr=0.01, eval_model=['convnet'], fc=False, fix_disc=False, ipc=1, logs_dir='./logs/PACS', lr1=0.0001, lr2=5e-06, match='logit', match_aug=True, match_coeff=0.001, match_model='convnet', mean=[0.485, 0.456, 0.406], metric='l1', mix_p=-1.0, mixup_net='cut', momentum=0.9, num_classes=7, num_envs=4, num_workers=4, output_dir='./results/PACS', pretrain_epochs=30, print_freq=50, seed=3407, std=[0.229, 0.224, 0.225], tag='PACS', test_interval=200, weight='', weight_decay=0.0005)
+
+********** Test env: 0
+
+Augmentataion Matching:  color_crop_cutout
+Augmentataion Net update:  color_crop
+[Train Epoch 0 Iter 50] G Loss: 1.696(1.698) D Loss: 3.717(4.000) D Acc: 25.781(18.812)
+[Train Epoch 1 Iter 50] G Loss: 2.890(1.922) D Loss: 4.030(4.001) D Acc: 30.469(28.250)
+[Train Epoch 2 Iter 50] G Loss: 4.142(2.569) D Loss: 4.465(3.554) D Acc: 39.844(35.094)
+[Train Epoch 3 Iter 50] G Loss: 1.729(2.954) D Loss: 4.598(3.459) D Acc: 42.188(42.172)
+[Train Epoch 4 Iter 50] G Loss: 5.105(3.506) D Loss: 2.714(3.119) D Acc: 44.531(44.906)
+[Train Epoch 5 Iter 50] G Loss: 4.889(3.704) D Loss: 3.589(3.011) D Acc: 43.750(47.156)
+[Train Epoch 6 Iter 50] G Loss: 3.735(3.511) D Loss: 3.155(2.688) D Acc: 48.438(48.109)
+[Train Epoch 7 Iter 50] G Loss: 2.408(3.038) D Loss: 2.303(2.575) D Acc: 50.000(50.031)
+[Train Epoch 8 Iter 50] G Loss: 2.364(2.628) D Loss: 2.171(2.261) D Acc: 49.219(51.344)
+[Train Epoch 9 Iter 50] G Loss: 2.415(2.629) D Loss: 1.281(1.883) D Acc: 53.906(52.188)
+Evaluating convnet
+/home/techt/anaconda3/envs/lc/lib/python3.8/site-packages/torch/functional.py:478: UserWarning: torch.meshgrid: in an upcoming release, it will be required to pass the indexing argument. (Triggered internally at  /opt/conda/conda-bld/pytorch_1659484810403/work/aten/src/ATen/native/TensorShape.cpp:2894.)
+  return _VF.meshgrid(tensors, **kwargs)  # type: ignore[attr-defined]
+[Test Epoch 200] Top1: 17.627 Top5: 73.877
+[Test Epoch 400] Top1: 18.066 Top5: 74.219
+[Test Epoch 600] Top1: 17.480 Top5: 72.949
+[Test Epoch 800] Top1: 18.018 Top5: 74.707
+[Test Epoch 1000] Top1: 17.090 Top5: 73.828
+Save best model for convnet
+Current Best Epoch for convnet: 9.0, Top1: 18.066, Top5: 74.219
+[Train Epoch 10 Iter 50] G Loss: -0.225(2.192) D Loss: 2.084(1.576) D Acc: 50.781(52.922)
+[Train Epoch 11 Iter 50] G Loss: -0.298(2.153) D Loss: 1.747(1.410) D Acc: 65.625(52.469)
+[Train Epoch 12 Iter 50] G Loss: -0.460(1.594) D Loss: 1.590(1.277) D Acc: 50.781(55.422)
+[Train Epoch 13 Iter 50] G Loss: 1.828(1.757) D Loss: 0.688(1.024) D Acc: 50.000(55.500)
+[Train Epoch 14 Iter 50] G Loss: 1.744(1.520) D Loss: 1.187(0.902) D Acc: 61.719(55.734)
+[Train Epoch 15 Iter 50] G Loss: 0.038(1.205) D Loss: 0.754(0.883) D Acc: 58.594(57.188)
+[Train Epoch 16 Iter 50] G Loss: 0.618(0.765) D Loss: 1.033(0.782) D Acc: 63.281(57.578)
+[Train Epoch 17 Iter 50] G Loss: 1.394(1.109) D Loss: 0.839(0.719) D Acc: 57.031(57.531)
+[Train Epoch 18 Iter 50] G Loss: 0.267(1.128) D Loss: 0.183(0.647) D Acc: 55.469(58.672)
+[Train Epoch 19 Iter 50] G Loss: -2.026(0.883) D Loss: 0.435(0.526) D Acc: 53.906(60.859)
+Evaluating convnet
+[Test Epoch 200] Top1: 20.459 Top5: 75.244
+[Test Epoch 400] Top1: 19.873 Top5: 76.709
+[Test Epoch 600] Top1: 20.605 Top5: 75.781
+[Test Epoch 800] Top1: 20.166 Top5: 77.441
+[Test Epoch 1000] Top1: 19.922 Top5: 75.879
+Save best model for convnet
+Current Best Epoch for convnet: 19.0, Top1: 20.605, Top5: 75.781
+[Train Epoch 20 Iter 50] G Loss: 2.909(0.787) D Loss: 0.556(0.546) D Acc: 58.594(60.844)
+[Train Epoch 21 Iter 50] G Loss: 1.466(1.024) D Loss: 0.746(0.453) D Acc: 54.688(62.281)
+[Train Epoch 22 Iter 50] G Loss: 2.683(0.861) D Loss: 1.001(0.335) D Acc: 61.719(62.734)
+[Train Epoch 23 Iter 50] G Loss: -0.885(0.645) D Loss: 0.123(0.351) D Acc: 65.625(62.891)
+[Train Epoch 24 Iter 50] G Loss: -0.968(0.731) D Loss: -0.321(0.270) D Acc: 71.094(63.875)
+[Train Epoch 25 Iter 50] G Loss: 1.600(0.603) D Loss: -0.324(0.231) D Acc: 70.312(64.391)
+[Train Epoch 26 Iter 50] G Loss: 0.554(0.692) D Loss: 0.333(0.189) D Acc: 55.469(64.375)
+[Train Epoch 27 Iter 50] G Loss: 0.602(0.428) D Loss: 0.534(0.165) D Acc: 67.188(65.141)
+[Train Epoch 28 Iter 50] G Loss: -3.043(0.423) D Loss: 0.392(0.051) D Acc: 71.094(65.453)
+[Train Epoch 29 Iter 50] G Loss: 2.761(0.506) D Loss: -0.258(0.064) D Acc: 68.750(65.750)
+Evaluating convnet
+[Test Epoch 200] Top1: 21.533 Top5: 79.736
+[Test Epoch 400] Top1: 20.947 Top5: 79.590
+[Test Epoch 600] Top1: 21.631 Top5: 80.615
+[Test Epoch 800] Top1: 20.361 Top5: 79.004
+[Test Epoch 1000] Top1: 21.875 Top5: 81.201
+Save best model for convnet
+Current Best Epoch for convnet: 29.0, Top1: 21.875, Top5: 81.201
+-----  Start fine-tuning with logit matching
+Random model: convnet
+[Train Epoch 30 Iter 50] G Loss: -0.139(-0.573) D Loss: -0.988(-0.878) D Acc: 71.875(70.844)
+Random model: resnet10_ap
+[Train Epoch 31 Iter 50] G Loss: 0.200(-0.308) D Loss: -0.980(-0.988) D Acc: 75.000(72.281)
+Random model: resnet10
+[Train Epoch 32 Iter 50] G Loss: -0.007(0.058) D Loss: -0.707(-0.991) D Acc: 80.469(72.859)
+Random model: resnet18
+[Train Epoch 33 Iter 50] G Loss: -0.349(0.074) D Loss: -1.131(-0.931) D Acc: 73.438(72.688)
+Random model: resnet10
+[Train Epoch 34 Iter 50] G Loss: 0.356(0.170) D Loss: -0.722(-0.998) D Acc: 64.062(71.812)
+Random model: resnet10_ap
+[Train Epoch 35 Iter 50] G Loss: 0.146(0.100) D Loss: -1.048(-0.976) D Acc: 71.875(72.469)
+Random model: resnet18
+[Train Epoch 36 Iter 50] G Loss: 0.532(0.231) D Loss: -1.011(-1.036) D Acc: 80.469(72.812)
+Random model: resnet18_ap
+[Train Epoch 37 Iter 50] G Loss: 0.070(0.410) D Loss: -1.336(-1.015) D Acc: 76.562(72.672)
+Random model: resnet18
+[Train Epoch 38 Iter 50] G Loss: 0.616(0.422) D Loss: -1.150(-1.060) D Acc: 77.344(73.203)
+Random model: resnet10
+[Train Epoch 39 Iter 50] G Loss: 0.458(0.555) D Loss: -0.914(-1.090) D Acc: 73.438(73.344)
+Evaluating convnet
+[Test Epoch 200] Top1: 23.584 Top5: 78.271
+[Test Epoch 400] Top1: 22.656 Top5: 77.686
+[Test Epoch 600] Top1: 21.973 Top5: 78.906
+[Test Epoch 800] Top1: 22.559 Top5: 78.662
+[Test Epoch 1000] Top1: 21.436 Top5: 77.979
+Save best model for convnet
+Current Best Epoch for convnet: 39.0, Top1: 23.584, Top5: 78.271
+Random model: resnet10_ap
+[Train Epoch 40 Iter 50] G Loss: 1.100(0.420) D Loss: -0.444(-1.051) D Acc: 75.000(73.266)
+Random model: resnet18_ap
+[Train Epoch 41 Iter 50] G Loss: 0.204(0.447) D Loss: -1.049(-1.073) D Acc: 69.531(73.594)
+Random model: resnet10_ap
+[Train Epoch 42 Iter 50] G Loss: 0.639(0.343) D Loss: -0.889(-1.030) D Acc: 64.844(74.047)
+Random model: resnet18
+[Train Epoch 43 Iter 50] G Loss: 0.796(0.446) D Loss: -0.956(-1.060) D Acc: 66.406(73.688)
+Random model: resnet18
+[Train Epoch 44 Iter 50] G Loss: 0.638(0.320) D Loss: -1.321(-1.005) D Acc: 78.125(73.375)
+Random model: resnet10
+[Train Epoch 45 Iter 50] G Loss: 0.714(0.660) D Loss: -1.057(-1.071) D Acc: 70.312(73.547)
+Random model: convnet
+[Train Epoch 46 Iter 50] G Loss: 0.543(0.684) D Loss: -0.892(-1.017) D Acc: 73.438(73.359)
+Random model: resnet18
+[Train Epoch 47 Iter 50] G Loss: 0.558(0.701) D Loss: -1.071(-1.023) D Acc: 73.438(73.484)
+Random model: resnet10
+[Train Epoch 48 Iter 50] G Loss: 0.050(0.824) D Loss: -0.780(-1.043) D Acc: 78.125(73.984)
+Random model: resnet18
+[Train Epoch 49 Iter 50] G Loss: 0.406(0.957) D Loss: -0.978(-1.083) D Acc: 73.438(74.125)
+Evaluating convnet
+[Test Epoch 200] Top1: 21.191 Top5: 79.492
+[Test Epoch 400] Top1: 22.266 Top5: 80.420
+[Test Epoch 600] Top1: 21.631 Top5: 78.271
+[Test Epoch 800] Top1: 22.266 Top5: 79.053
+[Test Epoch 1000] Top1: 22.217 Top5: 77.441
+Current Best Epoch for convnet: 39.0, Top1: 23.584, Top5: 78.271
+
+********** Test env: 1
+
+Augmentataion Matching:  color_crop_cutout
+Augmentataion Net update:  color_crop
+[Train Epoch 0 Iter 50] G Loss: 4.926(2.374) D Loss: 3.399(3.487) D Acc: 21.094(19.547)
+[Train Epoch 1 Iter 50] G Loss: 0.211(1.169) D Loss: 4.357(4.013) D Acc: 18.750(27.031)
+[Train Epoch 2 Iter 50] G Loss: 2.480(0.085) D Loss: 2.372(3.614) D Acc: 31.250(30.891)
+[Train Epoch 3 Iter 50] G Loss: -0.692(-0.574) D Loss: 2.459(3.555) D Acc: 46.094(34.391)
+[Train Epoch 4 Iter 50] G Loss: 0.789(0.388) D Loss: 3.427(3.123) D Acc: 39.062(37.578)
+[Train Epoch 5 Iter 50] G Loss: -0.533(-0.504) D Loss: 1.846(3.132) D Acc: 44.531(39.438)
+[Train Epoch 6 Iter 50] G Loss: -2.023(-1.313) D Loss: 2.779(3.170) D Acc: 40.625(39.828)
+[Train Epoch 7 Iter 50] G Loss: -0.055(-1.423) D Loss: 3.416(3.057) D Acc: 35.938(41.578)
+[Train Epoch 8 Iter 50] G Loss: -2.508(-1.750) D Loss: 2.295(2.950) D Acc: 51.562(43.562)
+[Train Epoch 9 Iter 50] G Loss: -3.254(-1.824) D Loss: 1.791(2.850) D Acc: 49.219(44.125)
+Evaluating convnet
+[Test Epoch 200] Top1: 19.923 Top5: 76.621
+[Test Epoch 400] Top1: 17.833 Top5: 77.560
+[Test Epoch 600] Top1: 15.742 Top5: 75.043
+[Test Epoch 800] Top1: 17.235 Top5: 79.991
+[Test Epoch 1000] Top1: 20.392 Top5: 79.309
+Save best model for convnet
+Current Best Epoch for convnet: 9.0, Top1: 20.392, Top5: 79.309
+[Train Epoch 10 Iter 50] G Loss: -0.593(-1.884) D Loss: 2.470(2.743) D Acc: 39.844(45.469)
+[Train Epoch 11 Iter 50] G Loss: -4.875(-2.247) D Loss: 1.590(2.433) D Acc: 46.875(46.609)
+[Train Epoch 12 Iter 50] G Loss: -0.331(-2.277) D Loss: 2.529(2.391) D Acc: 49.219(47.156)
+[Train Epoch 13 Iter 50] G Loss: -4.817(-2.471) D Loss: 1.932(2.131) D Acc: 60.938(48.438)
+[Train Epoch 14 Iter 50] G Loss: -0.413(-2.766) D Loss: 1.618(2.081) D Acc: 50.000(47.125)
+[Train Epoch 15 Iter 50] G Loss: -5.452(-2.293) D Loss: 1.405(1.777) D Acc: 55.469(48.156)
+[Train Epoch 16 Iter 50] G Loss: -2.404(-2.937) D Loss: 3.170(1.679) D Acc: 51.562(47.391)
+[Train Epoch 17 Iter 50] G Loss: -1.608(-2.765) D Loss: 1.283(1.447) D Acc: 52.344(47.484)
+[Train Epoch 18 Iter 50] G Loss: -0.806(-3.091) D Loss: 0.618(1.297) D Acc: 50.000(47.969)
+[Train Epoch 19 Iter 50] G Loss: -6.494(-3.503) D Loss: 1.100(1.214) D Acc: 50.781(48.562)
+Evaluating convnet
+[Test Epoch 200] Top1: 22.440 Top5: 82.338
+[Test Epoch 400] Top1: 18.686 Top5: 78.413
+[Test Epoch 600] Top1: 20.734 Top5: 81.698
+[Test Epoch 800] Top1: 19.881 Top5: 80.887
+[Test Epoch 1000] Top1: 20.392 Top5: 80.205
+Save best model for convnet
+Current Best Epoch for convnet: 19.0, Top1: 22.440, Top5: 82.338
+[Train Epoch 20 Iter 50] G Loss: -4.305(-3.534) D Loss: 0.348(1.101) D Acc: 52.344(49.078)
+[Train Epoch 21 Iter 50] G Loss: -6.574(-3.647) D Loss: 1.413(1.114) D Acc: 52.344(49.578)
+[Train Epoch 22 Iter 50] G Loss: -4.981(-3.341) D Loss: 0.842(0.974) D Acc: 60.156(50.688)
+[Train Epoch 23 Iter 50] G Loss: -4.363(-4.043) D Loss: 1.325(0.941) D Acc: 47.656(51.156)
+[Train Epoch 24 Iter 50] G Loss: -5.347(-3.783) D Loss: 1.512(1.027) D Acc: 49.219(51.016)
+[Train Epoch 25 Iter 50] G Loss: -2.687(-3.732) D Loss: 1.240(0.904) D Acc: 53.906(52.078)
+[Train Epoch 26 Iter 50] G Loss: -3.256(-3.819) D Loss: 0.520(0.800) D Acc: 46.875(53.141)
+[Train Epoch 27 Iter 50] G Loss: -4.030(-3.916) D Loss: 1.318(0.785) D Acc: 52.344(53.406)
+[Train Epoch 28 Iter 50] G Loss: -5.333(-3.910) D Loss: 0.306(0.793) D Acc: 49.219(54.391)
+[Train Epoch 29 Iter 50] G Loss: -3.534(-3.700) D Loss: 0.211(0.736) D Acc: 64.844(55.719)
+Evaluating convnet
+[Test Epoch 200] Top1: 23.891 Top5: 82.935
+[Test Epoch 400] Top1: 20.265 Top5: 82.210
+[Test Epoch 600] Top1: 20.137 Top5: 81.826
+[Test Epoch 800] Top1: 24.104 Top5: 83.063
+[Test Epoch 1000] Top1: 22.654 Top5: 83.063
+Save best model for convnet
+Current Best Epoch for convnet: 29.0, Top1: 24.104, Top5: 83.063
+-----  Start fine-tuning with logit matching
+Random model: resnet18_ap
+[Train Epoch 30 Iter 50] G Loss: -3.814(-4.537) D Loss: -0.350(-0.131) D Acc: 60.938(59.781)
+Random model: convnet
+[Train Epoch 31 Iter 50] G Loss: -4.427(-4.512) D Loss: -0.141(-0.260) D Acc: 59.375(60.500)
+Random model: convnet
+[Train Epoch 32 Iter 50] G Loss: -3.907(-4.111) D Loss: -0.454(-0.313) D Acc: 55.469(61.484)
+Random model: resnet18_ap
+[Train Epoch 33 Iter 50] G Loss: -3.946(-4.272) D Loss: 0.139(-0.241) D Acc: 57.031(61.656)
+Random model: resnet10
+[Train Epoch 34 Iter 50] G Loss: -3.566(-3.862) D Loss: -0.149(-0.225) D Acc: 60.156(61.375)
+Random model: resnet18
+[Train Epoch 35 Iter 50] G Loss: -3.482(-3.622) D Loss: -0.314(-0.260) D Acc: 65.625(61.734)
+Random model: convnet
+[Train Epoch 36 Iter 50] G Loss: -3.341(-3.269) D Loss: 0.060(-0.245) D Acc: 60.156(61.688)
+Random model: convnet
+[Train Epoch 37 Iter 50] G Loss: -2.945(-3.565) D Loss: 0.184(-0.223) D Acc: 60.938(62.188)
+Random model: resnet18
+[Train Epoch 38 Iter 50] G Loss: -3.196(-3.352) D Loss: -0.041(-0.249) D Acc: 60.156(61.812)
+Random model: resnet18_ap
+[Train Epoch 39 Iter 50] G Loss: -3.946(-3.567) D Loss: -0.519(-0.276) D Acc: 64.844(62.250)
+Evaluating convnet
+[Test Epoch 200] Top1: 25.939 Top5: 84.855
+[Test Epoch 400] Top1: 27.730 Top5: 86.263
+[Test Epoch 600] Top1: 22.227 Top5: 82.637
+[Test Epoch 800] Top1: 23.379 Top5: 84.002
+[Test Epoch 1000] Top1: 25.085 Top5: 82.594
+Save best model for convnet
+Current Best Epoch for convnet: 39.0, Top1: 27.730, Top5: 86.263
+Random model: convnet
+[Train Epoch 40 Iter 50] G Loss: -3.411(-3.714) D Loss: 0.077(-0.259) D Acc: 53.906(62.453)
+Random model: convnet
+[Train Epoch 41 Iter 50] G Loss: -3.555(-3.443) D Loss: -0.392(-0.279) D Acc: 62.500(61.422)
+Random model: resnet10
+[Train Epoch 42 Iter 50] G Loss: -3.531(-3.535) D Loss: -0.145(-0.237) D Acc: 60.156(62.828)
+Random model: resnet18_ap
+[Train Epoch 43 Iter 50] G Loss: -4.210(-3.507) D Loss: -0.402(-0.233) D Acc: 67.969(62.703)
+Random model: resnet10
+[Train Epoch 44 Iter 50] G Loss: -3.296(-3.507) D Loss: -0.033(-0.229) D Acc: 59.375(62.766)
+Random model: resnet10_ap
+[Train Epoch 45 Iter 50] G Loss: -3.241(-3.456) D Loss: -0.256(-0.265) D Acc: 64.062(62.875)
+Random model: resnet18_ap
+[Train Epoch 46 Iter 50] G Loss: -3.858(-3.453) D Loss: -0.342(-0.251) D Acc: 64.844(62.766)
+Random model: resnet18
+[Train Epoch 47 Iter 50] G Loss: -3.517(-3.615) D Loss: -0.399(-0.295) D Acc: 68.750(63.078)
+Random model: resnet18_ap
+[Train Epoch 48 Iter 50] G Loss: -2.858(-3.302) D Loss: -0.188(-0.307) D Acc: 63.281(63.219)
+Random model: resnet10
+[Train Epoch 49 Iter 50] G Loss: -3.364(-3.132) D Loss: -0.113(-0.344) D Acc: 60.938(63.406)
+Evaluating convnet
+[Test Epoch 200] Top1: 26.451 Top5: 80.503
+[Test Epoch 400] Top1: 26.621 Top5: 83.276
+[Test Epoch 600] Top1: 27.602 Top5: 82.722
+[Test Epoch 800] Top1: 26.792 Top5: 82.765
+[Test Epoch 1000] Top1: 23.251 Top5: 81.314
+Current Best Epoch for convnet: 39.0, Top1: 27.730, Top5: 86.263
+
+********** Test env: 2
+
+Augmentataion Matching:  color_crop_cutout
+Augmentataion Net update:  color_crop
+[Train Epoch 0 Iter 50] G Loss: 1.739(0.318) D Loss: 4.185(4.691) D Acc: 31.250(18.953)
+[Train Epoch 1 Iter 50] G Loss: 1.314(1.270) D Loss: 3.569(3.694) D Acc: 34.375(27.016)
+[Train Epoch 2 Iter 50] G Loss: 3.859(1.568) D Loss: 3.475(3.833) D Acc: 39.844(31.156)
+[Train Epoch 3 Iter 50] G Loss: 0.171(1.019) D Loss: 3.396(3.612) D Acc: 38.281(34.891)
+[Train Epoch 4 Iter 50] G Loss: 3.577(0.913) D Loss: 3.614(3.215) D Acc: 36.719(39.906)
+[Train Epoch 5 Iter 50] G Loss: -4.012(0.510) D Loss: 5.383(3.161) D Acc: 29.688(40.156)
+[Train Epoch 6 Iter 50] G Loss: -0.692(0.439) D Loss: 2.607(2.711) D Acc: 53.125(42.625)
+[Train Epoch 7 Iter 50] G Loss: 2.257(0.392) D Loss: 2.377(2.430) D Acc: 47.656(42.672)
+[Train Epoch 8 Iter 50] G Loss: -2.693(-0.266) D Loss: 2.018(2.211) D Acc: 48.438(44.688)
+[Train Epoch 9 Iter 50] G Loss: -0.502(-0.885) D Loss: 2.810(2.126) D Acc: 42.188(44.766)
+Evaluating convnet
+[Test Epoch 200] Top1: 16.766 Top5: 81.317
+[Test Epoch 400] Top1: 15.210 Top5: 78.623
+[Test Epoch 600] Top1: 16.587 Top5: 79.461
+[Test Epoch 800] Top1: 17.904 Top5: 78.443
+[Test Epoch 1000] Top1: 16.108 Top5: 78.922
+Save best model for convnet
+Current Best Epoch for convnet: 9.0, Top1: 17.904, Top5: 78.443
+[Train Epoch 10 Iter 50] G Loss: -0.964(-1.530) D Loss: 1.891(1.984) D Acc: 53.906(45.906)
+[Train Epoch 11 Iter 50] G Loss: -2.932(-1.850) D Loss: 2.149(1.850) D Acc: 41.406(45.719)
+[Train Epoch 12 Iter 50] G Loss: -1.650(-1.958) D Loss: 1.119(1.486) D Acc: 50.781(46.844)
+[Train Epoch 13 Iter 50] G Loss: -2.264(-2.228) D Loss: 1.451(1.372) D Acc: 39.844(47.109)
+[Train Epoch 14 Iter 50] G Loss: -2.876(-2.471) D Loss: 1.151(1.278) D Acc: 53.125(48.734)
+[Train Epoch 15 Iter 50] G Loss: -4.286(-2.464) D Loss: 1.671(1.260) D Acc: 48.438(49.094)
+[Train Epoch 16 Iter 50] G Loss: -1.949(-2.769) D Loss: 1.234(1.122) D Acc: 49.219(51.047)
+[Train Epoch 17 Iter 50] G Loss: -2.648(-2.843) D Loss: 0.956(0.953) D Acc: 50.000(51.562)
+[Train Epoch 18 Iter 50] G Loss: -3.951(-2.700) D Loss: 1.269(0.979) D Acc: 46.094(51.938)
+[Train Epoch 19 Iter 50] G Loss: -3.102(-2.920) D Loss: 0.603(0.836) D Acc: 55.469(53.141)
+Evaluating convnet
+[Test Epoch 200] Top1: 22.216 Top5: 82.335
+[Test Epoch 400] Top1: 25.988 Top5: 83.234
+[Test Epoch 600] Top1: 26.467 Top5: 83.234
+[Test Epoch 800] Top1: 26.886 Top5: 82.275
+[Test Epoch 1000] Top1: 30.719 Top5: 82.994
+Save best model for convnet
+Current Best Epoch for convnet: 19.0, Top1: 30.719, Top5: 82.994
+[Train Epoch 20 Iter 50] G Loss: -2.724(-2.475) D Loss: 1.255(0.807) D Acc: 59.375(53.719)
+[Train Epoch 21 Iter 50] G Loss: -2.596(-2.804) D Loss: 0.748(0.798) D Acc: 53.125(54.234)
+[Train Epoch 22 Iter 50] G Loss: -1.774(-2.814) D Loss: 0.380(0.687) D Acc: 57.812(55.266)
+[Train Epoch 23 Iter 50] G Loss: -2.624(-2.742) D Loss: 0.679(0.667) D Acc: 64.844(56.578)
+[Train Epoch 24 Iter 50] G Loss: -0.713(-2.699) D Loss: 1.663(0.592) D Acc: 57.031(56.531)
+[Train Epoch 25 Iter 50] G Loss: -2.346(-3.152) D Loss: 0.268(0.540) D Acc: 64.062(57.062)
+[Train Epoch 26 Iter 50] G Loss: -2.800(-2.999) D Loss: 1.582(0.571) D Acc: 54.688(57.203)
+[Train Epoch 27 Iter 50] G Loss: -2.847(-2.853) D Loss: 0.333(0.420) D Acc: 60.156(59.141)
+[Train Epoch 28 Iter 50] G Loss: -3.955(-3.046) D Loss: 0.319(0.449) D Acc: 55.469(58.922)
+[Train Epoch 29 Iter 50] G Loss: -6.396(-3.275) D Loss: 0.544(0.369) D Acc: 57.812(59.797)
+Evaluating convnet
+[Test Epoch 200] Top1: 29.042 Top5: 83.473
+[Test Epoch 400] Top1: 27.006 Top5: 84.072
+[Test Epoch 600] Top1: 27.066 Top5: 84.731
+[Test Epoch 800] Top1: 24.671 Top5: 84.192
+[Test Epoch 1000] Top1: 27.246 Top5: 83.892
+Current Best Epoch for convnet: 19.0, Top1: 30.719, Top5: 82.994
+-----  Start fine-tuning with logit matching
+Random model: resnet10
+[Train Epoch 30 Iter 50] G Loss: -3.054(-2.636) D Loss: 0.018(-0.264) D Acc: 62.500(55.953)
+Random model: resnet10_ap
+[Train Epoch 31 Iter 50] G Loss: -3.225(-2.973) D Loss: -0.133(-0.126) D Acc: 55.469(58.500)
+Random model: resnet18_ap
+[Train Epoch 32 Iter 50] G Loss: -2.607(-3.261) D Loss: -0.184(-0.128) D Acc: 60.938(58.188)
+Random model: resnet18_ap
+[Train Epoch 33 Iter 50] G Loss: -2.768(-3.082) D Loss: -0.229(-0.221) D Acc: 62.500(58.562)
+Random model: resnet18_ap
+[Train Epoch 34 Iter 50] G Loss: -2.753(-2.848) D Loss: -0.430(-0.272) D Acc: 61.719(58.641)
+Random model: resnet10_ap
+[Train Epoch 35 Iter 50] G Loss: -3.041(-2.813) D Loss: -0.381(-0.157) D Acc: 63.281(58.406)
+Random model: convnet
+[Train Epoch 36 Iter 50] G Loss: -3.032(-3.045) D Loss: -0.169(-0.214) D Acc: 48.438(58.438)
+Random model: resnet10_ap
+[Train Epoch 37 Iter 50] G Loss: -2.854(-2.896) D Loss: 0.074(-0.202) D Acc: 63.281(58.703)
+Random model: resnet10_ap
+[Train Epoch 38 Iter 50] G Loss: -2.827(-2.938) D Loss: -0.251(-0.151) D Acc: 60.156(59.234)
+Random model: resnet18
+[Train Epoch 39 Iter 50] G Loss: -2.874(-2.733) D Loss: -0.251(-0.265) D Acc: 62.500(59.469)
+Evaluating convnet
+[Test Epoch 200] Top1: 33.952 Top5: 84.910
+[Test Epoch 400] Top1: 36.168 Top5: 84.671
+[Test Epoch 600] Top1: 38.263 Top5: 86.527
+[Test Epoch 800] Top1: 37.425 Top5: 85.569
+[Test Epoch 1000] Top1: 37.784 Top5: 86.108
+Save best model for convnet
+Current Best Epoch for convnet: 39.0, Top1: 38.263, Top5: 86.527
+Random model: resnet18
+[Train Epoch 40 Iter 50] G Loss: -2.725(-2.845) D Loss: -0.027(-0.311) D Acc: 48.438(59.562)
+Random model: convnet
+[Train Epoch 41 Iter 50] G Loss: -3.095(-2.932) D Loss: -0.482(-0.300) D Acc: 57.812(59.984)
+Random model: resnet10
+[Train Epoch 42 Iter 50] G Loss: -2.385(-2.633) D Loss: -0.214(-0.316) D Acc: 54.688(60.234)
+Random model: resnet10_ap
+[Train Epoch 43 Iter 50] G Loss: -3.054(-3.180) D Loss: -0.196(-0.278) D Acc: 60.938(59.859)
+Random model: convnet
+[Train Epoch 44 Iter 50] G Loss: -2.791(-2.766) D Loss: -0.493(-0.280) D Acc: 59.375(60.547)
+Random model: convnet
+[Train Epoch 45 Iter 50] G Loss: -3.203(-2.900) D Loss: -0.710(-0.316) D Acc: 64.844(60.500)
+Random model: convnet
+[Train Epoch 46 Iter 50] G Loss: -2.491(-2.991) D Loss: 0.225(-0.267) D Acc: 58.594(60.297)
+Random model: convnet
+[Train Epoch 47 Iter 50] G Loss: -2.821(-2.669) D Loss: -0.047(-0.251) D Acc: 49.219(61.172)
+Random model: resnet18
+[Train Epoch 48 Iter 50] G Loss: -2.320(-2.917) D Loss: -0.085(-0.261) D Acc: 57.812(60.453)
+Random model: resnet10
+[Train Epoch 49 Iter 50] G Loss: -3.137(-3.102) D Loss: -0.479(-0.301) D Acc: 64.062(60.938)
+Evaluating convnet
+[Test Epoch 200] Top1: 36.587 Top5: 86.587
+[Test Epoch 400] Top1: 42.395 Top5: 86.228
+[Test Epoch 600] Top1: 42.575 Top5: 85.449
+[Test Epoch 800] Top1: 42.395 Top5: 86.048
+[Test Epoch 1000] Top1: 40.299 Top5: 87.006
+Save best model for convnet
+Current Best Epoch for convnet: 49.0, Top1: 42.575, Top5: 85.449
+
+********** Test env: 3
+
+Augmentataion Matching:  color_crop_cutout
+Augmentataion Net update:  color_crop
+Evaluating convnet
+[Test Epoch 200] Top1: 15.424 Top5: 85.034
+[Test Epoch 400] Top1: 17.969 Top5: 81.471
+[Test Epoch 600] Top1: 8.526 Top5: 83.991
+[Test Epoch 800] Top1: 13.489 Top5: 82.260
+[Test Epoch 1000] Top1: 12.599 Top5: 79.613
+Save best model for convnet
+Current Best Epoch for convnet: 9.0, Top1: 17.969, Top5: 81.471
+Evaluating convnet
+[Test Epoch 200] Top1: 18.096 Top5: 86.612
+[Test Epoch 400] Top1: 25.325 Top5: 87.198
+[Test Epoch 600] Top1: 26.190 Top5: 87.554
+[Test Epoch 800] Top1: 20.794 Top5: 83.813
+[Test Epoch 1000] Top1: 24.612 Top5: 87.427
+Save best model for convnet
+Current Best Epoch for convnet: 19.0, Top1: 26.190, Top5: 87.554
+Evaluating convnet
+[Test Epoch 200] Top1: 18.274 Top5: 70.934
+[Test Epoch 400] Top1: 18.376 Top5: 73.759
+[Test Epoch 600] Top1: 19.852 Top5: 87.936
+[Test Epoch 800] Top1: 18.274 Top5: 77.857
+[Test Epoch 1000] Top1: 23.187 Top5: 77.959
+Current Best Epoch for convnet: 19.0, Top1: 26.190, Top5: 87.554
+-----  Start fine-tuning with logit matching
+Random model: resnet10
+Random model: resnet18_ap
+Random model: resnet10
+Random model: resnet18
+Random model: resnet18_ap
+Random model: convnet
+Random model: convnet
+Random model: resnet18_ap
+Random model: convnet
+Random model: convnet
+Evaluating convnet
+[Test Epoch 200] Top1: 10.410 Top5: 84.296
+[Test Epoch 400] Top1: 9.952 Top5: 85.747
+[Test Epoch 600] Top1: 15.195 Top5: 85.747
+[Test Epoch 800] Top1: 7.712 Top5: 85.594
+[Test Epoch 1000] Top1: 13.057 Top5: 83.533
+Current Best Epoch for convnet: 19.0, Top1: 26.190, Top5: 87.554
+Random model: convnet
+Random model: resnet10_ap
+Random model: resnet10
+Random model: resnet10
+Random model: resnet18
+Random model: resnet10_ap
+Random model: resnet10
+Random model: resnet18_ap
+Random model: resnet18_ap
+Random model: resnet10
+Evaluating convnet
+[Test Epoch 200] Top1: 13.082 Top5: 86.256
+[Test Epoch 400] Top1: 14.711 Top5: 87.350
+[Test Epoch 600] Top1: 20.031 Top5: 81.675
+[Test Epoch 800] Top1: 14.457 Top5: 85.492
+[Test Epoch 1000] Top1: 18.605 Top5: 84.882
+Current Best Epoch for convnet: 19.0, Top1: 26.190, Top5: 87.554
+Leave-one-domain-out accuracy: 30.020
+
+
+
+(lc) ➜  DiM git:(main) ✗ CUDA_VISIBLE_DEVICES=0 python dg_dan.py --data PACS  --match-aug;
+CUDA_VISIBLE_DEVICES=0 python dg.py --data PACS  --match-aug;
+CUDA_VISIBLE_DEVICES=0 python dg_dan.py --data PACS  --match-aug  --debias-mode rsc;
+CUDA_VISIBLE_DEVICES=0 python dg.py --data PACS  --match-aug  --debias-mode rsc;
+Namespace(aug_type='color_crop_cutout', batch_size=128, beta=1.0, bias=False, channel=3, data='PACS', data_dir='/var/lib/data', debias_mode='none', dim_noise=90, epochs=50, epochs_eval=1000, epochs_match=100, epochs_match_train=16, eval_interval=10, eval_lr=0.01, eval_model=['convnet'], fc=False, fix_disc=False, ipc=1, logs_dir='./logs/PACS', lr1=0.0001, lr2=5e-06, match='logit', match_aug=True, match_coeff=0.001, match_model='convnet', mean=[0.485, 0.456, 0.406], metric='l1', mix_p=-1.0, mixup_net='cut', momentum=0.9, num_classes=7, num_envs=4, num_workers=4, output_dir='./results/PACS', pretrain_epochs=30, print_freq=50, seed=3407, std=[0.229, 0.224, 0.225], tag='PACS', test_interval=200, weight='', weight_decay=0.0005)
+
+********** Test env: 0
+
+Augmentataion Matching:  color_crop_cutout
+Augmentataion Net update:  color_crop
+[Train Epoch 0 Iter 50] G Loss: 2.006(1.036) D Loss: 4.261(5.295) D Acc: 24.219(18.797)
+[Train Epoch 1 Iter 50] G Loss: 4.925(2.323) D Loss: 3.587(3.979) D Acc: 28.906(30.516)
+[Train Epoch 2 Iter 50] G Loss: 3.335(2.613) D Loss: 3.581(3.830) D Acc: 42.188(35.125)
+[Train Epoch 3 Iter 50] G Loss: 2.408(2.771) D Loss: 3.553(3.691) D Acc: 40.625(40.469)
+[Train Epoch 4 Iter 50] G Loss: 4.282(3.775) D Loss: 3.299(3.283) D Acc: 48.438(44.500)
+[Train Epoch 5 Iter 50] G Loss: 5.340(3.534) D Loss: 2.286(3.238) D Acc: 42.969(46.250)
+[Train Epoch 6 Iter 50] G Loss: 5.265(3.415) D Loss: 2.676(2.935) D Acc: 47.656(47.359)
+[Train Epoch 7 Iter 50] G Loss: 3.338(3.044) D Loss: 2.867(2.657) D Acc: 57.031(49.922)
+[Train Epoch 8 Iter 50] G Loss: 0.115(2.785) D Loss: 2.140(2.512) D Acc: 53.125(50.250)
+[Train Epoch 9 Iter 50] G Loss: 1.788(2.528) D Loss: 1.787(2.024) D Acc: 57.812(51.688)
+Evaluating convnet
+/home/techt/anaconda3/envs/lc/lib/python3.8/site-packages/torch/functional.py:478: UserWarning: torch.meshgrid: in an upcoming release, it will be required to pass the indexing argument. (Triggered internally at  /opt/conda/conda-bld/pytorch_1659484810403/work/aten/src/ATen/native/TensorShape.cpp:2894.)
+  return _VF.meshgrid(tensors, **kwargs)  # type: ignore[attr-defined]
+[Test Epoch 200] Top1: 20.996 Top5: 79.639
+[Test Epoch 400] Top1: 20.264 Top5: 78.418
+[Test Epoch 600] Top1: 20.215 Top5: 80.029
+[Test Epoch 800] Top1: 21.045 Top5: 77.539
+[Test Epoch 1000] Top1: 20.410 Top5: 79.102
+Save best model for convnet
+Current Best Epoch for convnet: 9.0, Top1: 21.045, Top5: 77.539
+[Train Epoch 10 Iter 50] G Loss: 1.052(2.564) D Loss: 1.472(1.747) D Acc: 56.250(53.266)
+[Train Epoch 11 Iter 50] G Loss: 0.206(2.338) D Loss: 1.970(1.476) D Acc: 54.688(52.391)
+[Train Epoch 12 Iter 50] G Loss: -0.740(2.177) D Loss: 2.311(1.367) D Acc: 48.438(55.391)
+[Train Epoch 13 Iter 50] G Loss: 4.950(1.910) D Loss: 1.073(1.225) D Acc: 50.781(55.484)
+[Train Epoch 14 Iter 50] G Loss: 4.041(2.189) D Loss: 0.705(1.049) D Acc: 64.062(55.969)
+[Train Epoch 15 Iter 50] G Loss: 0.820(1.886) D Loss: 1.340(1.045) D Acc: 56.250(57.141)
+[Train Epoch 16 Iter 50] G Loss: 0.396(1.931) D Loss: 0.572(0.932) D Acc: 61.719(58.750)
+[Train Epoch 17 Iter 50] G Loss: 2.156(1.785) D Loss: 1.069(0.789) D Acc: 61.719(58.234)
+[Train Epoch 18 Iter 50] G Loss: 0.272(1.799) D Loss: 0.686(0.779) D Acc: 57.812(59.312)
+[Train Epoch 19 Iter 50] G Loss: 0.389(1.510) D Loss: 0.712(0.640) D Acc: 46.875(60.141)
+Evaluating convnet
+[Test Epoch 200] Top1: 20.557 Top5: 78.955
+[Test Epoch 400] Top1: 20.801 Top5: 80.664
+[Test Epoch 600] Top1: 19.287 Top5: 77.051
+[Test Epoch 800] Top1: 22.363 Top5: 81.836
+[Test Epoch 1000] Top1: 20.410 Top5: 79.834
+Save best model for convnet
+Current Best Epoch for convnet: 19.0, Top1: 22.363, Top5: 81.836
+[Train Epoch 20 Iter 50] G Loss: 2.114(1.724) D Loss: 0.565(0.610) D Acc: 53.906(60.969)
+[Train Epoch 21 Iter 50] G Loss: 3.553(1.820) D Loss: 1.160(0.463) D Acc: 57.812(61.203)
+[Train Epoch 22 Iter 50] G Loss: 3.008(1.565) D Loss: 0.622(0.333) D Acc: 60.938(62.828)
+[Train Epoch 23 Iter 50] G Loss: 2.983(1.316) D Loss: 0.188(0.297) D Acc: 61.719(63.250)
+[Train Epoch 24 Iter 50] G Loss: 0.961(1.583) D Loss: 0.154(0.275) D Acc: 60.938(64.141)
+[Train Epoch 25 Iter 50] G Loss: 0.286(1.478) D Loss: -0.227(0.144) D Acc: 69.531(64.016)
+[Train Epoch 26 Iter 50] G Loss: -0.281(1.144) D Loss: -0.372(0.153) D Acc: 65.625(65.250)
+[Train Epoch 27 Iter 50] G Loss: 2.280(1.237) D Loss: 0.042(0.115) D Acc: 71.094(65.141)
+[Train Epoch 28 Iter 50] G Loss: 1.453(1.120) D Loss: -0.381(0.050) D Acc: 68.750(65.734)
+[Train Epoch 29 Iter 50] G Loss: 1.024(0.821) D Loss: 0.354(0.118) D Acc: 67.969(65.297)
+Evaluating convnet
+[Test Epoch 200] Top1: 19.775 Top5: 76.953
+[Test Epoch 400] Top1: 19.775 Top5: 78.418
+[Test Epoch 600] Top1: 20.459 Top5: 77.100
+[Test Epoch 800] Top1: 19.629 Top5: 78.857
+[Test Epoch 1000] Top1: 18.652 Top5: 76.172
+Current Best Epoch for convnet: 19.0, Top1: 22.363, Top5: 81.836
+-----  Start fine-tuning with logit matching
+Random model: convnet
+[Train Epoch 30 Iter 50] G Loss: 0.803(1.176) D Loss: -0.766(-0.746) D Acc: 64.062(65.062)
+Random model: resnet10_ap
+[Train Epoch 31 Iter 50] G Loss: 1.326(1.627) D Loss: -0.700(-0.582) D Acc: 71.094(65.250)
+Random model: resnet10
+[Train Epoch 32 Iter 50] G Loss: 1.568(1.464) D Loss: -0.899(-0.689) D Acc: 74.219(66.000)
+Random model: resnet18
+[Train Epoch 33 Iter 50] G Loss: 1.416(1.526) D Loss: -0.873(-0.590) D Acc: 68.750(65.781)
+Random model: resnet10
+[Train Epoch 34 Iter 50] G Loss: 1.634(1.782) D Loss: -0.153(-0.611) D Acc: 57.812(64.844)
+Random model: resnet10_ap
+[Train Epoch 35 Iter 50] G Loss: 1.401(1.535) D Loss: -0.793(-0.624) D Acc: 70.312(65.797)
+Random model: resnet18
+[Train Epoch 36 Iter 50] G Loss: 1.107(1.434) D Loss: -0.642(-0.679) D Acc: 61.719(65.891)
+Random model: resnet18_ap
+[Train Epoch 37 Iter 50] G Loss: 1.673(1.641) D Loss: -0.882(-0.681) D Acc: 61.719(66.062)
+Random model: resnet18
+[Train Epoch 38 Iter 50] G Loss: 1.778(1.573) D Loss: -0.649(-0.622) D Acc: 67.188(65.953)
+Random model: resnet10
+[Train Epoch 39 Iter 50] G Loss: 1.168(1.417) D Loss: -0.316(-0.642) D Acc: 62.500(66.609)
+Evaluating convnet
+[Test Epoch 200] Top1: 19.434 Top5: 76.953
+[Test Epoch 400] Top1: 20.654 Top5: 78.711
+[Test Epoch 600] Top1: 19.922 Top5: 78.809
+[Test Epoch 800] Top1: 20.703 Top5: 77.295
+[Test Epoch 1000] Top1: 20.020 Top5: 79.395
+Current Best Epoch for convnet: 19.0, Top1: 22.363, Top5: 81.836
+Random model: resnet10_ap
+[Train Epoch 40 Iter 50] G Loss: 1.524(1.324) D Loss: -0.846(-0.659) D Acc: 67.188(66.344)
+Random model: resnet18_ap
+[Train Epoch 41 Iter 50] G Loss: 1.359(1.340) D Loss: -0.754(-0.685) D Acc: 63.281(66.641)
+Random model: resnet10_ap
+[Train Epoch 42 Iter 50] G Loss: 1.511(1.568) D Loss: -0.413(-0.645) D Acc: 64.062(67.125)
+Random model: resnet18
+[Train Epoch 43 Iter 50] G Loss: 1.945(1.462) D Loss: -0.670(-0.672) D Acc: 60.156(67.172)
+Random model: resnet18
+[Train Epoch 44 Iter 50] G Loss: 1.255(1.612) D Loss: -1.131(-0.687) D Acc: 68.750(66.562)
+Random model: resnet10
+[Train Epoch 45 Iter 50] G Loss: 1.523(1.847) D Loss: -0.774(-0.691) D Acc: 67.188(67.516)
+Random model: convnet
+[Train Epoch 46 Iter 50] G Loss: 1.277(1.479) D Loss: -0.494(-0.691) D Acc: 67.969(67.188)
+Random model: resnet18
+[Train Epoch 47 Iter 50] G Loss: 1.637(1.655) D Loss: -0.882(-0.693) D Acc: 65.625(67.469)
+Random model: resnet10
+[Train Epoch 48 Iter 50] G Loss: 1.360(1.702) D Loss: -0.407(-0.692) D Acc: 65.625(67.578)
+Random model: resnet18
+[Train Epoch 49 Iter 50] G Loss: 1.574(1.547) D Loss: -0.527(-0.776) D Acc: 62.500(67.922)
+Evaluating convnet
+[Test Epoch 200] Top1: 19.287 Top5: 77.686
+[Test Epoch 400] Top1: 19.922 Top5: 81.494
+[Test Epoch 600] Top1: 18.018 Top5: 79.590
+[Test Epoch 800] Top1: 19.824 Top5: 79.395
+[Test Epoch 1000] Top1: 20.020 Top5: 80.029
+Current Best Epoch for convnet: 19.0, Top1: 22.363, Top5: 81.836
+
+********** Test env: 1
+
+Augmentataion Matching:  color_crop_cutout
+Augmentataion Net update:  color_crop
+[Train Epoch 0 Iter 50] G Loss: -0.109(0.412) D Loss: 4.489(4.791) D Acc: 22.656(20.391)
+[Train Epoch 1 Iter 50] G Loss: 3.718(0.496) D Loss: 4.300(4.143) D Acc: 20.312(25.312)
+[Train Epoch 2 Iter 50] G Loss: 1.631(0.269) D Loss: 4.554(4.033) D Acc: 25.781(29.453)
+[Train Epoch 3 Iter 50] G Loss: 1.570(0.142) D Loss: 2.231(3.773) D Acc: 40.625(35.203)
+[Train Epoch 4 Iter 50] G Loss: -0.805(0.066) D Loss: 4.777(3.612) D Acc: 23.438(38.484)
+[Train Epoch 5 Iter 50] G Loss: -1.560(-0.300) D Loss: 3.867(3.559) D Acc: 50.781(40.109)
+[Train Epoch 6 Iter 50] G Loss: -0.056(-0.793) D Loss: 3.408(3.438) D Acc: 44.531(41.688)
+[Train Epoch 7 Iter 50] G Loss: -0.205(-0.396) D Loss: 2.957(3.250) D Acc: 39.844(42.969)
+[Train Epoch 8 Iter 50] G Loss: -0.309(-0.727) D Loss: 2.427(2.958) D Acc: 42.969(45.469)
+[Train Epoch 9 Iter 50] G Loss: -0.918(-1.020) D Loss: 2.018(2.754) D Acc: 52.344(45.453)
+Evaluating convnet
+[Test Epoch 200] Top1: 17.705 Top5: 80.589
+[Test Epoch 400] Top1: 17.918 Top5: 80.119
+[Test Epoch 600] Top1: 18.643 Top5: 79.735
+[Test Epoch 800] Top1: 18.302 Top5: 78.157
+[Test Epoch 1000] Top1: 20.734 Top5: 79.693
+Save best model for convnet
+Current Best Epoch for convnet: 9.0, Top1: 20.734, Top5: 79.693
+[Train Epoch 10 Iter 50] G Loss: 1.613(-1.199) D Loss: 1.994(2.546) D Acc: 42.969(46.406)
+[Train Epoch 11 Iter 50] G Loss: -1.621(-1.794) D Loss: 1.325(2.369) D Acc: 53.906(46.984)
+[Train Epoch 12 Iter 50] G Loss: 1.114(-1.722) D Loss: 2.502(2.028) D Acc: 37.500(47.219)
+[Train Epoch 13 Iter 50] G Loss: 0.006(-1.872) D Loss: 1.853(1.915) D Acc: 53.906(47.297)
+[Train Epoch 14 Iter 50] G Loss: -1.655(-2.249) D Loss: 1.701(1.752) D Acc: 55.469(48.094)
+[Train Epoch 15 Iter 50] G Loss: -5.471(-2.259) D Loss: 1.012(1.570) D Acc: 53.906(47.719)
+[Train Epoch 16 Iter 50] G Loss: -1.300(-2.611) D Loss: 1.669(1.555) D Acc: 47.656(47.766)
+[Train Epoch 17 Iter 50] G Loss: -1.862(-2.822) D Loss: 1.096(1.293) D Acc: 46.094(48.484)
+[Train Epoch 18 Iter 50] G Loss: -1.119(-2.904) D Loss: 0.938(1.195) D Acc: 50.000(49.969)
+[Train Epoch 19 Iter 50] G Loss: -3.447(-2.636) D Loss: 1.188(1.242) D Acc: 55.469(49.797)
+Evaluating convnet
+[Test Epoch 200] Top1: 20.222 Top5: 78.498
+[Test Epoch 400] Top1: 19.795 Top5: 78.626
+[Test Epoch 600] Top1: 19.539 Top5: 79.266
+[Test Epoch 800] Top1: 20.776 Top5: 80.077
+[Test Epoch 1000] Top1: 18.387 Top5: 76.834
+Current Best Epoch for convnet: 9.0, Top1: 20.734, Top5: 79.693
+[Train Epoch 20 Iter 50] G Loss: -4.213(-3.241) D Loss: 0.537(1.079) D Acc: 53.906(50.391)
+[Train Epoch 21 Iter 50] G Loss: -5.179(-3.371) D Loss: 1.032(1.115) D Acc: 50.781(50.828)
+[Train Epoch 22 Iter 50] G Loss: -6.540(-3.659) D Loss: 1.521(1.058) D Acc: 58.594(51.500)
+[Train Epoch 23 Iter 50] G Loss: -6.782(-3.441) D Loss: 1.978(0.958) D Acc: 47.656(52.688)
+[Train Epoch 24 Iter 50] G Loss: -2.992(-3.376) D Loss: 1.041(0.935) D Acc: 53.906(52.750)
+[Train Epoch 25 Iter 50] G Loss: -1.421(-3.686) D Loss: 0.995(0.923) D Acc: 54.688(53.562)
+[Train Epoch 26 Iter 50] G Loss: -4.263(-4.038) D Loss: 0.282(0.816) D Acc: 58.594(53.781)
+[Train Epoch 27 Iter 50] G Loss: -2.921(-3.850) D Loss: 1.355(0.751) D Acc: 49.219(54.078)
+[Train Epoch 28 Iter 50] G Loss: -3.859(-4.057) D Loss: 0.861(0.762) D Acc: 52.344(54.484)
+[Train Epoch 29 Iter 50] G Loss: -4.725(-4.029) D Loss: 1.187(0.700) D Acc: 57.031(55.656)
+Evaluating convnet
+[Test Epoch 200] Top1: 21.886 Top5: 82.039
+[Test Epoch 400] Top1: 22.440 Top5: 79.906
+[Test Epoch 600] Top1: 22.568 Top5: 81.869
+[Test Epoch 800] Top1: 25.085 Top5: 81.442
+[Test Epoch 1000] Top1: 24.573 Top5: 80.375
+Save best model for convnet
+Current Best Epoch for convnet: 29.0, Top1: 25.085, Top5: 81.442
+-----  Start fine-tuning with logit matching
+Random model: resnet18_ap
+[Train Epoch 30 Iter 50] G Loss: -4.365(-4.818) D Loss: -0.676(-0.436) D Acc: 65.625(60.328)
+Random model: convnet
+[Train Epoch 31 Iter 50] G Loss: -4.855(-4.837) D Loss: -0.443(-0.388) D Acc: 58.594(60.516)
+Random model: convnet
+[Train Epoch 32 Iter 50] G Loss: -4.393(-4.487) D Loss: -0.448(-0.240) D Acc: 58.594(61.047)
+Random model: resnet18_ap
+[Train Epoch 33 Iter 50] G Loss: -4.093(-3.991) D Loss: -0.141(-0.357) D Acc: 58.594(61.625)
+Random model: resnet10
+[Train Epoch 34 Iter 50] G Loss: -4.073(-4.135) D Loss: -0.771(-0.366) D Acc: 60.156(61.812)
+Random model: resnet18
+[Train Epoch 35 Iter 50] G Loss: -4.144(-4.228) D Loss: -0.305(-0.347) D Acc: 63.281(61.922)
+Random model: convnet
+[Train Epoch 36 Iter 50] G Loss: -3.433(-3.778) D Loss: -0.270(-0.375) D Acc: 57.812(62.250)
+Random model: convnet
+[Train Epoch 37 Iter 50] G Loss: -3.887(-3.863) D Loss: 0.325(-0.332) D Acc: 55.469(62.562)
+Random model: resnet18
+[Train Epoch 38 Iter 50] G Loss: -4.127(-4.000) D Loss: 0.038(-0.335) D Acc: 58.594(62.453)
+Random model: resnet18_ap
+[Train Epoch 39 Iter 50] G Loss: -4.494(-4.183) D Loss: -0.534(-0.376) D Acc: 69.531(62.375)
+Evaluating convnet
+[Test Epoch 200] Top1: 23.123 Top5: 80.461
+[Test Epoch 400] Top1: 23.592 Top5: 82.466
+[Test Epoch 600] Top1: 25.853 Top5: 83.788
+[Test Epoch 800] Top1: 24.147 Top5: 82.850
+[Test Epoch 1000] Top1: 22.568 Top5: 83.020
+Current Best Epoch for convnet: 29.0, Top1: 25.085, Top5: 81.442
+Random model: convnet
+[Train Epoch 40 Iter 50] G Loss: -4.202(-4.472) D Loss: -0.174(-0.304) D Acc: 57.812(62.750)
+Random model: convnet
+[Train Epoch 41 Iter 50] G Loss: -4.095(-4.185) D Loss: -0.405(-0.383) D Acc: 66.406(62.125)
+Random model: resnet10
+[Train Epoch 42 Iter 50] G Loss: -3.816(-3.596) D Loss: -0.222(-0.434) D Acc: 60.156(63.047)
+Random model: resnet18_ap
+[Train Epoch 43 Iter 50] G Loss: -4.301(-4.083) D Loss: -0.638(-0.432) D Acc: 68.750(63.094)
+Random model: resnet10
+[Train Epoch 44 Iter 50] G Loss: -4.057(-4.131) D Loss: -0.809(-0.439) D Acc: 67.969(63.062)
+Random model: resnet10_ap
+[Train Epoch 45 Iter 50] G Loss: -3.944(-4.032) D Loss: -0.497(-0.403) D Acc: 61.719(63.562)
+Random model: resnet18_ap
+[Train Epoch 46 Iter 50] G Loss: -3.452(-3.730) D Loss: -0.570(-0.439) D Acc: 67.188(63.625)
+Random model: resnet18
+[Train Epoch 47 Iter 50] G Loss: -3.767(-3.839) D Loss: -0.428(-0.365) D Acc: 67.188(63.641)
+Random model: resnet18_ap
+[Train Epoch 48 Iter 50] G Loss: -3.593(-3.539) D Loss: -0.446(-0.384) D Acc: 60.156(63.672)
+Random model: resnet10
+[Train Epoch 49 Iter 50] G Loss: -3.641(-3.570) D Loss: -0.063(-0.411) D Acc: 61.719(63.859)
+Evaluating convnet
+[Test Epoch 200] Top1: 19.241 Top5: 72.995
+[Test Epoch 400] Top1: 21.502 Top5: 73.251
+[Test Epoch 600] Top1: 20.776 Top5: 76.152
+[Test Epoch 800] Top1: 21.075 Top5: 75.640
+[Test Epoch 1000] Top1: 20.094 Top5: 75.128
+Current Best Epoch for convnet: 29.0, Top1: 25.085, Top5: 81.442
+
+********** Test env: 2
+
+Augmentataion Matching:  color_crop_cutout
+Augmentataion Net update:  color_crop
+[Train Epoch 0 Iter 50] G Loss: 0.670(-0.125) D Loss: 4.058(5.194) D Acc: 27.344(18.094)
+[Train Epoch 1 Iter 50] G Loss: -0.797(1.113) D Loss: 4.572(3.579) D Acc: 32.031(26.766)
+[Train Epoch 2 Iter 50] G Loss: 2.157(1.060) D Loss: 3.945(4.044) D Acc: 27.344(32.422)
+[Train Epoch 3 Iter 50] G Loss: 1.162(0.635) D Loss: 3.289(3.908) D Acc: 46.875(35.969)
+[Train Epoch 4 Iter 50] G Loss: 0.665(0.226) D Loss: 3.597(3.800) D Acc: 37.500(39.812)
+[Train Epoch 5 Iter 50] G Loss: 0.131(0.527) D Loss: 4.318(3.451) D Acc: 30.469(41.281)
+[Train Epoch 6 Iter 50] G Loss: -1.877(-0.537) D Loss: 4.107(3.232) D Acc: 45.312(42.875)
+[Train Epoch 7 Iter 50] G Loss: -0.079(-0.032) D Loss: 3.764(2.912) D Acc: 47.656(44.109)
+[Train Epoch 8 Iter 50] G Loss: 1.208(-0.534) D Loss: 0.984(2.629) D Acc: 46.094(44.328)
+[Train Epoch 9 Iter 50] G Loss: 0.810(-0.713) D Loss: 2.194(2.516) D Acc: 46.094(45.828)
+Evaluating convnet
+[Test Epoch 200] Top1: 17.784 Top5: 74.611
+[Test Epoch 400] Top1: 16.228 Top5: 80.898
+[Test Epoch 600] Top1: 18.144 Top5: 79.940
+[Test Epoch 800] Top1: 20.180 Top5: 82.395
+[Test Epoch 1000] Top1: 18.323 Top5: 81.557
+Save best model for convnet
+Current Best Epoch for convnet: 9.0, Top1: 20.180, Top5: 82.395
+[Train Epoch 10 Iter 50] G Loss: 0.957(-1.047) D Loss: 2.187(2.329) D Acc: 50.000(45.891)
+[Train Epoch 11 Iter 50] G Loss: -6.776(-2.037) D Loss: 4.101(2.371) D Acc: 39.844(46.219)
+[Train Epoch 12 Iter 50] G Loss: -2.854(-2.287) D Loss: 1.858(1.938) D Acc: 48.438(48.219)
+[Train Epoch 13 Iter 50] G Loss: -3.767(-2.543) D Loss: 1.554(1.847) D Acc: 46.875(46.562)
+[Train Epoch 14 Iter 50] G Loss: -3.409(-2.718) D Loss: 1.849(1.686) D Acc: 50.781(48.125)
+[Train Epoch 15 Iter 50] G Loss: -4.556(-2.935) D Loss: 1.653(1.478) D Acc: 44.531(48.984)
+[Train Epoch 16 Iter 50] G Loss: -1.761(-2.978) D Loss: 1.683(1.352) D Acc: 43.750(51.109)
+[Train Epoch 17 Iter 50] G Loss: -4.869(-2.974) D Loss: 1.528(1.342) D Acc: 51.562(51.406)
+[Train Epoch 18 Iter 50] G Loss: -5.484(-3.164) D Loss: 1.187(1.238) D Acc: 49.219(52.078)
+[Train Epoch 19 Iter 50] G Loss: -3.546(-3.413) D Loss: 0.694(1.190) D Acc: 49.219(53.000)
+Evaluating convnet
+[Test Epoch 200] Top1: 20.659 Top5: 81.078
+[Test Epoch 400] Top1: 20.539 Top5: 82.934
+[Test Epoch 600] Top1: 21.617 Top5: 82.395
+[Test Epoch 800] Top1: 20.000 Top5: 80.359
+[Test Epoch 1000] Top1: 21.497 Top5: 80.898
+Save best model for convnet
+Current Best Epoch for convnet: 19.0, Top1: 21.617, Top5: 82.395
+[Train Epoch 20 Iter 50] G Loss: -3.841(-3.499) D Loss: 1.296(1.119) D Acc: 54.688(53.188)
+[Train Epoch 21 Iter 50] G Loss: -5.653(-3.201) D Loss: 0.951(1.012) D Acc: 58.594(54.172)
+[Train Epoch 22 Iter 50] G Loss: -3.187(-3.405) D Loss: 0.608(0.951) D Acc: 58.594(54.594)
+[Train Epoch 23 Iter 50] G Loss: -2.813(-3.509) D Loss: 1.245(0.844) D Acc: 60.156(55.641)
+[Train Epoch 24 Iter 50] G Loss: -2.934(-3.536) D Loss: 1.097(0.819) D Acc: 53.906(55.922)
+[Train Epoch 25 Iter 50] G Loss: -3.221(-3.610) D Loss: 0.157(0.677) D Acc: 61.719(57.344)
+[Train Epoch 26 Iter 50] G Loss: -3.718(-3.622) D Loss: 1.766(0.709) D Acc: 53.125(56.719)
+[Train Epoch 27 Iter 50] G Loss: -3.204(-3.380) D Loss: 0.076(0.580) D Acc: 60.938(58.375)
+[Train Epoch 28 Iter 50] G Loss: -4.367(-3.643) D Loss: 0.732(0.568) D Acc: 57.031(58.859)
+[Train Epoch 29 Iter 50] G Loss: -4.255(-3.512) D Loss: 0.913(0.471) D Acc: 54.688(59.250)
+Evaluating convnet
+[Test Epoch 200] Top1: 26.707 Top5: 84.671
+[Test Epoch 400] Top1: 25.689 Top5: 85.749
+[Test Epoch 600] Top1: 27.904 Top5: 85.329
+[Test Epoch 800] Top1: 30.060 Top5: 86.168
+[Test Epoch 1000] Top1: 30.240 Top5: 87.066
+Save best model for convnet
+Current Best Epoch for convnet: 29.0, Top1: 30.240, Top5: 87.066
+-----  Start fine-tuning with logit matching
+Random model: resnet10
+[Train Epoch 30 Iter 50] G Loss: -4.519(-4.161) D Loss: -0.675(-0.508) D Acc: 67.969(65.688)
+Random model: resnet10_ap
+[Train Epoch 31 Iter 50] G Loss: -3.783(-3.796) D Loss: -0.229(-0.634) D Acc: 60.156(65.938)
+Random model: resnet18_ap
+[Train Epoch 32 Iter 50] G Loss: -3.693(-3.930) D Loss: -0.689(-0.645) D Acc: 71.875(65.844)
+Random model: resnet18_ap
+[Train Epoch 33 Iter 50] G Loss: -3.420(-3.992) D Loss: -0.839(-0.597) D Acc: 77.344(66.750)
+Random model: resnet18_ap
+[Train Epoch 34 Iter 50] G Loss: -4.225(-3.846) D Loss: -0.921(-0.573) D Acc: 71.094(66.703)
+Random model: resnet10_ap
+[Train Epoch 35 Iter 50] G Loss: -3.981(-3.991) D Loss: -0.427(-0.528) D Acc: 65.625(67.156)
+Random model: convnet
+[Train Epoch 36 Iter 50] G Loss: -3.425(-3.645) D Loss: -0.331(-0.537) D Acc: 61.719(66.938)
+Random model: resnet10_ap
+[Train Epoch 37 Iter 50] G Loss: -3.751(-3.462) D Loss: -0.453(-0.586) D Acc: 70.312(67.219)
+Random model: resnet10_ap
+[Train Epoch 38 Iter 50] G Loss: -3.320(-3.576) D Loss: -0.585(-0.569) D Acc: 67.188(67.312)
+Random model: resnet18
+[Train Epoch 39 Iter 50] G Loss: -3.259(-3.560) D Loss: -0.457(-0.589) D Acc: 66.406(67.656)
+Evaluating convnet
+[Test Epoch 200] Top1: 27.186 Top5: 87.305
+[Test Epoch 400] Top1: 30.060 Top5: 86.707
+[Test Epoch 600] Top1: 35.808 Top5: 87.126
+[Test Epoch 800] Top1: 30.479 Top5: 84.611
+[Test Epoch 1000] Top1: 31.138 Top5: 87.186
+Save best model for convnet
+Current Best Epoch for convnet: 39.0, Top1: 35.808, Top5: 87.126
+Random model: resnet18
+[Train Epoch 40 Iter 50] G Loss: -3.649(-3.551) D Loss: -0.351(-0.551) D Acc: 57.812(67.906)
+Random model: convnet
+[Train Epoch 41 Iter 50] G Loss: -3.370(-3.471) D Loss: -0.804(-0.559) D Acc: 73.438(67.422)
+Random model: resnet10
+[Train Epoch 42 Iter 50] G Loss: -3.644(-3.525) D Loss: -0.312(-0.561) D Acc: 65.625(68.422)
+Random model: resnet10_ap
+[Train Epoch 43 Iter 50] G Loss: -3.214(-3.397) D Loss: -0.784(-0.541) D Acc: 62.500(67.312)
+Random model: convnet
+[Train Epoch 44 Iter 50] G Loss: -3.173(-3.517) D Loss: -0.939(-0.533) D Acc: 67.188(67.453)
+Random model: convnet
+[Train Epoch 45 Iter 50] G Loss: -3.295(-3.419) D Loss: -0.860(-0.541) D Acc: 73.438(68.000)
+Random model: convnet
+[Train Epoch 46 Iter 50] G Loss: -3.663(-3.391) D Loss: 0.139(-0.555) D Acc: 68.750(68.312)
+Random model: convnet
+[Train Epoch 47 Iter 50] G Loss: -3.196(-3.576) D Loss: -0.489(-0.567) D Acc: 61.719(68.531)
+Random model: resnet18
+[Train Epoch 48 Iter 50] G Loss: -3.563(-3.390) D Loss: -0.475(-0.527) D Acc: 70.312(68.188)
+Random model: resnet10
+[Train Epoch 49 Iter 50] G Loss: -3.732(-3.243) D Loss: -0.753(-0.574) D Acc: 71.094(68.516)
+Evaluating convnet
+[Test Epoch 200] Top1: 29.042 Top5: 87.066
+[Test Epoch 400] Top1: 27.246 Top5: 87.425
+[Test Epoch 600] Top1: 26.886 Top5: 86.048
+[Test Epoch 800] Top1: 28.802 Top5: 88.383
+[Test Epoch 1000] Top1: 30.659 Top5: 86.407
+Current Best Epoch for convnet: 39.0, Top1: 35.808, Top5: 87.126
+
+********** Test env: 3
+
+Augmentataion Matching:  color_crop_cutout
+Augmentataion Net update:  color_crop
+Evaluating convnet
+[Test Epoch 200] Top1: 6.134 Top5: 78.875
+[Test Epoch 400] Top1: 14.533 Top5: 81.369
+[Test Epoch 600] Top1: 19.216 Top5: 78.671
+[Test Epoch 800] Top1: 22.321 Top5: 81.446
+[Test Epoch 1000] Top1: 21.736 Top5: 89.565
+Save best model for convnet
+Current Best Epoch for convnet: 9.0, Top1: 22.321, Top5: 81.446
+Evaluating convnet
+[Test Epoch 200] Top1: 20.311 Top5: 79.486
+[Test Epoch 400] Top1: 16.976 Top5: 80.886
+[Test Epoch 600] Top1: 16.213 Top5: 79.689
+[Test Epoch 800] Top1: 18.249 Top5: 80.529
+[Test Epoch 1000] Top1: 22.627 Top5: 80.122
+Current Best Epoch for convnet: 9.0, Top1: 22.321, Top5: 81.446
+Evaluating convnet
+[Test Epoch 200] Top1: 24.612 Top5: 87.910
+[Test Epoch 400] Top1: 20.107 Top5: 84.602
+[Test Epoch 600] Top1: 23.136 Top5: 85.976
+[Test Epoch 800] Top1: 23.212 Top5: 85.187
+[Test Epoch 1000] Top1: 22.347 Top5: 86.561
+Save best model for convnet
+Current Best Epoch for convnet: 29.0, Top1: 24.612, Top5: 87.910
+-----  Start fine-tuning with logit matching
+Random model: resnet10
+Random model: resnet18_ap
+Random model: resnet10
+Random model: resnet18
+Random model: resnet18_ap
+Random model: convnet
+Random model: convnet
+Random model: resnet18_ap
+Random model: convnet
+Random model: convnet
+Evaluating convnet
+[Test Epoch 200] Top1: 22.627 Top5: 86.154
+[Test Epoch 400] Top1: 22.652 Top5: 83.965
+[Test Epoch 600] Top1: 22.550 Top5: 87.503
+[Test Epoch 800] Top1: 22.728 Top5: 85.722
+[Test Epoch 1000] Top1: 21.583 Top5: 84.933
+Current Best Epoch for convnet: 29.0, Top1: 24.612, Top5: 87.910
+Random model: convnet
+Random model: resnet10_ap
+Random model: resnet10
+Random model: resnet10
+Random model: resnet18
+Random model: resnet10_ap
+Random model: resnet10
+Random model: resnet18_ap
+Random model: resnet18_ap
+Random model: resnet10
+Evaluating convnet
+[Test Epoch 200] Top1: 24.077 Top5: 86.638
+[Test Epoch 400] Top1: 23.517 Top5: 81.318
+[Test Epoch 600] Top1: 21.558 Top5: 83.660
+[Test Epoch 800] Top1: 20.514 Top5: 84.602
+[Test Epoch 1000] Top1: 21.736 Top5: 78.875
+Current Best Epoch for convnet: 29.0, Top1: 24.612, Top5: 87.910
+Leave-one-domain-out accuracy: 26.967
+Namespace(aug_type='color_crop_cutout', batch_size=128, beta=1.0, bias=False, channel=3, data='PACS', data_dir='/var/lib/data', debias_mode='none', dim_noise=90, epochs=50, epochs_eval=1000, epochs_match=100, epochs_match_train=16, eval_interval=10, eval_lr=0.01, eval_model=['convnet'], fc=False, fix_disc=False, ipc=1, logs_dir='./logs/PACS', lr1=0.0001, lr2=5e-06, match='logit', match_aug=True, match_coeff=0.001, match_model='convnet', mean=[0.485, 0.456, 0.406], metric='l1', mix_p=-1.0, mixup_net='cut', momentum=0.9, num_classes=7, num_envs=4, num_workers=4, output_dir='./results/PACS', pretrain_epochs=30, print_freq=50, seed=3407, std=[0.229, 0.224, 0.225], tag='PACS', test_interval=200, weight='', weight_decay=0.0005)
+
+********** Test env: 0
+
+Augmentataion Matching:  color_crop_cutout
+Augmentataion Net update:  color_crop
+[Train Epoch 0 Iter 50] G Loss: 1.696(1.698) D Loss: 3.717(4.000) D Acc: 25.781(18.812)
+[Train Epoch 1 Iter 50] G Loss: 2.890(1.922) D Loss: 4.030(4.001) D Acc: 30.469(28.250)
+[Train Epoch 2 Iter 50] G Loss: 4.142(2.569) D Loss: 4.465(3.554) D Acc: 39.844(35.094)
+[Train Epoch 3 Iter 50] G Loss: 1.729(2.954) D Loss: 4.598(3.459) D Acc: 42.188(42.172)
+[Train Epoch 4 Iter 50] G Loss: 5.105(3.506) D Loss: 2.714(3.119) D Acc: 44.531(44.906)
+[Train Epoch 5 Iter 50] G Loss: 4.889(3.704) D Loss: 3.589(3.011) D Acc: 43.750(47.156)
+[Train Epoch 6 Iter 50] G Loss: 3.735(3.511) D Loss: 3.155(2.688) D Acc: 48.438(48.109)
+[Train Epoch 7 Iter 50] G Loss: 2.408(3.038) D Loss: 2.303(2.575) D Acc: 50.000(50.031)
+[Train Epoch 8 Iter 50] G Loss: 2.364(2.628) D Loss: 2.171(2.261) D Acc: 49.219(51.344)
+[Train Epoch 9 Iter 50] G Loss: 2.415(2.629) D Loss: 1.281(1.883) D Acc: 53.906(52.188)
+Evaluating convnet
+/home/techt/anaconda3/envs/lc/lib/python3.8/site-packages/torch/functional.py:478: UserWarning: torch.meshgrid: in an upcoming release, it will be required to pass the indexing argument. (Triggered internally at  /opt/conda/conda-bld/pytorch_1659484810403/work/aten/src/ATen/native/TensorShape.cpp:2894.)
+  return _VF.meshgrid(tensors, **kwargs)  # type: ignore[attr-defined]
+[Test Epoch 200] Top1: 17.627 Top5: 73.877
+[Test Epoch 400] Top1: 18.066 Top5: 74.219
+[Test Epoch 600] Top1: 17.480 Top5: 72.949
+[Test Epoch 800] Top1: 18.018 Top5: 74.707
+[Test Epoch 1000] Top1: 17.090 Top5: 73.828
+Save best model for convnet
+Current Best Epoch for convnet: 9.0, Top1: 18.066, Top5: 74.219
+[Train Epoch 10 Iter 50] G Loss: -0.225(2.192) D Loss: 2.084(1.576) D Acc: 50.781(52.922)
+[Train Epoch 11 Iter 50] G Loss: -0.298(2.153) D Loss: 1.747(1.410) D Acc: 65.625(52.469)
+[Train Epoch 12 Iter 50] G Loss: -0.460(1.594) D Loss: 1.590(1.277) D Acc: 50.781(55.422)
+[Train Epoch 13 Iter 50] G Loss: 1.828(1.757) D Loss: 0.688(1.024) D Acc: 50.000(55.500)
+[Train Epoch 14 Iter 50] G Loss: 1.744(1.520) D Loss: 1.187(0.902) D Acc: 61.719(55.734)
+[Train Epoch 15 Iter 50] G Loss: 0.038(1.205) D Loss: 0.754(0.883) D Acc: 58.594(57.188)
+[Train Epoch 16 Iter 50] G Loss: 0.618(0.765) D Loss: 1.033(0.782) D Acc: 63.281(57.578)
+[Train Epoch 17 Iter 50] G Loss: 1.394(1.109) D Loss: 0.839(0.719) D Acc: 57.031(57.531)
+[Train Epoch 18 Iter 50] G Loss: 0.267(1.128) D Loss: 0.183(0.647) D Acc: 55.469(58.672)
+[Train Epoch 19 Iter 50] G Loss: -2.026(0.883) D Loss: 0.435(0.526) D Acc: 53.906(60.859)
+Evaluating convnet
+[Test Epoch 200] Top1: 20.459 Top5: 75.244
+[Test Epoch 400] Top1: 19.873 Top5: 76.709
+[Test Epoch 600] Top1: 20.605 Top5: 75.781
+[Test Epoch 800] Top1: 20.166 Top5: 77.441
+[Test Epoch 1000] Top1: 19.922 Top5: 75.879
+Save best model for convnet
+Current Best Epoch for convnet: 19.0, Top1: 20.605, Top5: 75.781
+[Train Epoch 20 Iter 50] G Loss: 2.909(0.787) D Loss: 0.556(0.546) D Acc: 58.594(60.844)
+[Train Epoch 21 Iter 50] G Loss: 1.466(1.024) D Loss: 0.746(0.453) D Acc: 54.688(62.281)
+[Train Epoch 22 Iter 50] G Loss: 2.683(0.861) D Loss: 1.001(0.335) D Acc: 61.719(62.734)
+[Train Epoch 23 Iter 50] G Loss: -0.885(0.645) D Loss: 0.123(0.351) D Acc: 65.625(62.891)
+[Train Epoch 24 Iter 50] G Loss: -0.968(0.731) D Loss: -0.321(0.270) D Acc: 71.094(63.875)
+[Train Epoch 25 Iter 50] G Loss: 1.600(0.603) D Loss: -0.324(0.231) D Acc: 70.312(64.391)
+[Train Epoch 26 Iter 50] G Loss: 0.554(0.692) D Loss: 0.333(0.189) D Acc: 55.469(64.375)
+[Train Epoch 27 Iter 50] G Loss: 0.602(0.428) D Loss: 0.534(0.165) D Acc: 67.188(65.141)
+[Train Epoch 28 Iter 50] G Loss: -3.043(0.423) D Loss: 0.392(0.051) D Acc: 71.094(65.453)
+[Train Epoch 29 Iter 50] G Loss: 2.761(0.506) D Loss: -0.258(0.064) D Acc: 68.750(65.750)
+Evaluating convnet
+[Test Epoch 200] Top1: 21.533 Top5: 79.736
+[Test Epoch 400] Top1: 20.947 Top5: 79.590
+[Test Epoch 600] Top1: 21.631 Top5: 80.615
+[Test Epoch 800] Top1: 20.361 Top5: 79.004
+[Test Epoch 1000] Top1: 21.875 Top5: 81.201
+Save best model for convnet
+Current Best Epoch for convnet: 29.0, Top1: 21.875, Top5: 81.201
+-----  Start fine-tuning with logit matching
+Random model: convnet
+[Train Epoch 30 Iter 50] G Loss: -0.183(-0.616) D Loss: -0.987(-0.878) D Acc: 71.875(70.859)
+Random model: resnet10_ap
+[Train Epoch 31 Iter 50] G Loss: 0.085(-0.385) D Loss: -0.975(-0.989) D Acc: 75.000(72.297)
+Random model: resnet10
+[Train Epoch 32 Iter 50] G Loss: -0.157(-0.046) D Loss: -0.699(-0.988) D Acc: 80.469(72.906)
+Random model: resnet18
+[Train Epoch 33 Iter 50] G Loss: -0.453(-0.032) D Loss: -1.127(-0.927) D Acc: 73.438(72.766)
+Random model: resnet10
+[Train Epoch 34 Iter 50] G Loss: 0.197(0.059) D Loss: -0.719(-0.997) D Acc: 64.062(71.812)
+Random model: resnet10_ap
+[Train Epoch 35 Iter 50] G Loss: 0.035(0.007) D Loss: -1.047(-0.974) D Acc: 71.875(72.391)
+Random model: resnet18
+[Train Epoch 36 Iter 50] G Loss: 0.306(0.106) D Loss: -0.982(-1.026) D Acc: 80.469(72.781)
+Random model: resnet18_ap
+[Train Epoch 37 Iter 50] G Loss: -0.060(0.303) D Loss: -1.323(-1.005) D Acc: 76.562(72.656)
+Random model: resnet18
+[Train Epoch 38 Iter 50] G Loss: 0.430(0.318) D Loss: -1.141(-1.055) D Acc: 77.344(73.250)
+Random model: resnet10
+[Train Epoch 39 Iter 50] G Loss: 0.188(0.387) D Loss: -0.891(-1.086) D Acc: 72.656(73.344)
+Evaluating convnet
+[Test Epoch 200] Top1: 22.559 Top5: 77.539
+[Test Epoch 400] Top1: 22.754 Top5: 78.418
+[Test Epoch 600] Top1: 22.998 Top5: 79.395
+[Test Epoch 800] Top1: 22.461 Top5: 78.320
+[Test Epoch 1000] Top1: 21.338 Top5: 78.516
+Save best model for convnet
+Current Best Epoch for convnet: 39.0, Top1: 22.998, Top5: 79.395
+Random model: resnet10_ap
+[Train Epoch 40 Iter 50] G Loss: 0.864(0.295) D Loss: -0.410(-1.038) D Acc: 75.000(73.344)
+Random model: resnet18_ap
+[Train Epoch 41 Iter 50] G Loss: -0.003(0.300) D Loss: -0.991(-1.055) D Acc: 68.750(73.516)
+Random model: resnet10_ap
+[Train Epoch 42 Iter 50] G Loss: 0.531(0.271) D Loss: -0.917(-1.023) D Acc: 64.844(74.031)
+Random model: resnet18
+[Train Epoch 43 Iter 50] G Loss: 0.681(0.363) D Loss: -0.964(-1.059) D Acc: 66.406(73.562)
+Random model: resnet18
+[Train Epoch 44 Iter 50] G Loss: 0.513(0.326) D Loss: -1.366(-1.023) D Acc: 78.125(73.203)
+Random model: resnet10
+[Train Epoch 45 Iter 50] G Loss: 0.362(0.515) D Loss: -1.056(-1.076) D Acc: 70.312(73.453)
+Random model: convnet
+[Train Epoch 46 Iter 50] G Loss: 0.539(0.622) D Loss: -0.861(-1.008) D Acc: 73.438(73.281)
+Random model: resnet18
+[Train Epoch 47 Iter 50] G Loss: 0.481(0.582) D Loss: -1.085(-1.028) D Acc: 72.656(73.297)
+Random model: resnet10
+[Train Epoch 48 Iter 50] G Loss: -0.104(0.584) D Loss: -0.754(-1.041) D Acc: 78.125(74.016)
+Random model: resnet18
+[Train Epoch 49 Iter 50] G Loss: 0.387(0.713) D Loss: -0.879(-1.072) D Acc: 74.219(74.312)
+Evaluating convnet
+[Test Epoch 200] Top1: 21.631 Top5: 79.150
+[Test Epoch 400] Top1: 21.484 Top5: 80.322
+[Test Epoch 600] Top1: 22.119 Top5: 77.881
+[Test Epoch 800] Top1: 22.949 Top5: 80.273
+[Test Epoch 1000] Top1: 22.070 Top5: 78.076
+Current Best Epoch for convnet: 39.0, Top1: 22.998, Top5: 79.395
+
+********** Test env: 1
+
+Augmentataion Matching:  color_crop_cutout
+Augmentataion Net update:  color_crop
+[Train Epoch 0 Iter 50] G Loss: 4.926(2.374) D Loss: 3.399(3.487) D Acc: 21.094(19.547)
+[Train Epoch 1 Iter 50] G Loss: 0.211(1.169) D Loss: 4.357(4.013) D Acc: 18.750(27.031)
+[Train Epoch 2 Iter 50] G Loss: 2.480(0.085) D Loss: 2.372(3.614) D Acc: 31.250(30.891)
+[Train Epoch 3 Iter 50] G Loss: -0.692(-0.574) D Loss: 2.459(3.555) D Acc: 46.094(34.391)
+[Train Epoch 4 Iter 50] G Loss: 0.789(0.388) D Loss: 3.427(3.123) D Acc: 39.062(37.578)
+[Train Epoch 5 Iter 50] G Loss: -0.533(-0.504) D Loss: 1.846(3.132) D Acc: 44.531(39.438)
+[Train Epoch 6 Iter 50] G Loss: -2.023(-1.313) D Loss: 2.779(3.170) D Acc: 40.625(39.828)
+[Train Epoch 7 Iter 50] G Loss: -0.055(-1.423) D Loss: 3.416(3.057) D Acc: 35.938(41.578)
+[Train Epoch 8 Iter 50] G Loss: -2.508(-1.750) D Loss: 2.295(2.950) D Acc: 51.562(43.562)
+[Train Epoch 9 Iter 50] G Loss: -3.254(-1.824) D Loss: 1.791(2.850) D Acc: 49.219(44.125)
+Evaluating convnet
+[Test Epoch 200] Top1: 19.923 Top5: 76.621
+[Test Epoch 400] Top1: 17.833 Top5: 77.560
+[Test Epoch 600] Top1: 15.742 Top5: 75.043
+[Test Epoch 800] Top1: 17.235 Top5: 79.991
+[Test Epoch 1000] Top1: 20.392 Top5: 79.309
+Save best model for convnet
+Current Best Epoch for convnet: 9.0, Top1: 20.392, Top5: 79.309
+[Train Epoch 10 Iter 50] G Loss: -0.593(-1.884) D Loss: 2.470(2.743) D Acc: 39.844(45.469)
+[Train Epoch 11 Iter 50] G Loss: -4.875(-2.247) D Loss: 1.590(2.433) D Acc: 46.875(46.609)
+[Train Epoch 12 Iter 50] G Loss: -0.331(-2.277) D Loss: 2.529(2.391) D Acc: 49.219(47.156)
+[Train Epoch 13 Iter 50] G Loss: -4.817(-2.471) D Loss: 1.932(2.131) D Acc: 60.938(48.438)
+[Train Epoch 14 Iter 50] G Loss: -0.413(-2.766) D Loss: 1.618(2.081) D Acc: 50.000(47.125)
+[Train Epoch 15 Iter 50] G Loss: -5.452(-2.293) D Loss: 1.405(1.777) D Acc: 55.469(48.156)
+[Train Epoch 16 Iter 50] G Loss: -2.404(-2.937) D Loss: 3.170(1.679) D Acc: 51.562(47.391)
+[Train Epoch 17 Iter 50] G Loss: -1.608(-2.765) D Loss: 1.283(1.447) D Acc: 52.344(47.484)
+[Train Epoch 18 Iter 50] G Loss: -0.806(-3.091) D Loss: 0.618(1.297) D Acc: 50.000(47.969)
+[Train Epoch 19 Iter 50] G Loss: -6.494(-3.503) D Loss: 1.100(1.214) D Acc: 50.781(48.562)
+Evaluating convnet
+[Test Epoch 200] Top1: 22.440 Top5: 82.338
+[Test Epoch 400] Top1: 18.686 Top5: 78.413
+[Test Epoch 600] Top1: 20.734 Top5: 81.698
+[Test Epoch 800] Top1: 19.881 Top5: 80.887
+[Test Epoch 1000] Top1: 20.392 Top5: 80.205
+Save best model for convnet
+Current Best Epoch for convnet: 19.0, Top1: 22.440, Top5: 82.338
+[Train Epoch 20 Iter 50] G Loss: -4.305(-3.534) D Loss: 0.348(1.101) D Acc: 52.344(49.078)
+[Train Epoch 21 Iter 50] G Loss: -6.574(-3.647) D Loss: 1.413(1.114) D Acc: 52.344(49.578)
+[Train Epoch 22 Iter 50] G Loss: -4.981(-3.341) D Loss: 0.842(0.974) D Acc: 60.156(50.688)
+[Train Epoch 23 Iter 50] G Loss: -4.363(-4.043) D Loss: 1.325(0.941) D Acc: 47.656(51.156)
+[Train Epoch 24 Iter 50] G Loss: -5.347(-3.783) D Loss: 1.512(1.027) D Acc: 49.219(51.016)
+[Train Epoch 25 Iter 50] G Loss: -2.687(-3.732) D Loss: 1.240(0.904) D Acc: 53.906(52.078)
+[Train Epoch 26 Iter 50] G Loss: -3.256(-3.819) D Loss: 0.520(0.800) D Acc: 46.875(53.141)
+[Train Epoch 27 Iter 50] G Loss: -4.030(-3.916) D Loss: 1.318(0.785) D Acc: 52.344(53.406)
+[Train Epoch 28 Iter 50] G Loss: -5.333(-3.910) D Loss: 0.306(0.793) D Acc: 49.219(54.391)
+[Train Epoch 29 Iter 50] G Loss: -3.534(-3.700) D Loss: 0.211(0.736) D Acc: 64.844(55.719)
+Evaluating convnet
+[Test Epoch 200] Top1: 23.891 Top5: 82.935
+[Test Epoch 400] Top1: 20.265 Top5: 82.210
+[Test Epoch 600] Top1: 20.137 Top5: 81.826
+[Test Epoch 800] Top1: 24.104 Top5: 83.063
+[Test Epoch 1000] Top1: 22.654 Top5: 83.063
+Save best model for convnet
+Current Best Epoch for convnet: 29.0, Top1: 24.104, Top5: 83.063
+-----  Start fine-tuning with logit matching
+Random model: resnet18_ap
+[Train Epoch 30 Iter 50] G Loss: -3.978(-4.639) D Loss: -0.346(-0.131) D Acc: 60.938(59.797)
+Random model: convnet
+[Train Epoch 31 Iter 50] G Loss: -4.485(-4.558) D Loss: -0.141(-0.257) D Acc: 59.375(60.578)
+Random model: convnet
+[Train Epoch 32 Iter 50] G Loss: -3.957(-4.155) D Loss: -0.447(-0.310) D Acc: 54.688(61.422)
+Random model: resnet18_ap
+[Train Epoch 33 Iter 50] G Loss: -4.047(-4.384) D Loss: 0.147(-0.240) D Acc: 57.031(61.734)
+Random model: resnet10
+[Train Epoch 34 Iter 50] G Loss: -3.729(-3.958) D Loss: -0.144(-0.224) D Acc: 60.156(61.344)
+Random model: resnet18
+[Train Epoch 35 Iter 50] G Loss: -3.591(-3.727) D Loss: -0.319(-0.257) D Acc: 66.406(61.719)
+Random model: convnet
+[Train Epoch 36 Iter 50] G Loss: -3.383(-3.309) D Loss: 0.051(-0.245) D Acc: 60.156(61.609)
+Random model: convnet
+[Train Epoch 37 Iter 50] G Loss: -3.054(-3.630) D Loss: 0.188(-0.218) D Acc: 60.938(62.125)
+Random model: resnet18
+[Train Epoch 38 Iter 50] G Loss: -3.345(-3.486) D Loss: -0.036(-0.245) D Acc: 60.156(61.734)
+Random model: resnet18_ap
+[Train Epoch 39 Iter 50] G Loss: -4.060(-3.661) D Loss: -0.517(-0.270) D Acc: 64.844(62.203)
+Evaluating convnet
+[Test Epoch 200] Top1: 24.061 Top5: 84.727
+[Test Epoch 400] Top1: 25.683 Top5: 85.154
+[Test Epoch 600] Top1: 21.886 Top5: 82.935
+[Test Epoch 800] Top1: 24.147 Top5: 82.978
+[Test Epoch 1000] Top1: 26.024 Top5: 83.234
+Save best model for convnet
+Current Best Epoch for convnet: 39.0, Top1: 26.024, Top5: 83.234
+Random model: convnet
+[Train Epoch 40 Iter 50] G Loss: -3.501(-3.784) D Loss: 0.072(-0.257) D Acc: 54.688(62.547)
+Random model: convnet
+[Train Epoch 41 Iter 50] G Loss: -3.633(-3.503) D Loss: -0.384(-0.279) D Acc: 63.281(61.453)
+Random model: resnet10
+[Train Epoch 42 Iter 50] G Loss: -3.656(-3.653) D Loss: -0.145(-0.235) D Acc: 60.938(62.875)
+Random model: resnet18_ap
+[Train Epoch 43 Iter 50] G Loss: -4.326(-3.594) D Loss: -0.401(-0.236) D Acc: 67.969(62.781)
+Random model: resnet10
+[Train Epoch 44 Iter 50] G Loss: -3.494(-3.627) D Loss: -0.034(-0.231) D Acc: 59.375(62.734)
+Random model: resnet10_ap
+[Train Epoch 45 Iter 50] G Loss: -3.414(-3.538) D Loss: -0.245(-0.263) D Acc: 64.062(62.766)
+Random model: resnet18_ap
+[Train Epoch 46 Iter 50] G Loss: -3.994(-3.578) D Loss: -0.341(-0.252) D Acc: 64.062(62.703)
+Random model: resnet18
+[Train Epoch 47 Iter 50] G Loss: -3.718(-3.743) D Loss: -0.408(-0.297) D Acc: 68.750(62.938)
+Random model: resnet18_ap
+[Train Epoch 48 Iter 50] G Loss: -3.073(-3.417) D Loss: -0.178(-0.301) D Acc: 64.844(63.172)
+Random model: resnet10
+[Train Epoch 49 Iter 50] G Loss: -3.541(-3.262) D Loss: -0.113(-0.337) D Acc: 60.156(63.484)
+Evaluating convnet
+[Test Epoch 200] Top1: 27.432 Top5: 80.461
+[Test Epoch 400] Top1: 25.683 Top5: 83.404
+[Test Epoch 600] Top1: 28.114 Top5: 81.442
+[Test Epoch 800] Top1: 26.493 Top5: 82.892
+[Test Epoch 1000] Top1: 24.701 Top5: 81.869
+Save best model for convnet
+Current Best Epoch for convnet: 49.0, Top1: 28.114, Top5: 81.442
+
+********** Test env: 2
+
+Augmentataion Matching:  color_crop_cutout
+Augmentataion Net update:  color_crop
+[Train Epoch 0 Iter 50] G Loss: 1.739(0.318) D Loss: 4.185(4.691) D Acc: 31.250(18.953)
+[Train Epoch 1 Iter 50] G Loss: 1.314(1.270) D Loss: 3.569(3.694) D Acc: 34.375(27.016)
+[Train Epoch 2 Iter 50] G Loss: 3.859(1.568) D Loss: 3.475(3.833) D Acc: 39.844(31.156)
+[Train Epoch 3 Iter 50] G Loss: 0.171(1.019) D Loss: 3.396(3.612) D Acc: 38.281(34.891)
+[Train Epoch 4 Iter 50] G Loss: 3.577(0.913) D Loss: 3.614(3.215) D Acc: 36.719(39.906)
+[Train Epoch 5 Iter 50] G Loss: -4.012(0.510) D Loss: 5.383(3.161) D Acc: 29.688(40.156)
+[Train Epoch 6 Iter 50] G Loss: -0.692(0.439) D Loss: 2.607(2.711) D Acc: 53.125(42.625)
+[Train Epoch 7 Iter 50] G Loss: 2.257(0.392) D Loss: 2.377(2.430) D Acc: 47.656(42.672)
+[Train Epoch 8 Iter 50] G Loss: -2.693(-0.266) D Loss: 2.018(2.211) D Acc: 48.438(44.688)
+[Train Epoch 9 Iter 50] G Loss: -0.502(-0.885) D Loss: 2.810(2.126) D Acc: 42.188(44.766)
+Evaluating convnet
+[Test Epoch 200] Top1: 16.766 Top5: 81.317
+[Test Epoch 400] Top1: 15.210 Top5: 78.623
+[Test Epoch 600] Top1: 16.587 Top5: 79.461
+[Test Epoch 800] Top1: 17.904 Top5: 78.443
+[Test Epoch 1000] Top1: 16.108 Top5: 78.922
+Save best model for convnet
+Current Best Epoch for convnet: 9.0, Top1: 17.904, Top5: 78.443
+[Train Epoch 10 Iter 50] G Loss: -0.964(-1.530) D Loss: 1.891(1.984) D Acc: 53.906(45.906)
+[Train Epoch 11 Iter 50] G Loss: -2.932(-1.850) D Loss: 2.149(1.850) D Acc: 41.406(45.719)
+[Train Epoch 12 Iter 50] G Loss: -1.650(-1.958) D Loss: 1.119(1.486) D Acc: 50.781(46.844)
+[Train Epoch 13 Iter 50] G Loss: -2.264(-2.228) D Loss: 1.451(1.372) D Acc: 39.844(47.109)
+[Train Epoch 14 Iter 50] G Loss: -2.876(-2.471) D Loss: 1.151(1.278) D Acc: 53.125(48.734)
+[Train Epoch 15 Iter 50] G Loss: -4.286(-2.464) D Loss: 1.671(1.260) D Acc: 48.438(49.094)
+[Train Epoch 16 Iter 50] G Loss: -1.949(-2.769) D Loss: 1.234(1.122) D Acc: 49.219(51.047)
+[Train Epoch 17 Iter 50] G Loss: -2.648(-2.843) D Loss: 0.956(0.953) D Acc: 50.000(51.562)
+[Train Epoch 18 Iter 50] G Loss: -3.951(-2.700) D Loss: 1.269(0.979) D Acc: 46.094(51.938)
+[Train Epoch 19 Iter 50] G Loss: -3.102(-2.920) D Loss: 0.603(0.836) D Acc: 55.469(53.141)
+Evaluating convnet
+[Test Epoch 200] Top1: 22.216 Top5: 82.335
+[Test Epoch 400] Top1: 25.988 Top5: 83.234
+[Test Epoch 600] Top1: 26.467 Top5: 83.234
+[Test Epoch 800] Top1: 26.886 Top5: 82.275
+[Test Epoch 1000] Top1: 30.719 Top5: 82.994
+Save best model for convnet
+Current Best Epoch for convnet: 19.0, Top1: 30.719, Top5: 82.994
+[Train Epoch 20 Iter 50] G Loss: -2.724(-2.475) D Loss: 1.255(0.807) D Acc: 59.375(53.719)
+[Train Epoch 21 Iter 50] G Loss: -2.596(-2.804) D Loss: 0.748(0.798) D Acc: 53.125(54.234)
+[Train Epoch 22 Iter 50] G Loss: -1.774(-2.814) D Loss: 0.380(0.687) D Acc: 57.812(55.266)
+[Train Epoch 23 Iter 50] G Loss: -2.624(-2.742) D Loss: 0.679(0.667) D Acc: 64.844(56.578)
+[Train Epoch 24 Iter 50] G Loss: -0.713(-2.699) D Loss: 1.663(0.592) D Acc: 57.031(56.531)
+[Train Epoch 25 Iter 50] G Loss: -2.346(-3.152) D Loss: 0.268(0.540) D Acc: 64.062(57.062)
+[Train Epoch 26 Iter 50] G Loss: -2.800(-2.999) D Loss: 1.582(0.571) D Acc: 54.688(57.203)
+[Train Epoch 27 Iter 50] G Loss: -2.847(-2.853) D Loss: 0.333(0.420) D Acc: 60.156(59.141)
+[Train Epoch 28 Iter 50] G Loss: -3.955(-3.046) D Loss: 0.319(0.449) D Acc: 55.469(58.922)
+[Train Epoch 29 Iter 50] G Loss: -6.396(-3.275) D Loss: 0.544(0.369) D Acc: 57.812(59.797)
+Evaluating convnet
+[Test Epoch 200] Top1: 29.042 Top5: 83.473
+[Test Epoch 400] Top1: 27.006 Top5: 84.072
+[Test Epoch 600] Top1: 27.066 Top5: 84.731
+[Test Epoch 800] Top1: 24.671 Top5: 84.192
+[Test Epoch 1000] Top1: 27.246 Top5: 83.892
+Current Best Epoch for convnet: 19.0, Top1: 30.719, Top5: 82.994
+-----  Start fine-tuning with logit matching
+Random model: resnet10
+[Train Epoch 30 Iter 50] G Loss: -3.163(-2.709) D Loss: 0.025(-0.264) D Acc: 62.500(55.906)
+Random model: resnet10_ap
+[Train Epoch 31 Iter 50] G Loss: -3.347(-3.044) D Loss: -0.129(-0.125) D Acc: 56.250(58.469)
+Random model: resnet18_ap
+[Train Epoch 32 Iter 50] G Loss: -2.715(-3.338) D Loss: -0.174(-0.122) D Acc: 60.938(58.188)
+Random model: resnet18_ap
+[Train Epoch 33 Iter 50] G Loss: -2.869(-3.106) D Loss: -0.242(-0.218) D Acc: 62.500(58.484)
+Random model: resnet18_ap
+[Train Epoch 34 Iter 50] G Loss: -2.810(-2.928) D Loss: -0.438(-0.274) D Acc: 61.719(58.562)
+Random model: resnet10_ap
+[Train Epoch 35 Iter 50] G Loss: -3.140(-2.885) D Loss: -0.366(-0.157) D Acc: 63.281(58.406)
+Random model: convnet
+[Train Epoch 36 Iter 50] G Loss: -3.029(-3.082) D Loss: -0.169(-0.219) D Acc: 47.656(58.516)
+Random model: resnet10_ap
+[Train Epoch 37 Iter 50] G Loss: -2.963(-2.957) D Loss: 0.085(-0.200) D Acc: 63.281(58.703)
+Random model: resnet10_ap
+[Train Epoch 38 Iter 50] G Loss: -2.972(-2.969) D Loss: -0.256(-0.143) D Acc: 59.375(59.188)
+Random model: resnet18
+[Train Epoch 39 Iter 50] G Loss: -2.988(-2.813) D Loss: -0.259(-0.254) D Acc: 60.938(59.438)
+Evaluating convnet
+[Test Epoch 200] Top1: 34.311 Top5: 85.689
+[Test Epoch 400] Top1: 36.048 Top5: 84.551
+[Test Epoch 600] Top1: 38.623 Top5: 86.048
+[Test Epoch 800] Top1: 38.263 Top5: 86.287
+[Test Epoch 1000] Top1: 37.904 Top5: 86.407
+Save best model for convnet
+Current Best Epoch for convnet: 39.0, Top1: 38.623, Top5: 86.048
+Random model: resnet18
+[Train Epoch 40 Iter 50] G Loss: -2.767(-2.922) D Loss: -0.028(-0.311) D Acc: 48.438(59.609)
+Random model: convnet
+[Train Epoch 41 Iter 50] G Loss: -3.111(-2.958) D Loss: -0.503(-0.297) D Acc: 57.812(59.984)
+Random model: resnet10
+[Train Epoch 42 Iter 50] G Loss: -2.493(-2.762) D Loss: -0.210(-0.319) D Acc: 55.469(60.375)
+Random model: resnet10_ap
+[Train Epoch 43 Iter 50] G Loss: -3.176(-3.283) D Loss: -0.201(-0.279) D Acc: 60.938(59.781)
+Random model: convnet
+[Train Epoch 44 Iter 50] G Loss: -2.827(-2.810) D Loss: -0.457(-0.271) D Acc: 60.156(60.484)
+Random model: convnet
+[Train Epoch 45 Iter 50] G Loss: -3.468(-3.069) D Loss: -0.665(-0.294) D Acc: 64.062(60.531)
+Random model: convnet
+[Train Epoch 46 Iter 50] G Loss: -2.401(-3.013) D Loss: 0.243(-0.263) D Acc: 58.594(60.359)
+Random model: convnet
+[Train Epoch 47 Iter 50] G Loss: -2.829(-2.722) D Loss: -0.120(-0.275) D Acc: 48.438(61.219)
+Random model: resnet18
+[Train Epoch 48 Iter 50] G Loss: -2.543(-3.017) D Loss: -0.096(-0.251) D Acc: 57.812(60.438)
+Random model: resnet10
+[Train Epoch 49 Iter 50] G Loss: -3.330(-3.248) D Loss: -0.467(-0.326) D Acc: 63.281(60.844)
+Evaluating convnet
+[Test Epoch 200] Top1: 33.772 Top5: 86.228
+[Test Epoch 400] Top1: 40.060 Top5: 86.228
+[Test Epoch 600] Top1: 40.180 Top5: 86.168
+[Test Epoch 800] Top1: 41.617 Top5: 85.928
+[Test Epoch 1000] Top1: 38.383 Top5: 86.766
+Save best model for convnet
+Current Best Epoch for convnet: 49.0, Top1: 41.617, Top5: 85.928
+
+********** Test env: 3
+
+Augmentataion Matching:  color_crop_cutout
+Augmentataion Net update:  color_crop
+Evaluating convnet
+[Test Epoch 200] Top1: 15.424 Top5: 85.034
+[Test Epoch 400] Top1: 17.969 Top5: 81.471
+[Test Epoch 600] Top1: 8.526 Top5: 83.991
+[Test Epoch 800] Top1: 13.489 Top5: 82.260
+[Test Epoch 1000] Top1: 12.599 Top5: 79.613
+Save best model for convnet
+Current Best Epoch for convnet: 9.0, Top1: 17.969, Top5: 81.471
+Evaluating convnet
+[Test Epoch 200] Top1: 18.096 Top5: 86.612
+[Test Epoch 400] Top1: 25.325 Top5: 87.198
+[Test Epoch 600] Top1: 26.190 Top5: 87.554
+[Test Epoch 800] Top1: 20.794 Top5: 83.813
+[Test Epoch 1000] Top1: 24.612 Top5: 87.427
+Save best model for convnet
+Current Best Epoch for convnet: 19.0, Top1: 26.190, Top5: 87.554
+Evaluating convnet
+[Test Epoch 200] Top1: 18.274 Top5: 70.934
+[Test Epoch 400] Top1: 18.376 Top5: 73.759
+[Test Epoch 600] Top1: 19.852 Top5: 87.936
+[Test Epoch 800] Top1: 18.274 Top5: 77.857
+[Test Epoch 1000] Top1: 23.187 Top5: 77.959
+Current Best Epoch for convnet: 19.0, Top1: 26.190, Top5: 87.554
+-----  Start fine-tuning with logit matching
+Random model: resnet10
+Random model: resnet18_ap
+Random model: resnet10
+Random model: resnet18
+Random model: resnet18_ap
+Random model: convnet
+Random model: convnet
+Random model: resnet18_ap
+Random model: convnet
+Random model: convnet
+Evaluating convnet
+[Test Epoch 200] Top1: 10.664 Top5: 83.482
+[Test Epoch 400] Top1: 10.028 Top5: 86.205
+[Test Epoch 600] Top1: 17.740 Top5: 85.696
+[Test Epoch 800] Top1: 7.865 Top5: 84.169
+[Test Epoch 1000] Top1: 13.719 Top5: 84.474
+Current Best Epoch for convnet: 19.0, Top1: 26.190, Top5: 87.554
+Random model: convnet
+Random model: resnet10_ap
+Random model: resnet10
+Random model: resnet10
+Random model: resnet18
+Random model: resnet10_ap
+Random model: resnet10
+Random model: resnet18_ap
+Random model: resnet18_ap
+Random model: resnet10
+Evaluating convnet
+[Test Epoch 200] Top1: 16.544 Top5: 87.910
+[Test Epoch 400] Top1: 17.180 Top5: 88.241
+[Test Epoch 600] Top1: 20.361 Top5: 89.412
+[Test Epoch 800] Top1: 18.631 Top5: 85.365
+[Test Epoch 1000] Top1: 21.074 Top5: 86.383
+Current Best Epoch for convnet: 19.0, Top1: 26.190, Top5: 87.554
+Leave-one-domain-out accuracy: 29.730
+Namespace(aug_type='color_crop_cutout', batch_size=128, beta=1.0, bias=False, channel=3, data='PACS', data_dir='/var/lib/data', debias_mode='rsc', dim_noise=90, epochs=50, epochs_eval=1000, epochs_match=100, epochs_match_train=16, eval_interval=10, eval_lr=0.01, eval_model=['convnet'], fc=False, fix_disc=False, ipc=1, logs_dir='./logs/PACS', lr1=0.0001, lr2=5e-06, match='logit', match_aug=True, match_coeff=0.001, match_model='convnet', mean=[0.485, 0.456, 0.406], metric='l1', mix_p=-1.0, mixup_net='cut', momentum=0.9, num_classes=7, num_envs=4, num_workers=4, output_dir='./results/PACS', pretrain_epochs=30, print_freq=50, seed=3407, std=[0.229, 0.224, 0.225], tag='PACS', test_interval=200, weight='', weight_decay=0.0005)
+
+********** Test env: 0
+
+Augmentataion Matching:  color_crop_cutout
+Augmentataion Net update:  color_crop
+[Train Epoch 0 Iter 50] G Loss: 2.006(1.036) D Loss: 4.261(5.295) D Acc: 24.219(18.797)
+[Train Epoch 1 Iter 50] G Loss: 4.925(2.323) D Loss: 3.587(3.979) D Acc: 28.906(30.516)
+[Train Epoch 2 Iter 50] G Loss: 3.335(2.613) D Loss: 3.581(3.830) D Acc: 42.188(35.125)
+[Train Epoch 3 Iter 50] G Loss: 2.408(2.771) D Loss: 3.553(3.691) D Acc: 40.625(40.469)
+[Train Epoch 4 Iter 50] G Loss: 4.282(3.775) D Loss: 3.299(3.283) D Acc: 48.438(44.500)
+[Train Epoch 5 Iter 50] G Loss: 5.340(3.534) D Loss: 2.286(3.238) D Acc: 42.969(46.250)
+[Train Epoch 6 Iter 50] G Loss: 5.265(3.415) D Loss: 2.676(2.935) D Acc: 47.656(47.359)
+[Train Epoch 7 Iter 50] G Loss: 3.338(3.044) D Loss: 2.867(2.657) D Acc: 57.031(49.922)
+[Train Epoch 8 Iter 50] G Loss: 0.115(2.785) D Loss: 2.140(2.512) D Acc: 53.125(50.250)
+[Train Epoch 9 Iter 50] G Loss: 1.788(2.528) D Loss: 1.787(2.024) D Acc: 57.812(51.688)
+Evaluating convnet
+/home/techt/anaconda3/envs/lc/lib/python3.8/site-packages/torch/functional.py:478: UserWarning: torch.meshgrid: in an upcoming release, it will be required to pass the indexing argument. (Triggered internally at  /opt/conda/conda-bld/pytorch_1659484810403/work/aten/src/ATen/native/TensorShape.cpp:2894.)
+  return _VF.meshgrid(tensors, **kwargs)  # type: ignore[attr-defined]
+[Test Epoch 200] Top1: 20.996 Top5: 79.639
+[Test Epoch 400] Top1: 20.264 Top5: 78.418
+[Test Epoch 600] Top1: 20.215 Top5: 80.029
+[Test Epoch 800] Top1: 21.045 Top5: 77.539
+[Test Epoch 1000] Top1: 20.410 Top5: 79.102
+Save best model for convnet
+Current Best Epoch for convnet: 9.0, Top1: 21.045, Top5: 77.539
+[Train Epoch 10 Iter 50] G Loss: 1.052(2.564) D Loss: 1.472(1.747) D Acc: 56.250(53.266)
+[Train Epoch 11 Iter 50] G Loss: 0.206(2.338) D Loss: 1.970(1.476) D Acc: 54.688(52.391)
+[Train Epoch 12 Iter 50] G Loss: -0.740(2.177) D Loss: 2.311(1.367) D Acc: 48.438(55.391)
+[Train Epoch 13 Iter 50] G Loss: 4.950(1.910) D Loss: 1.073(1.225) D Acc: 50.781(55.484)
+[Train Epoch 14 Iter 50] G Loss: 4.041(2.189) D Loss: 0.705(1.049) D Acc: 64.062(55.969)
+[Train Epoch 15 Iter 50] G Loss: 0.820(1.886) D Loss: 1.340(1.045) D Acc: 56.250(57.141)
+[Train Epoch 16 Iter 50] G Loss: 0.396(1.931) D Loss: 0.572(0.932) D Acc: 61.719(58.750)
+[Train Epoch 17 Iter 50] G Loss: 2.156(1.785) D Loss: 1.069(0.789) D Acc: 61.719(58.234)
+[Train Epoch 18 Iter 50] G Loss: 0.272(1.799) D Loss: 0.686(0.779) D Acc: 57.812(59.312)
+[Train Epoch 19 Iter 50] G Loss: 0.389(1.510) D Loss: 0.712(0.640) D Acc: 46.875(60.141)
+Evaluating convnet
+[Test Epoch 200] Top1: 20.557 Top5: 78.955
+[Test Epoch 400] Top1: 20.801 Top5: 80.664
+[Test Epoch 600] Top1: 19.287 Top5: 77.051
+[Test Epoch 800] Top1: 22.363 Top5: 81.836
+[Test Epoch 1000] Top1: 20.410 Top5: 79.834
+Save best model for convnet
+Current Best Epoch for convnet: 19.0, Top1: 22.363, Top5: 81.836
+[Train Epoch 20 Iter 50] G Loss: 2.114(1.724) D Loss: 0.565(0.610) D Acc: 53.906(60.969)
+[Train Epoch 21 Iter 50] G Loss: 3.553(1.820) D Loss: 1.160(0.463) D Acc: 57.812(61.203)
+[Train Epoch 22 Iter 50] G Loss: 3.008(1.565) D Loss: 0.622(0.333) D Acc: 60.938(62.828)
+[Train Epoch 23 Iter 50] G Loss: 2.983(1.316) D Loss: 0.188(0.297) D Acc: 61.719(63.250)
+[Train Epoch 24 Iter 50] G Loss: 0.961(1.583) D Loss: 0.154(0.275) D Acc: 60.938(64.141)
+[Train Epoch 25 Iter 50] G Loss: 0.286(1.478) D Loss: -0.227(0.144) D Acc: 69.531(64.016)
+[Train Epoch 26 Iter 50] G Loss: -0.281(1.144) D Loss: -0.372(0.153) D Acc: 65.625(65.250)
+[Train Epoch 27 Iter 50] G Loss: 2.280(1.237) D Loss: 0.042(0.115) D Acc: 71.094(65.141)
+[Train Epoch 28 Iter 50] G Loss: 1.453(1.120) D Loss: -0.381(0.050) D Acc: 68.750(65.734)
+[Train Epoch 29 Iter 50] G Loss: 1.024(0.821) D Loss: 0.354(0.118) D Acc: 67.969(65.297)
+Evaluating convnet
+[Test Epoch 200] Top1: 19.775 Top5: 76.953
+[Test Epoch 400] Top1: 19.775 Top5: 78.418
+[Test Epoch 600] Top1: 20.459 Top5: 77.100
+[Test Epoch 800] Top1: 19.629 Top5: 78.857
+[Test Epoch 1000] Top1: 18.652 Top5: 76.172
+Current Best Epoch for convnet: 19.0, Top1: 22.363, Top5: 81.836
+-----  Start fine-tuning with logit matching
+Random model: convnet
+[Train Epoch 30 Iter 50] G Loss: 0.803(1.176) D Loss: -0.766(-0.746) D Acc: 64.062(65.062)
+Random model: resnet10_ap
+[Train Epoch 31 Iter 50] G Loss: 1.326(1.627) D Loss: -0.700(-0.582) D Acc: 71.094(65.250)
+Random model: resnet10
+[Train Epoch 32 Iter 50] G Loss: 1.568(1.464) D Loss: -0.899(-0.689) D Acc: 74.219(66.000)
+Random model: resnet18
+[Train Epoch 33 Iter 50] G Loss: 1.416(1.526) D Loss: -0.873(-0.590) D Acc: 68.750(65.781)
+Random model: resnet10
+[Train Epoch 34 Iter 50] G Loss: 1.634(1.782) D Loss: -0.153(-0.611) D Acc: 57.812(64.844)
+Random model: resnet10_ap
+[Train Epoch 35 Iter 50] G Loss: 1.401(1.535) D Loss: -0.793(-0.624) D Acc: 70.312(65.797)
+Random model: resnet18
+[Train Epoch 36 Iter 50] G Loss: 1.107(1.434) D Loss: -0.642(-0.679) D Acc: 61.719(65.891)
+Random model: resnet18_ap
+[Train Epoch 37 Iter 50] G Loss: 1.673(1.641) D Loss: -0.882(-0.681) D Acc: 61.719(66.062)
+Random model: resnet18
+[Train Epoch 38 Iter 50] G Loss: 1.778(1.573) D Loss: -0.649(-0.622) D Acc: 67.188(65.953)
+Random model: resnet10
+[Train Epoch 39 Iter 50] G Loss: 1.168(1.417) D Loss: -0.316(-0.642) D Acc: 62.500(66.609)
+Evaluating convnet
+[Test Epoch 200] Top1: 19.434 Top5: 76.953
+[Test Epoch 400] Top1: 20.654 Top5: 78.711
+[Test Epoch 600] Top1: 19.922 Top5: 78.809
+[Test Epoch 800] Top1: 20.703 Top5: 77.295
+[Test Epoch 1000] Top1: 20.020 Top5: 79.395
+Current Best Epoch for convnet: 19.0, Top1: 22.363, Top5: 81.836
+Random model: resnet10_ap
+[Train Epoch 40 Iter 50] G Loss: 1.524(1.324) D Loss: -0.846(-0.659) D Acc: 67.188(66.344)
+Random model: resnet18_ap
+[Train Epoch 41 Iter 50] G Loss: 1.359(1.340) D Loss: -0.754(-0.685) D Acc: 63.281(66.641)
+Random model: resnet10_ap
+[Train Epoch 42 Iter 50] G Loss: 1.511(1.568) D Loss: -0.413(-0.645) D Acc: 64.062(67.125)
+Random model: resnet18
+[Train Epoch 43 Iter 50] G Loss: 1.945(1.462) D Loss: -0.670(-0.672) D Acc: 60.156(67.172)
+Random model: resnet18
+[Train Epoch 44 Iter 50] G Loss: 1.255(1.612) D Loss: -1.131(-0.687) D Acc: 68.750(66.562)
+Random model: resnet10
+[Train Epoch 45 Iter 50] G Loss: 1.523(1.847) D Loss: -0.774(-0.691) D Acc: 67.188(67.516)
+Random model: convnet
+[Train Epoch 46 Iter 50] G Loss: 1.277(1.479) D Loss: -0.494(-0.691) D Acc: 67.969(67.188)
+Random model: resnet18
+[Train Epoch 47 Iter 50] G Loss: 1.637(1.655) D Loss: -0.882(-0.693) D Acc: 65.625(67.469)
+Random model: resnet10
+[Train Epoch 48 Iter 50] G Loss: 1.360(1.702) D Loss: -0.407(-0.692) D Acc: 65.625(67.578)
+Random model: resnet18
+[Train Epoch 49 Iter 50] G Loss: 1.574(1.547) D Loss: -0.527(-0.776) D Acc: 62.500(67.922)
+Evaluating convnet
+[Test Epoch 200] Top1: 19.287 Top5: 77.686
+[Test Epoch 400] Top1: 19.922 Top5: 81.494
+[Test Epoch 600] Top1: 18.018 Top5: 79.590
+[Test Epoch 800] Top1: 19.824 Top5: 79.395
+[Test Epoch 1000] Top1: 20.020 Top5: 80.029
+Current Best Epoch for convnet: 19.0, Top1: 22.363, Top5: 81.836
+
+********** Test env: 1
+
+Augmentataion Matching:  color_crop_cutout
+Augmentataion Net update:  color_crop
+[Train Epoch 0 Iter 50] G Loss: -0.109(0.412) D Loss: 4.489(4.791) D Acc: 22.656(20.391)
+[Train Epoch 1 Iter 50] G Loss: 3.718(0.496) D Loss: 4.300(4.143) D Acc: 20.312(25.312)
+[Train Epoch 2 Iter 50] G Loss: 1.631(0.269) D Loss: 4.554(4.033) D Acc: 25.781(29.453)
+[Train Epoch 3 Iter 50] G Loss: 1.570(0.142) D Loss: 2.231(3.773) D Acc: 40.625(35.203)
+[Train Epoch 4 Iter 50] G Loss: -0.805(0.066) D Loss: 4.777(3.612) D Acc: 23.438(38.484)
+[Train Epoch 5 Iter 50] G Loss: -1.560(-0.300) D Loss: 3.867(3.559) D Acc: 50.781(40.109)
+[Train Epoch 6 Iter 50] G Loss: -0.056(-0.793) D Loss: 3.408(3.438) D Acc: 44.531(41.688)
+[Train Epoch 7 Iter 50] G Loss: -0.205(-0.396) D Loss: 2.957(3.250) D Acc: 39.844(42.969)
+[Train Epoch 8 Iter 50] G Loss: -0.309(-0.727) D Loss: 2.427(2.958) D Acc: 42.969(45.469)
+[Train Epoch 9 Iter 50] G Loss: -0.918(-1.020) D Loss: 2.018(2.754) D Acc: 52.344(45.453)
+Evaluating convnet
+[Test Epoch 200] Top1: 17.705 Top5: 80.589
+[Test Epoch 400] Top1: 17.918 Top5: 80.119
+[Test Epoch 600] Top1: 18.643 Top5: 79.735
+[Test Epoch 800] Top1: 18.302 Top5: 78.157
+[Test Epoch 1000] Top1: 20.734 Top5: 79.693
+Save best model for convnet
+Current Best Epoch for convnet: 9.0, Top1: 20.734, Top5: 79.693
+[Train Epoch 10 Iter 50] G Loss: 1.613(-1.199) D Loss: 1.994(2.546) D Acc: 42.969(46.406)
+[Train Epoch 11 Iter 50] G Loss: -1.621(-1.794) D Loss: 1.325(2.369) D Acc: 53.906(46.984)
+[Train Epoch 12 Iter 50] G Loss: 1.114(-1.722) D Loss: 2.502(2.028) D Acc: 37.500(47.219)
+[Train Epoch 13 Iter 50] G Loss: 0.006(-1.872) D Loss: 1.853(1.915) D Acc: 53.906(47.297)
+[Train Epoch 14 Iter 50] G Loss: -1.655(-2.249) D Loss: 1.701(1.752) D Acc: 55.469(48.094)
+[Train Epoch 15 Iter 50] G Loss: -5.471(-2.259) D Loss: 1.012(1.570) D Acc: 53.906(47.719)
+[Train Epoch 16 Iter 50] G Loss: -1.300(-2.611) D Loss: 1.669(1.555) D Acc: 47.656(47.766)
+[Train Epoch 17 Iter 50] G Loss: -1.862(-2.822) D Loss: 1.096(1.293) D Acc: 46.094(48.484)
+[Train Epoch 18 Iter 50] G Loss: -1.119(-2.904) D Loss: 0.938(1.195) D Acc: 50.000(49.969)
+[Train Epoch 19 Iter 50] G Loss: -3.447(-2.636) D Loss: 1.188(1.242) D Acc: 55.469(49.797)
+Evaluating convnet
+[Test Epoch 200] Top1: 20.222 Top5: 78.498
+[Test Epoch 400] Top1: 19.795 Top5: 78.626
+[Test Epoch 600] Top1: 19.539 Top5: 79.266
+[Test Epoch 800] Top1: 20.776 Top5: 80.077
+[Test Epoch 1000] Top1: 18.387 Top5: 76.834
+Current Best Epoch for convnet: 9.0, Top1: 20.734, Top5: 79.693
+[Train Epoch 20 Iter 50] G Loss: -4.213(-3.241) D Loss: 0.537(1.079) D Acc: 53.906(50.391)
+[Train Epoch 21 Iter 50] G Loss: -5.179(-3.371) D Loss: 1.032(1.115) D Acc: 50.781(50.828)
+[Train Epoch 22 Iter 50] G Loss: -6.540(-3.659) D Loss: 1.521(1.058) D Acc: 58.594(51.500)
+[Train Epoch 23 Iter 50] G Loss: -6.782(-3.441) D Loss: 1.978(0.958) D Acc: 47.656(52.688)
+[Train Epoch 24 Iter 50] G Loss: -2.992(-3.376) D Loss: 1.041(0.935) D Acc: 53.906(52.750)
+[Train Epoch 25 Iter 50] G Loss: -1.421(-3.686) D Loss: 0.995(0.923) D Acc: 54.688(53.562)
+[Train Epoch 26 Iter 50] G Loss: -4.263(-4.038) D Loss: 0.282(0.816) D Acc: 58.594(53.781)
+[Train Epoch 27 Iter 50] G Loss: -2.921(-3.850) D Loss: 1.355(0.751) D Acc: 49.219(54.078)
+[Train Epoch 28 Iter 50] G Loss: -3.859(-4.057) D Loss: 0.861(0.762) D Acc: 52.344(54.484)
+[Train Epoch 29 Iter 50] G Loss: -4.725(-4.029) D Loss: 1.187(0.700) D Acc: 57.031(55.656)
+Evaluating convnet
+[Test Epoch 200] Top1: 21.886 Top5: 82.039
+[Test Epoch 400] Top1: 22.440 Top5: 79.906
+[Test Epoch 600] Top1: 22.568 Top5: 81.869
+[Test Epoch 800] Top1: 25.085 Top5: 81.442
+[Test Epoch 1000] Top1: 24.573 Top5: 80.375
+Save best model for convnet
+Current Best Epoch for convnet: 29.0, Top1: 25.085, Top5: 81.442
+-----  Start fine-tuning with logit matching
+Random model: resnet18_ap
+[Train Epoch 30 Iter 50] G Loss: -4.365(-4.818) D Loss: -0.676(-0.436) D Acc: 65.625(60.328)
+Random model: convnet
+[Train Epoch 31 Iter 50] G Loss: -4.855(-4.837) D Loss: -0.443(-0.388) D Acc: 58.594(60.516)
+Random model: convnet
+[Train Epoch 32 Iter 50] G Loss: -4.393(-4.487) D Loss: -0.448(-0.240) D Acc: 58.594(61.047)
+Random model: resnet18_ap
+[Train Epoch 33 Iter 50] G Loss: -4.093(-3.991) D Loss: -0.141(-0.357) D Acc: 58.594(61.625)
+Random model: resnet10
+[Train Epoch 34 Iter 50] G Loss: -4.073(-4.135) D Loss: -0.771(-0.366) D Acc: 60.156(61.812)
+Random model: resnet18
+[Train Epoch 35 Iter 50] G Loss: -4.144(-4.228) D Loss: -0.305(-0.347) D Acc: 63.281(61.922)
+Random model: convnet
+[Train Epoch 36 Iter 50] G Loss: -3.433(-3.778) D Loss: -0.270(-0.375) D Acc: 57.812(62.250)
+Random model: convnet
+[Train Epoch 37 Iter 50] G Loss: -3.887(-3.863) D Loss: 0.325(-0.332) D Acc: 55.469(62.562)
+Random model: resnet18
+[Train Epoch 38 Iter 50] G Loss: -4.127(-4.000) D Loss: 0.038(-0.335) D Acc: 58.594(62.453)
+Random model: resnet18_ap
+[Train Epoch 39 Iter 50] G Loss: -4.494(-4.183) D Loss: -0.534(-0.376) D Acc: 69.531(62.375)
+Evaluating convnet
+[Test Epoch 200] Top1: 23.123 Top5: 80.461
+[Test Epoch 400] Top1: 23.592 Top5: 82.466
+[Test Epoch 600] Top1: 25.853 Top5: 83.788
+[Test Epoch 800] Top1: 24.147 Top5: 82.850
+[Test Epoch 1000] Top1: 22.568 Top5: 83.020
+Current Best Epoch for convnet: 29.0, Top1: 25.085, Top5: 81.442
+Random model: convnet
+[Train Epoch 40 Iter 50] G Loss: -4.202(-4.472) D Loss: -0.174(-0.304) D Acc: 57.812(62.750)
+Random model: convnet
+[Train Epoch 41 Iter 50] G Loss: -4.095(-4.185) D Loss: -0.405(-0.383) D Acc: 66.406(62.125)
+Random model: resnet10
+[Train Epoch 42 Iter 50] G Loss: -3.816(-3.596) D Loss: -0.222(-0.434) D Acc: 60.156(63.047)
+Random model: resnet18_ap
+[Train Epoch 43 Iter 50] G Loss: -4.301(-4.083) D Loss: -0.638(-0.432) D Acc: 68.750(63.094)
+Random model: resnet10
+[Train Epoch 44 Iter 50] G Loss: -4.057(-4.131) D Loss: -0.809(-0.439) D Acc: 67.969(63.062)
+Random model: resnet10_ap
+[Train Epoch 45 Iter 50] G Loss: -3.944(-4.032) D Loss: -0.497(-0.403) D Acc: 61.719(63.562)
+Random model: resnet18_ap
+[Train Epoch 46 Iter 50] G Loss: -3.452(-3.730) D Loss: -0.570(-0.439) D Acc: 67.188(63.625)
+Random model: resnet18
+[Train Epoch 47 Iter 50] G Loss: -3.767(-3.839) D Loss: -0.428(-0.365) D Acc: 67.188(63.641)
+Random model: resnet18_ap
+[Train Epoch 48 Iter 50] G Loss: -3.593(-3.539) D Loss: -0.446(-0.384) D Acc: 60.156(63.672)
+Random model: resnet10
+[Train Epoch 49 Iter 50] G Loss: -3.641(-3.570) D Loss: -0.063(-0.411) D Acc: 61.719(63.859)
+Evaluating convnet
+[Test Epoch 200] Top1: 19.241 Top5: 72.995
+[Test Epoch 400] Top1: 21.502 Top5: 73.251
+[Test Epoch 600] Top1: 20.776 Top5: 76.152
+[Test Epoch 800] Top1: 21.075 Top5: 75.640
+[Test Epoch 1000] Top1: 20.094 Top5: 75.128
+Current Best Epoch for convnet: 29.0, Top1: 25.085, Top5: 81.442
+
+********** Test env: 2
+
+Augmentataion Matching:  color_crop_cutout
+Augmentataion Net update:  color_crop
+[Train Epoch 0 Iter 50] G Loss: 0.670(-0.125) D Loss: 4.058(5.194) D Acc: 27.344(18.094)
+[Train Epoch 1 Iter 50] G Loss: -0.797(1.113) D Loss: 4.572(3.579) D Acc: 32.031(26.766)
+[Train Epoch 2 Iter 50] G Loss: 2.157(1.060) D Loss: 3.945(4.044) D Acc: 27.344(32.422)
+[Train Epoch 3 Iter 50] G Loss: 1.162(0.635) D Loss: 3.289(3.908) D Acc: 46.875(35.969)
+[Train Epoch 4 Iter 50] G Loss: 0.665(0.226) D Loss: 3.597(3.800) D Acc: 37.500(39.812)
+[Train Epoch 5 Iter 50] G Loss: 0.131(0.527) D Loss: 4.318(3.451) D Acc: 30.469(41.281)
+[Train Epoch 6 Iter 50] G Loss: -1.877(-0.537) D Loss: 4.107(3.232) D Acc: 45.312(42.875)
+[Train Epoch 7 Iter 50] G Loss: -0.079(-0.032) D Loss: 3.764(2.912) D Acc: 47.656(44.109)
+[Train Epoch 8 Iter 50] G Loss: 1.208(-0.534) D Loss: 0.984(2.629) D Acc: 46.094(44.328)
+[Train Epoch 9 Iter 50] G Loss: 0.810(-0.713) D Loss: 2.194(2.516) D Acc: 46.094(45.828)
+Evaluating convnet
+[Test Epoch 200] Top1: 17.784 Top5: 74.611
+[Test Epoch 400] Top1: 16.228 Top5: 80.898
+[Test Epoch 600] Top1: 18.144 Top5: 79.940
+[Test Epoch 800] Top1: 20.180 Top5: 82.395
+[Test Epoch 1000] Top1: 18.323 Top5: 81.557
+Save best model for convnet
+Current Best Epoch for convnet: 9.0, Top1: 20.180, Top5: 82.395
+[Train Epoch 10 Iter 50] G Loss: 0.957(-1.047) D Loss: 2.187(2.329) D Acc: 50.000(45.891)
+[Train Epoch 11 Iter 50] G Loss: -6.776(-2.037) D Loss: 4.101(2.371) D Acc: 39.844(46.219)
+[Train Epoch 12 Iter 50] G Loss: -2.854(-2.287) D Loss: 1.858(1.938) D Acc: 48.438(48.219)
+[Train Epoch 13 Iter 50] G Loss: -3.767(-2.543) D Loss: 1.554(1.847) D Acc: 46.875(46.562)
+[Train Epoch 14 Iter 50] G Loss: -3.409(-2.718) D Loss: 1.849(1.686) D Acc: 50.781(48.125)
+[Train Epoch 15 Iter 50] G Loss: -4.556(-2.935) D Loss: 1.653(1.478) D Acc: 44.531(48.984)
+[Train Epoch 16 Iter 50] G Loss: -1.761(-2.978) D Loss: 1.683(1.352) D Acc: 43.750(51.109)
+[Train Epoch 17 Iter 50] G Loss: -4.869(-2.974) D Loss: 1.528(1.342) D Acc: 51.562(51.406)
+[Train Epoch 18 Iter 50] G Loss: -5.484(-3.164) D Loss: 1.187(1.238) D Acc: 49.219(52.078)
+[Train Epoch 19 Iter 50] G Loss: -3.546(-3.413) D Loss: 0.694(1.190) D Acc: 49.219(53.000)
+Evaluating convnet
+[Test Epoch 200] Top1: 20.659 Top5: 81.078
+[Test Epoch 400] Top1: 20.539 Top5: 82.934
+[Test Epoch 600] Top1: 21.617 Top5: 82.395
+[Test Epoch 800] Top1: 20.000 Top5: 80.359
+[Test Epoch 1000] Top1: 21.497 Top5: 80.898
+Save best model for convnet
+Current Best Epoch for convnet: 19.0, Top1: 21.617, Top5: 82.395
+[Train Epoch 20 Iter 50] G Loss: -3.841(-3.499) D Loss: 1.296(1.119) D Acc: 54.688(53.188)
+[Train Epoch 21 Iter 50] G Loss: -5.653(-3.201) D Loss: 0.951(1.012) D Acc: 58.594(54.172)
+[Train Epoch 22 Iter 50] G Loss: -3.187(-3.405) D Loss: 0.608(0.951) D Acc: 58.594(54.594)
+[Train Epoch 23 Iter 50] G Loss: -2.813(-3.509) D Loss: 1.245(0.844) D Acc: 60.156(55.641)
+[Train Epoch 24 Iter 50] G Loss: -2.934(-3.536) D Loss: 1.097(0.819) D Acc: 53.906(55.922)
+[Train Epoch 25 Iter 50] G Loss: -3.221(-3.610) D Loss: 0.157(0.677) D Acc: 61.719(57.344)
+[Train Epoch 26 Iter 50] G Loss: -3.718(-3.622) D Loss: 1.766(0.709) D Acc: 53.125(56.719)
+[Train Epoch 27 Iter 50] G Loss: -3.204(-3.380) D Loss: 0.076(0.580) D Acc: 60.938(58.375)
+[Train Epoch 28 Iter 50] G Loss: -4.367(-3.643) D Loss: 0.732(0.568) D Acc: 57.031(58.859)
+[Train Epoch 29 Iter 50] G Loss: -4.255(-3.512) D Loss: 0.913(0.471) D Acc: 54.688(59.250)
+Evaluating convnet
+[Test Epoch 200] Top1: 26.707 Top5: 84.671
+[Test Epoch 400] Top1: 25.689 Top5: 85.749
+[Test Epoch 600] Top1: 27.904 Top5: 85.329
+[Test Epoch 800] Top1: 30.060 Top5: 86.168
+[Test Epoch 1000] Top1: 30.240 Top5: 87.066
+Save best model for convnet
+Current Best Epoch for convnet: 29.0, Top1: 30.240, Top5: 87.066
+-----  Start fine-tuning with logit matching
+Random model: resnet10
+[Train Epoch 30 Iter 50] G Loss: -4.519(-4.161) D Loss: -0.675(-0.508) D Acc: 67.969(65.688)
+Random model: resnet10_ap
+[Train Epoch 31 Iter 50] G Loss: -3.783(-3.796) D Loss: -0.229(-0.634) D Acc: 60.156(65.938)
+Random model: resnet18_ap
+[Train Epoch 32 Iter 50] G Loss: -3.693(-3.930) D Loss: -0.689(-0.645) D Acc: 71.875(65.844)
+Random model: resnet18_ap
+[Train Epoch 33 Iter 50] G Loss: -3.420(-3.992) D Loss: -0.839(-0.597) D Acc: 77.344(66.750)
+Random model: resnet18_ap
+[Train Epoch 34 Iter 50] G Loss: -4.225(-3.846) D Loss: -0.921(-0.573) D Acc: 71.094(66.703)
+Random model: resnet10_ap
+[Train Epoch 35 Iter 50] G Loss: -3.981(-3.991) D Loss: -0.427(-0.528) D Acc: 65.625(67.156)
+Random model: convnet
+[Train Epoch 36 Iter 50] G Loss: -3.425(-3.645) D Loss: -0.331(-0.537) D Acc: 61.719(66.938)
+Random model: resnet10_ap
+[Train Epoch 37 Iter 50] G Loss: -3.751(-3.462) D Loss: -0.453(-0.586) D Acc: 70.312(67.219)
+Random model: resnet10_ap
+[Train Epoch 38 Iter 50] G Loss: -3.320(-3.576) D Loss: -0.585(-0.569) D Acc: 67.188(67.312)
+Random model: resnet18
+[Train Epoch 39 Iter 50] G Loss: -3.259(-3.560) D Loss: -0.457(-0.589) D Acc: 66.406(67.656)
+Evaluating convnet
+[Test Epoch 200] Top1: 27.186 Top5: 87.305
+[Test Epoch 400] Top1: 30.060 Top5: 86.707
+[Test Epoch 600] Top1: 35.808 Top5: 87.126
+[Test Epoch 800] Top1: 30.479 Top5: 84.611
+[Test Epoch 1000] Top1: 31.138 Top5: 87.186
+Save best model for convnet
+Current Best Epoch for convnet: 39.0, Top1: 35.808, Top5: 87.126
+Random model: resnet18
+[Train Epoch 40 Iter 50] G Loss: -3.649(-3.551) D Loss: -0.351(-0.551) D Acc: 57.812(67.906)
+Random model: convnet
+[Train Epoch 41 Iter 50] G Loss: -3.370(-3.471) D Loss: -0.804(-0.559) D Acc: 73.438(67.422)
+Random model: resnet10
+[Train Epoch 42 Iter 50] G Loss: -3.644(-3.525) D Loss: -0.312(-0.561) D Acc: 65.625(68.422)
+Random model: resnet10_ap
+[Train Epoch 43 Iter 50] G Loss: -3.214(-3.397) D Loss: -0.784(-0.541) D Acc: 62.500(67.312)
+Random model: convnet
+[Train Epoch 44 Iter 50] G Loss: -3.173(-3.517) D Loss: -0.939(-0.533) D Acc: 67.188(67.453)
+Random model: convnet
+[Train Epoch 45 Iter 50] G Loss: -3.295(-3.419) D Loss: -0.860(-0.541) D Acc: 73.438(68.000)
+Random model: convnet
+[Train Epoch 46 Iter 50] G Loss: -3.663(-3.391) D Loss: 0.139(-0.555) D Acc: 68.750(68.312)
+Random model: convnet
+[Train Epoch 47 Iter 50] G Loss: -3.196(-3.576) D Loss: -0.489(-0.567) D Acc: 61.719(68.531)
+Random model: resnet18
+[Train Epoch 48 Iter 50] G Loss: -3.563(-3.390) D Loss: -0.475(-0.527) D Acc: 70.312(68.188)
+Random model: resnet10
+[Train Epoch 49 Iter 50] G Loss: -3.732(-3.243) D Loss: -0.753(-0.574) D Acc: 71.094(68.516)
+Evaluating convnet
+[Test Epoch 200] Top1: 29.042 Top5: 87.066
+[Test Epoch 400] Top1: 27.246 Top5: 87.425
+[Test Epoch 600] Top1: 26.886 Top5: 86.048
+[Test Epoch 800] Top1: 28.802 Top5: 88.383
+[Test Epoch 1000] Top1: 30.659 Top5: 86.407
+Current Best Epoch for convnet: 39.0, Top1: 35.808, Top5: 87.126
+
+********** Test env: 3
+
+Augmentataion Matching:  color_crop_cutout
+Augmentataion Net update:  color_crop
+Evaluating convnet
+[Test Epoch 200] Top1: 6.134 Top5: 78.875
+[Test Epoch 400] Top1: 14.533 Top5: 81.369
+[Test Epoch 600] Top1: 19.216 Top5: 78.671
+[Test Epoch 800] Top1: 22.321 Top5: 81.446
+[Test Epoch 1000] Top1: 21.736 Top5: 89.565
+Save best model for convnet
+Current Best Epoch for convnet: 9.0, Top1: 22.321, Top5: 81.446
+Evaluating convnet
+[Test Epoch 200] Top1: 20.311 Top5: 79.486
+[Test Epoch 400] Top1: 16.976 Top5: 80.886
+[Test Epoch 600] Top1: 16.213 Top5: 79.689
+[Test Epoch 800] Top1: 18.249 Top5: 80.529
+[Test Epoch 1000] Top1: 22.627 Top5: 80.122
+Current Best Epoch for convnet: 9.0, Top1: 22.321, Top5: 81.446
+Evaluating convnet
+[Test Epoch 200] Top1: 24.612 Top5: 87.910
+[Test Epoch 400] Top1: 20.107 Top5: 84.602
+[Test Epoch 600] Top1: 23.136 Top5: 85.976
+[Test Epoch 800] Top1: 23.212 Top5: 85.187
+[Test Epoch 1000] Top1: 22.347 Top5: 86.561
+Save best model for convnet
+Current Best Epoch for convnet: 29.0, Top1: 24.612, Top5: 87.910
+-----  Start fine-tuning with logit matching
+Random model: resnet10
+Random model: resnet18_ap
+Random model: resnet10
+Random model: resnet18
+Random model: resnet18_ap
+Random model: convnet
+Random model: convnet
+Random model: resnet18_ap
+Random model: convnet
+Random model: convnet
+Evaluating convnet
+[Test Epoch 200] Top1: 22.627 Top5: 86.154
+[Test Epoch 400] Top1: 22.652 Top5: 83.965
+[Test Epoch 600] Top1: 22.550 Top5: 87.503
+[Test Epoch 800] Top1: 22.728 Top5: 85.722
+[Test Epoch 1000] Top1: 21.583 Top5: 84.933
+Current Best Epoch for convnet: 29.0, Top1: 24.612, Top5: 87.910
+Random model: convnet
+Random model: resnet10_ap
+Random model: resnet10
+Random model: resnet10
+Random model: resnet18
+Random model: resnet10_ap
+Random model: resnet10
+Random model: resnet18_ap
+Random model: resnet18_ap
+Random model: resnet10
+Evaluating convnet
+[Test Epoch 200] Top1: 24.077 Top5: 86.638
+[Test Epoch 400] Top1: 23.517 Top5: 81.318
+[Test Epoch 600] Top1: 21.558 Top5: 83.660
+[Test Epoch 800] Top1: 20.514 Top5: 84.602
+[Test Epoch 1000] Top1: 21.736 Top5: 78.875
+Current Best Epoch for convnet: 29.0, Top1: 24.612, Top5: 87.910
+Leave-one-domain-out accuracy: 26.967
+Namespace(aug_type='color_crop_cutout', batch_size=128, beta=1.0, bias=False, channel=3, data='PACS', data_dir='/var/lib/data', debias_mode='rsc', dim_noise=90, epochs=50, epochs_eval=1000, epochs_match=100, epochs_match_train=16, eval_interval=10, eval_lr=0.01, eval_model=['convnet'], fc=False, fix_disc=False, ipc=1, logs_dir='./logs/PACS', lr1=0.0001, lr2=5e-06, match='logit', match_aug=True, match_coeff=0.001, match_model='convnet', mean=[0.485, 0.456, 0.406], metric='l1', mix_p=-1.0, mixup_net='cut', momentum=0.9, num_classes=7, num_envs=4, num_workers=4, output_dir='./results/PACS', pretrain_epochs=30, print_freq=50, seed=3407, std=[0.229, 0.224, 0.225], tag='PACS', test_interval=200, weight='', weight_decay=0.0005)
+
+********** Test env: 0
+
+Augmentataion Matching:  color_crop_cutout
+Augmentataion Net update:  color_crop
+[Train Epoch 0 Iter 50] G Loss: 1.696(1.698) D Loss: 3.717(4.000) D Acc: 25.781(18.812)
+[Train Epoch 1 Iter 50] G Loss: 2.890(1.922) D Loss: 4.030(4.001) D Acc: 30.469(28.250)
+[Train Epoch 2 Iter 50] G Loss: 4.142(2.569) D Loss: 4.465(3.554) D Acc: 39.844(35.094)
+[Train Epoch 3 Iter 50] G Loss: 1.729(2.954) D Loss: 4.598(3.459) D Acc: 42.188(42.172)
+[Train Epoch 4 Iter 50] G Loss: 5.105(3.506) D Loss: 2.714(3.119) D Acc: 44.531(44.906)
+[Train Epoch 5 Iter 50] G Loss: 4.889(3.704) D Loss: 3.589(3.011) D Acc: 43.750(47.156)
+[Train Epoch 6 Iter 50] G Loss: 3.735(3.511) D Loss: 3.155(2.688) D Acc: 48.438(48.109)
+[Train Epoch 7 Iter 50] G Loss: 2.408(3.038) D Loss: 2.303(2.575) D Acc: 50.000(50.031)
+[Train Epoch 8 Iter 50] G Loss: 2.364(2.628) D Loss: 2.171(2.261) D Acc: 49.219(51.344)
+[Train Epoch 9 Iter 50] G Loss: 2.415(2.629) D Loss: 1.281(1.883) D Acc: 53.906(52.188)
+Evaluating convnet
+/home/techt/anaconda3/envs/lc/lib/python3.8/site-packages/torch/functional.py:478: UserWarning: torch.meshgrid: in an upcoming release, it will be required to pass the indexing argument. (Triggered internally at  /opt/conda/conda-bld/pytorch_1659484810403/work/aten/src/ATen/native/TensorShape.cpp:2894.)
+  return _VF.meshgrid(tensors, **kwargs)  # type: ignore[attr-defined]
+[Test Epoch 200] Top1: 17.627 Top5: 73.877
+[Test Epoch 400] Top1: 18.066 Top5: 74.219
+[Test Epoch 600] Top1: 17.480 Top5: 72.949
+[Test Epoch 800] Top1: 18.018 Top5: 74.707
+[Test Epoch 1000] Top1: 17.090 Top5: 73.828
+Save best model for convnet
+Current Best Epoch for convnet: 9.0, Top1: 18.066, Top5: 74.219
+[Train Epoch 10 Iter 50] G Loss: -0.225(2.192) D Loss: 2.084(1.576) D Acc: 50.781(52.922)
+[Train Epoch 11 Iter 50] G Loss: -0.298(2.153) D Loss: 1.747(1.410) D Acc: 65.625(52.469)
+[Train Epoch 12 Iter 50] G Loss: -0.460(1.594) D Loss: 1.590(1.277) D Acc: 50.781(55.422)
+[Train Epoch 13 Iter 50] G Loss: 1.828(1.757) D Loss: 0.688(1.024) D Acc: 50.000(55.500)
+[Train Epoch 14 Iter 50] G Loss: 1.744(1.520) D Loss: 1.187(0.902) D Acc: 61.719(55.734)
+[Train Epoch 15 Iter 50] G Loss: 0.038(1.205) D Loss: 0.754(0.883) D Acc: 58.594(57.188)
+[Train Epoch 16 Iter 50] G Loss: 0.618(0.765) D Loss: 1.033(0.782) D Acc: 63.281(57.578)
+[Train Epoch 17 Iter 50] G Loss: 1.394(1.109) D Loss: 0.839(0.719) D Acc: 57.031(57.531)
+[Train Epoch 18 Iter 50] G Loss: 0.267(1.128) D Loss: 0.183(0.647) D Acc: 55.469(58.672)
+[Train Epoch 19 Iter 50] G Loss: -2.026(0.883) D Loss: 0.435(0.526) D Acc: 53.906(60.859)
+Evaluating convnet
+[Test Epoch 200] Top1: 20.459 Top5: 75.244
+[Test Epoch 400] Top1: 19.873 Top5: 76.709
+[Test Epoch 600] Top1: 20.605 Top5: 75.781
+[Test Epoch 800] Top1: 20.166 Top5: 77.441
+[Test Epoch 1000] Top1: 19.922 Top5: 75.879
+Save best model for convnet
+Current Best Epoch for convnet: 19.0, Top1: 20.605, Top5: 75.781
+[Train Epoch 20 Iter 50] G Loss: 2.909(0.787) D Loss: 0.556(0.546) D Acc: 58.594(60.844)
+[Train Epoch 21 Iter 50] G Loss: 1.466(1.024) D Loss: 0.746(0.453) D Acc: 54.688(62.281)
+[Train Epoch 22 Iter 50] G Loss: 2.683(0.861) D Loss: 1.001(0.335) D Acc: 61.719(62.734)
+[Train Epoch 23 Iter 50] G Loss: -0.885(0.645) D Loss: 0.123(0.351) D Acc: 65.625(62.891)
+[Train Epoch 24 Iter 50] G Loss: -0.968(0.731) D Loss: -0.321(0.270) D Acc: 71.094(63.875)
+[Train Epoch 25 Iter 50] G Loss: 1.600(0.603) D Loss: -0.324(0.231) D Acc: 70.312(64.391)
+[Train Epoch 26 Iter 50] G Loss: 0.554(0.692) D Loss: 0.333(0.189) D Acc: 55.469(64.375)
+[Train Epoch 27 Iter 50] G Loss: 0.602(0.428) D Loss: 0.534(0.165) D Acc: 67.188(65.141)
+[Train Epoch 28 Iter 50] G Loss: -3.043(0.423) D Loss: 0.392(0.051) D Acc: 71.094(65.453)
+[Train Epoch 29 Iter 50] G Loss: 2.761(0.506) D Loss: -0.258(0.064) D Acc: 68.750(65.750)
+Evaluating convnet
+[Test Epoch 200] Top1: 21.533 Top5: 79.736
+[Test Epoch 400] Top1: 20.947 Top5: 79.590
+[Test Epoch 600] Top1: 21.631 Top5: 80.615
+[Test Epoch 800] Top1: 20.361 Top5: 79.004
+[Test Epoch 1000] Top1: 21.875 Top5: 81.201
+Save best model for convnet
+Current Best Epoch for convnet: 29.0, Top1: 21.875, Top5: 81.201
+-----  Start fine-tuning with logit matching
+Random model: convnet
+[Train Epoch 30 Iter 50] G Loss: -0.183(-0.616) D Loss: -0.987(-0.878) D Acc: 71.875(70.859)
+Random model: resnet10_ap
+[Train Epoch 31 Iter 50] G Loss: 0.085(-0.385) D Loss: -0.975(-0.989) D Acc: 75.000(72.297)
+Random model: resnet10
+[Train Epoch 32 Iter 50] G Loss: -0.157(-0.046) D Loss: -0.699(-0.988) D Acc: 80.469(72.906)
+Random model: resnet18
+[Train Epoch 33 Iter 50] G Loss: -0.453(-0.032) D Loss: -1.127(-0.927) D Acc: 73.438(72.766)
+Random model: resnet10
+[Train Epoch 34 Iter 50] G Loss: 0.197(0.059) D Loss: -0.719(-0.997) D Acc: 64.062(71.812)
+Random model: resnet10_ap
+[Train Epoch 35 Iter 50] G Loss: 0.035(0.007) D Loss: -1.047(-0.974) D Acc: 71.875(72.391)
+Random model: resnet18
+[Train Epoch 36 Iter 50] G Loss: 0.306(0.106) D Loss: -0.982(-1.026) D Acc: 80.469(72.781)
+Random model: resnet18_ap
+[Train Epoch 37 Iter 50] G Loss: -0.060(0.303) D Loss: -1.323(-1.005) D Acc: 76.562(72.656)
+Random model: resnet18
+[Train Epoch 38 Iter 50] G Loss: 0.430(0.318) D Loss: -1.141(-1.055) D Acc: 77.344(73.250)
+Random model: resnet10
+[Train Epoch 39 Iter 50] G Loss: 0.188(0.387) D Loss: -0.891(-1.086) D Acc: 72.656(73.344)
+Evaluating convnet
+[Test Epoch 200] Top1: 22.559 Top5: 77.539
+[Test Epoch 400] Top1: 22.754 Top5: 78.418
+[Test Epoch 600] Top1: 22.998 Top5: 79.395
+[Test Epoch 800] Top1: 22.461 Top5: 78.320
+[Test Epoch 1000] Top1: 21.338 Top5: 78.516
+Save best model for convnet
+Current Best Epoch for convnet: 39.0, Top1: 22.998, Top5: 79.395
+Random model: resnet10_ap
+[Train Epoch 40 Iter 50] G Loss: 0.864(0.295) D Loss: -0.410(-1.038) D Acc: 75.000(73.344)
+Random model: resnet18_ap
+[Train Epoch 41 Iter 50] G Loss: -0.003(0.300) D Loss: -0.991(-1.055) D Acc: 68.750(73.516)
+Random model: resnet10_ap
+[Train Epoch 42 Iter 50] G Loss: 0.531(0.271) D Loss: -0.917(-1.023) D Acc: 64.844(74.031)
+Random model: resnet18
+[Train Epoch 43 Iter 50] G Loss: 0.681(0.363) D Loss: -0.964(-1.059) D Acc: 66.406(73.562)
+Random model: resnet18
+[Train Epoch 44 Iter 50] G Loss: 0.513(0.326) D Loss: -1.366(-1.023) D Acc: 78.125(73.203)
+Random model: resnet10
+[Train Epoch 45 Iter 50] G Loss: 0.362(0.515) D Loss: -1.056(-1.076) D Acc: 70.312(73.453)
+Random model: convnet
+[Train Epoch 46 Iter 50] G Loss: 0.539(0.622) D Loss: -0.861(-1.008) D Acc: 73.438(73.281)
+Random model: resnet18
+[Train Epoch 47 Iter 50] G Loss: 0.481(0.582) D Loss: -1.085(-1.028) D Acc: 72.656(73.297)
+Random model: resnet10
+[Train Epoch 48 Iter 50] G Loss: -0.104(0.584) D Loss: -0.754(-1.041) D Acc: 78.125(74.016)
+Random model: resnet18
+[Train Epoch 49 Iter 50] G Loss: 0.387(0.713) D Loss: -0.879(-1.072) D Acc: 74.219(74.312)
+Evaluating convnet
+[Test Epoch 200] Top1: 21.631 Top5: 79.150
+[Test Epoch 400] Top1: 21.484 Top5: 80.322
+[Test Epoch 600] Top1: 22.119 Top5: 77.881
+[Test Epoch 800] Top1: 22.949 Top5: 80.273
+[Test Epoch 1000] Top1: 22.070 Top5: 78.076
+Current Best Epoch for convnet: 39.0, Top1: 22.998, Top5: 79.395
+
+********** Test env: 1
+
+Augmentataion Matching:  color_crop_cutout
+Augmentataion Net update:  color_crop
+[Train Epoch 0 Iter 50] G Loss: 4.926(2.374) D Loss: 3.399(3.487) D Acc: 21.094(19.547)
+[Train Epoch 1 Iter 50] G Loss: 0.211(1.169) D Loss: 4.357(4.013) D Acc: 18.750(27.031)
+[Train Epoch 2 Iter 50] G Loss: 2.480(0.085) D Loss: 2.372(3.614) D Acc: 31.250(30.891)
+[Train Epoch 3 Iter 50] G Loss: -0.692(-0.574) D Loss: 2.459(3.555) D Acc: 46.094(34.391)
+[Train Epoch 4 Iter 50] G Loss: 0.789(0.388) D Loss: 3.427(3.123) D Acc: 39.062(37.578)
+[Train Epoch 5 Iter 50] G Loss: -0.533(-0.504) D Loss: 1.846(3.132) D Acc: 44.531(39.438)
+[Train Epoch 6 Iter 50] G Loss: -2.023(-1.313) D Loss: 2.779(3.170) D Acc: 40.625(39.828)
+[Train Epoch 7 Iter 50] G Loss: -0.055(-1.423) D Loss: 3.416(3.057) D Acc: 35.938(41.578)
+[Train Epoch 8 Iter 50] G Loss: -2.508(-1.750) D Loss: 2.295(2.950) D Acc: 51.562(43.562)
+[Train Epoch 9 Iter 50] G Loss: -3.254(-1.824) D Loss: 1.791(2.850) D Acc: 49.219(44.125)
+Evaluating convnet
+[Test Epoch 200] Top1: 19.923 Top5: 76.621
+[Test Epoch 400] Top1: 17.833 Top5: 77.560
+[Test Epoch 600] Top1: 15.742 Top5: 75.043
+[Test Epoch 800] Top1: 17.235 Top5: 79.991
+[Test Epoch 1000] Top1: 20.392 Top5: 79.309
+Save best model for convnet
+Current Best Epoch for convnet: 9.0, Top1: 20.392, Top5: 79.309
+[Train Epoch 10 Iter 50] G Loss: -0.593(-1.884) D Loss: 2.470(2.743) D Acc: 39.844(45.469)
+[Train Epoch 11 Iter 50] G Loss: -4.875(-2.247) D Loss: 1.590(2.433) D Acc: 46.875(46.609)
+[Train Epoch 12 Iter 50] G Loss: -0.331(-2.277) D Loss: 2.529(2.391) D Acc: 49.219(47.156)
+[Train Epoch 13 Iter 50] G Loss: -4.817(-2.471) D Loss: 1.932(2.131) D Acc: 60.938(48.438)
+[Train Epoch 14 Iter 50] G Loss: -0.413(-2.766) D Loss: 1.618(2.081) D Acc: 50.000(47.125)
+[Train Epoch 15 Iter 50] G Loss: -5.452(-2.293) D Loss: 1.405(1.777) D Acc: 55.469(48.156)
+[Train Epoch 16 Iter 50] G Loss: -2.404(-2.937) D Loss: 3.170(1.679) D Acc: 51.562(47.391)
+[Train Epoch 17 Iter 50] G Loss: -1.608(-2.765) D Loss: 1.283(1.447) D Acc: 52.344(47.484)
+[Train Epoch 18 Iter 50] G Loss: -0.806(-3.091) D Loss: 0.618(1.297) D Acc: 50.000(47.969)
+[Train Epoch 19 Iter 50] G Loss: -6.494(-3.503) D Loss: 1.100(1.214) D Acc: 50.781(48.562)
+Evaluating convnet
+[Test Epoch 200] Top1: 22.440 Top5: 82.338
+[Test Epoch 400] Top1: 18.686 Top5: 78.413
+[Test Epoch 600] Top1: 20.734 Top5: 81.698
+[Test Epoch 800] Top1: 19.881 Top5: 80.887
+[Test Epoch 1000] Top1: 20.392 Top5: 80.205
+Save best model for convnet
+Current Best Epoch for convnet: 19.0, Top1: 22.440, Top5: 82.338
+[Train Epoch 20 Iter 50] G Loss: -4.305(-3.534) D Loss: 0.348(1.101) D Acc: 52.344(49.078)
+[Train Epoch 21 Iter 50] G Loss: -6.574(-3.647) D Loss: 1.413(1.114) D Acc: 52.344(49.578)
+[Train Epoch 22 Iter 50] G Loss: -4.981(-3.341) D Loss: 0.842(0.974) D Acc: 60.156(50.688)
+[Train Epoch 23 Iter 50] G Loss: -4.363(-4.043) D Loss: 1.325(0.941) D Acc: 47.656(51.156)
+[Train Epoch 24 Iter 50] G Loss: -5.347(-3.783) D Loss: 1.512(1.027) D Acc: 49.219(51.016)
+[Train Epoch 25 Iter 50] G Loss: -2.687(-3.732) D Loss: 1.240(0.904) D Acc: 53.906(52.078)
+[Train Epoch 26 Iter 50] G Loss: -3.256(-3.819) D Loss: 0.520(0.800) D Acc: 46.875(53.141)
+[Train Epoch 27 Iter 50] G Loss: -4.030(-3.916) D Loss: 1.318(0.785) D Acc: 52.344(53.406)
+[Train Epoch 28 Iter 50] G Loss: -5.333(-3.910) D Loss: 0.306(0.793) D Acc: 49.219(54.391)
+[Train Epoch 29 Iter 50] G Loss: -3.534(-3.700) D Loss: 0.211(0.736) D Acc: 64.844(55.719)
+Evaluating convnet
+[Test Epoch 200] Top1: 23.891 Top5: 82.935
+[Test Epoch 400] Top1: 20.265 Top5: 82.210
+[Test Epoch 600] Top1: 20.137 Top5: 81.826
+[Test Epoch 800] Top1: 24.104 Top5: 83.063
+[Test Epoch 1000] Top1: 22.654 Top5: 83.063
+Save best model for convnet
+Current Best Epoch for convnet: 29.0, Top1: 24.104, Top5: 83.063
+-----  Start fine-tuning with logit matching
+Random model: resnet18_ap
+[Train Epoch 30 Iter 50] G Loss: -3.978(-4.639) D Loss: -0.346(-0.131) D Acc: 60.938(59.797)
+Random model: convnet
+[Train Epoch 31 Iter 50] G Loss: -4.485(-4.558) D Loss: -0.141(-0.257) D Acc: 59.375(60.578)
+Random model: convnet
+[Train Epoch 32 Iter 50] G Loss: -3.957(-4.155) D Loss: -0.447(-0.310) D Acc: 54.688(61.422)
+Random model: resnet18_ap
+[Train Epoch 33 Iter 50] G Loss: -4.047(-4.384) D Loss: 0.147(-0.240) D Acc: 57.031(61.734)
+Random model: resnet10
+[Train Epoch 34 Iter 50] G Loss: -3.729(-3.958) D Loss: -0.144(-0.224) D Acc: 60.156(61.344)
+Random model: resnet18
+[Train Epoch 35 Iter 50] G Loss: -3.591(-3.727) D Loss: -0.319(-0.257) D Acc: 66.406(61.719)
+Random model: convnet
+[Train Epoch 36 Iter 50] G Loss: -3.383(-3.309) D Loss: 0.051(-0.245) D Acc: 60.156(61.609)
+Random model: convnet
+[Train Epoch 37 Iter 50] G Loss: -3.054(-3.630) D Loss: 0.188(-0.218) D Acc: 60.938(62.125)
+Random model: resnet18
+[Train Epoch 38 Iter 50] G Loss: -3.345(-3.486) D Loss: -0.036(-0.245) D Acc: 60.156(61.734)
+Random model: resnet18_ap
+[Train Epoch 39 Iter 50] G Loss: -4.060(-3.661) D Loss: -0.517(-0.270) D Acc: 64.844(62.203)
+Evaluating convnet
+[Test Epoch 200] Top1: 24.061 Top5: 84.727
+[Test Epoch 400] Top1: 25.683 Top5: 85.154
+[Test Epoch 600] Top1: 21.886 Top5: 82.935
+[Test Epoch 800] Top1: 24.147 Top5: 82.978
+[Test Epoch 1000] Top1: 26.024 Top5: 83.234
+Save best model for convnet
+Current Best Epoch for convnet: 39.0, Top1: 26.024, Top5: 83.234
+Random model: convnet
+[Train Epoch 40 Iter 50] G Loss: -3.501(-3.784) D Loss: 0.072(-0.257) D Acc: 54.688(62.547)
+Random model: convnet
+[Train Epoch 41 Iter 50] G Loss: -3.633(-3.503) D Loss: -0.384(-0.279) D Acc: 63.281(61.453)
+Random model: resnet10
+[Train Epoch 42 Iter 50] G Loss: -3.656(-3.653) D Loss: -0.145(-0.235) D Acc: 60.938(62.875)
+Random model: resnet18_ap
+[Train Epoch 43 Iter 50] G Loss: -4.326(-3.594) D Loss: -0.401(-0.236) D Acc: 67.969(62.781)
+Random model: resnet10
+[Train Epoch 44 Iter 50] G Loss: -3.494(-3.627) D Loss: -0.034(-0.231) D Acc: 59.375(62.734)
+Random model: resnet10_ap
+[Train Epoch 45 Iter 50] G Loss: -3.414(-3.538) D Loss: -0.245(-0.263) D Acc: 64.062(62.766)
+Random model: resnet18_ap
+[Train Epoch 46 Iter 50] G Loss: -3.994(-3.578) D Loss: -0.341(-0.252) D Acc: 64.062(62.703)
+Random model: resnet18
+[Train Epoch 47 Iter 50] G Loss: -3.718(-3.743) D Loss: -0.408(-0.297) D Acc: 68.750(62.938)
+Random model: resnet18_ap
+[Train Epoch 48 Iter 50] G Loss: -3.073(-3.417) D Loss: -0.178(-0.301) D Acc: 64.844(63.172)
+Random model: resnet10
+[Train Epoch 49 Iter 50] G Loss: -3.541(-3.262) D Loss: -0.113(-0.337) D Acc: 60.156(63.484)
+Evaluating convnet
+[Test Epoch 200] Top1: 27.432 Top5: 80.461
+[Test Epoch 400] Top1: 25.683 Top5: 83.404
+[Test Epoch 600] Top1: 28.114 Top5: 81.442
+[Test Epoch 800] Top1: 26.493 Top5: 82.892
+[Test Epoch 1000] Top1: 24.701 Top5: 81.869
+Save best model for convnet
+Current Best Epoch for convnet: 49.0, Top1: 28.114, Top5: 81.442
+
+********** Test env: 2
+
+Augmentataion Matching:  color_crop_cutout
+Augmentataion Net update:  color_crop
+[Train Epoch 0 Iter 50] G Loss: 1.739(0.318) D Loss: 4.185(4.691) D Acc: 31.250(18.953)
+[Train Epoch 1 Iter 50] G Loss: 1.314(1.270) D Loss: 3.569(3.694) D Acc: 34.375(27.016)
+[Train Epoch 2 Iter 50] G Loss: 3.859(1.568) D Loss: 3.475(3.833) D Acc: 39.844(31.156)
+[Train Epoch 3 Iter 50] G Loss: 0.171(1.019) D Loss: 3.396(3.612) D Acc: 38.281(34.891)
+[Train Epoch 4 Iter 50] G Loss: 3.577(0.913) D Loss: 3.614(3.215) D Acc: 36.719(39.906)
+[Train Epoch 5 Iter 50] G Loss: -4.012(0.510) D Loss: 5.383(3.161) D Acc: 29.688(40.156)
+[Train Epoch 6 Iter 50] G Loss: -0.692(0.439) D Loss: 2.607(2.711) D Acc: 53.125(42.625)
+[Train Epoch 7 Iter 50] G Loss: 2.257(0.392) D Loss: 2.377(2.430) D Acc: 47.656(42.672)
+[Train Epoch 8 Iter 50] G Loss: -2.693(-0.266) D Loss: 2.018(2.211) D Acc: 48.438(44.688)
+[Train Epoch 9 Iter 50] G Loss: -0.502(-0.885) D Loss: 2.810(2.126) D Acc: 42.188(44.766)
+Evaluating convnet
+[Test Epoch 200] Top1: 16.766 Top5: 81.317
+[Test Epoch 400] Top1: 15.210 Top5: 78.623
+[Test Epoch 600] Top1: 16.587 Top5: 79.461
+[Test Epoch 800] Top1: 17.904 Top5: 78.443
+[Test Epoch 1000] Top1: 16.108 Top5: 78.922
+Save best model for convnet
+Current Best Epoch for convnet: 9.0, Top1: 17.904, Top5: 78.443
+[Train Epoch 10 Iter 50] G Loss: -0.964(-1.530) D Loss: 1.891(1.984) D Acc: 53.906(45.906)
+[Train Epoch 11 Iter 50] G Loss: -2.932(-1.850) D Loss: 2.149(1.850) D Acc: 41.406(45.719)
+[Train Epoch 12 Iter 50] G Loss: -1.650(-1.958) D Loss: 1.119(1.486) D Acc: 50.781(46.844)
+[Train Epoch 13 Iter 50] G Loss: -2.264(-2.228) D Loss: 1.451(1.372) D Acc: 39.844(47.109)
+[Train Epoch 14 Iter 50] G Loss: -2.876(-2.471) D Loss: 1.151(1.278) D Acc: 53.125(48.734)
+[Train Epoch 15 Iter 50] G Loss: -4.286(-2.464) D Loss: 1.671(1.260) D Acc: 48.438(49.094)
+[Train Epoch 16 Iter 50] G Loss: -1.949(-2.769) D Loss: 1.234(1.122) D Acc: 49.219(51.047)
+[Train Epoch 17 Iter 50] G Loss: -2.648(-2.843) D Loss: 0.956(0.953) D Acc: 50.000(51.562)
+[Train Epoch 18 Iter 50] G Loss: -3.951(-2.700) D Loss: 1.269(0.979) D Acc: 46.094(51.938)
+[Train Epoch 19 Iter 50] G Loss: -3.102(-2.920) D Loss: 0.603(0.836) D Acc: 55.469(53.141)
+Evaluating convnet
+[Test Epoch 200] Top1: 22.216 Top5: 82.335
+[Test Epoch 400] Top1: 25.988 Top5: 83.234
+[Test Epoch 600] Top1: 26.467 Top5: 83.234
+[Test Epoch 800] Top1: 26.886 Top5: 82.275
+[Test Epoch 1000] Top1: 30.719 Top5: 82.994
+Save best model for convnet
+Current Best Epoch for convnet: 19.0, Top1: 30.719, Top5: 82.994
+[Train Epoch 20 Iter 50] G Loss: -2.724(-2.475) D Loss: 1.255(0.807) D Acc: 59.375(53.719)
+[Train Epoch 21 Iter 50] G Loss: -2.596(-2.804) D Loss: 0.748(0.798) D Acc: 53.125(54.234)
+[Train Epoch 22 Iter 50] G Loss: -1.774(-2.814) D Loss: 0.380(0.687) D Acc: 57.812(55.266)
+[Train Epoch 23 Iter 50] G Loss: -2.624(-2.742) D Loss: 0.679(0.667) D Acc: 64.844(56.578)
+[Train Epoch 24 Iter 50] G Loss: -0.713(-2.699) D Loss: 1.663(0.592) D Acc: 57.031(56.531)
+[Train Epoch 25 Iter 50] G Loss: -2.346(-3.152) D Loss: 0.268(0.540) D Acc: 64.062(57.062)
+[Train Epoch 26 Iter 50] G Loss: -2.800(-2.999) D Loss: 1.582(0.571) D Acc: 54.688(57.203)
+[Train Epoch 27 Iter 50] G Loss: -2.847(-2.853) D Loss: 0.333(0.420) D Acc: 60.156(59.141)
+[Train Epoch 28 Iter 50] G Loss: -3.955(-3.046) D Loss: 0.319(0.449) D Acc: 55.469(58.922)
+[Train Epoch 29 Iter 50] G Loss: -6.396(-3.275) D Loss: 0.544(0.369) D Acc: 57.812(59.797)
+Evaluating convnet
+[Test Epoch 200] Top1: 29.042 Top5: 83.473
+[Test Epoch 400] Top1: 27.006 Top5: 84.072
+[Test Epoch 600] Top1: 27.066 Top5: 84.731
+[Test Epoch 800] Top1: 24.671 Top5: 84.192
+[Test Epoch 1000] Top1: 27.246 Top5: 83.892
+Current Best Epoch for convnet: 19.0, Top1: 30.719, Top5: 82.994
+-----  Start fine-tuning with logit matching
+Random model: resnet10
+[Train Epoch 30 Iter 50] G Loss: -3.163(-2.709) D Loss: 0.025(-0.264) D Acc: 62.500(55.906)
+Random model: resnet10_ap
+[Train Epoch 31 Iter 50] G Loss: -3.347(-3.044) D Loss: -0.129(-0.125) D Acc: 56.250(58.469)
+Random model: resnet18_ap
+[Train Epoch 32 Iter 50] G Loss: -2.715(-3.338) D Loss: -0.174(-0.122) D Acc: 60.938(58.188)
+Random model: resnet18_ap
+[Train Epoch 33 Iter 50] G Loss: -2.869(-3.106) D Loss: -0.242(-0.218) D Acc: 62.500(58.484)
+Random model: resnet18_ap
+[Train Epoch 34 Iter 50] G Loss: -2.810(-2.928) D Loss: -0.438(-0.274) D Acc: 61.719(58.562)
+Random model: resnet10_ap
+[Train Epoch 35 Iter 50] G Loss: -3.140(-2.885) D Loss: -0.366(-0.157) D Acc: 63.281(58.406)
+Random model: convnet
+[Train Epoch 36 Iter 50] G Loss: -3.029(-3.082) D Loss: -0.169(-0.219) D Acc: 47.656(58.516)
+Random model: resnet10_ap
+[Train Epoch 37 Iter 50] G Loss: -2.963(-2.957) D Loss: 0.085(-0.200) D Acc: 63.281(58.703)
+Random model: resnet10_ap
+[Train Epoch 38 Iter 50] G Loss: -2.972(-2.969) D Loss: -0.256(-0.143) D Acc: 59.375(59.188)
+Random model: resnet18
+[Train Epoch 39 Iter 50] G Loss: -2.988(-2.813) D Loss: -0.259(-0.254) D Acc: 60.938(59.438)
+Evaluating convnet
+[Test Epoch 200] Top1: 34.311 Top5: 85.689
+[Test Epoch 400] Top1: 36.048 Top5: 84.551
+[Test Epoch 600] Top1: 38.623 Top5: 86.048
+[Test Epoch 800] Top1: 38.263 Top5: 86.287
+[Test Epoch 1000] Top1: 37.904 Top5: 86.407
+Save best model for convnet
+Current Best Epoch for convnet: 39.0, Top1: 38.623, Top5: 86.048
+Random model: resnet18
+[Train Epoch 40 Iter 50] G Loss: -2.767(-2.922) D Loss: -0.028(-0.311) D Acc: 48.438(59.609)
+Random model: convnet
+[Train Epoch 41 Iter 50] G Loss: -3.111(-2.958) D Loss: -0.503(-0.297) D Acc: 57.812(59.984)
+Random model: resnet10
+[Train Epoch 42 Iter 50] G Loss: -2.493(-2.762) D Loss: -0.210(-0.319) D Acc: 55.469(60.375)
+Random model: resnet10_ap
+[Train Epoch 43 Iter 50] G Loss: -3.176(-3.283) D Loss: -0.201(-0.279) D Acc: 60.938(59.781)
+Random model: convnet
+[Train Epoch 44 Iter 50] G Loss: -2.827(-2.810) D Loss: -0.457(-0.271) D Acc: 60.156(60.484)
+Random model: convnet
+[Train Epoch 45 Iter 50] G Loss: -3.468(-3.069) D Loss: -0.665(-0.294) D Acc: 64.062(60.531)
+Random model: convnet
+[Train Epoch 46 Iter 50] G Loss: -2.401(-3.013) D Loss: 0.243(-0.263) D Acc: 58.594(60.359)
+Random model: convnet
+[Train Epoch 47 Iter 50] G Loss: -2.829(-2.722) D Loss: -0.120(-0.275) D Acc: 48.438(61.219)
+Random model: resnet18
+[Train Epoch 48 Iter 50] G Loss: -2.543(-3.017) D Loss: -0.096(-0.251) D Acc: 57.812(60.438)
+Random model: resnet10
+[Train Epoch 49 Iter 50] G Loss: -3.330(-3.248) D Loss: -0.467(-0.326) D Acc: 63.281(60.844)
+Evaluating convnet
+[Test Epoch 200] Top1: 33.772 Top5: 86.228
+[Test Epoch 400] Top1: 40.060 Top5: 86.228
+[Test Epoch 600] Top1: 40.180 Top5: 86.168
+[Test Epoch 800] Top1: 41.617 Top5: 85.928
+[Test Epoch 1000] Top1: 38.383 Top5: 86.766
+Save best model for convnet
+Current Best Epoch for convnet: 49.0, Top1: 41.617, Top5: 85.928
+
+********** Test env: 3
+
+Augmentataion Matching:  color_crop_cutout
+Augmentataion Net update:  color_crop
+Evaluating convnet
+[Test Epoch 200] Top1: 15.424 Top5: 85.034
+[Test Epoch 400] Top1: 17.969 Top5: 81.471
+[Test Epoch 600] Top1: 8.526 Top5: 83.991
+[Test Epoch 800] Top1: 13.489 Top5: 82.260
+[Test Epoch 1000] Top1: 12.599 Top5: 79.613
+Save best model for convnet
+Current Best Epoch for convnet: 9.0, Top1: 17.969, Top5: 81.471
+Evaluating convnet
+[Test Epoch 200] Top1: 18.096 Top5: 86.612
+[Test Epoch 400] Top1: 25.325 Top5: 87.198
+[Test Epoch 600] Top1: 26.190 Top5: 87.554
+[Test Epoch 800] Top1: 20.794 Top5: 83.813
+[Test Epoch 1000] Top1: 24.612 Top5: 87.427
+Save best model for convnet
+Current Best Epoch for convnet: 19.0, Top1: 26.190, Top5: 87.554
+Evaluating convnet
+[Test Epoch 200] Top1: 18.274 Top5: 70.934
+[Test Epoch 400] Top1: 18.376 Top5: 73.759
+[Test Epoch 600] Top1: 19.852 Top5: 87.936
+[Test Epoch 800] Top1: 18.274 Top5: 77.857
+[Test Epoch 1000] Top1: 23.187 Top5: 77.959
+Current Best Epoch for convnet: 19.0, Top1: 26.190, Top5: 87.554
+-----  Start fine-tuning with logit matching
+Random model: resnet10
+Random model: resnet18_ap
+Random model: resnet10
+Random model: resnet18
+Random model: resnet18_ap
+Random model: convnet
+Random model: convnet
+Random model: resnet18_ap
+Random model: convnet
+Random model: convnet
+Evaluating convnet
+[Test Epoch 200] Top1: 10.664 Top5: 83.482
+[Test Epoch 400] Top1: 10.028 Top5: 86.205
+[Test Epoch 600] Top1: 17.740 Top5: 85.696
+[Test Epoch 800] Top1: 7.865 Top5: 84.169
+[Test Epoch 1000] Top1: 13.719 Top5: 84.474
+Current Best Epoch for convnet: 19.0, Top1: 26.190, Top5: 87.554
+Random model: convnet
+Random model: resnet10_ap
+Random model: resnet10
+Random model: resnet10
+Random model: resnet18
+Random model: resnet10_ap
+Random model: resnet10
+Random model: resnet18_ap
+Random model: resnet18_ap
+Random model: resnet10
+Evaluating convnet
+[Test Epoch 200] Top1: 16.544 Top5: 87.910
+[Test Epoch 400] Top1: 17.180 Top5: 88.241
+[Test Epoch 600] Top1: 20.361 Top5: 89.412
+[Test Epoch 800] Top1: 18.631 Top5: 85.365
+[Test Epoch 1000] Top1: 21.074 Top5: 86.383
+Current Best Epoch for convnet: 19.0, Top1: 26.190, Top5: 87.554
+Leave-one-domain-out accuracy: 29.730
+
+
+
