@@ -9,7 +9,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torchvision
-import torchvision.datasets as datasets
+# import torchvision.datasets as datasets
+from utils import load_data
 import torchvision.transforms as transforms
 from torchvision.utils import save_image, make_grid
 
@@ -33,76 +34,6 @@ def str2bool(v):
         return False
     else:
         raise argparse.ArgumentTypeError('Boolean value expected.')
-
-
-def load_data(args):
-    '''Obtain data
-    '''
-    transform_train = transforms.Compose([
-        transforms.ToTensor(),
-        transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
-    ])
-    if args.data == 'cifar10':
-        transform_test = transforms.Compose([
-            transforms.ToTensor(),
-            transforms.Normalize((0.491, 0.482, 0.447), (0.202, 0.199, 0.201))
-        ])
-        trainset = datasets.CIFAR10(root=args.data_dir, train=True, download=True,
-                                    transform=transform_train)
-        testset = datasets.CIFAR10(root=args.data_dir, train=False, download=True,
-                                   transform=transform_test)
-    elif args.data == 'svhn':
-        transform_test = transforms.Compose([
-            transforms.ToTensor(),
-            transforms.Normalize((0.437, 0.444, 0.473), (0.198, 0.201, 0.197))
-        ])
-        trainset = datasets.SVHN(os.path.join(args.data_dir, 'svhn'),
-                                 split='train',
-                                 download=True,
-                                 transform=transform_train)
-        testset = datasets.SVHN(os.path.join(args.data_dir, 'svhn'),
-                                split='test',
-                                download=True,
-                                transform=transform_test)
-    elif args.data == 'fashion':
-        transform_train = transforms.Compose([
-            transforms.ToTensor(),
-            transforms.Normalize((0.5,), (0.5,))
-        ])
-        transform_test = transforms.Compose([
-            transforms.ToTensor(),
-            transforms.Normalize((0.286,), (0.353,))
-        ])
-
-        trainset = datasets.FashionMNIST(args.data_dir, train=True, download=True,
-                                 transform=transform_train)
-        testset = datasets.FashionMNIST(args.data_dir, train=False, download=True,
-                                 transform=transform_train)
-    elif args.data == 'mnist':
-        transform_train = transforms.Compose([
-            transforms.ToTensor(),
-            transforms.Normalize((0.5,), (0.5,))
-        ])
-        transform_test = transforms.Compose([
-            transforms.ToTensor(),
-            transforms.Normalize((0.131,), (0.308,))
-        ])
-
-        trainset = datasets.MNIST(args.data_dir, train=True, download=True,
-                                 transform=transform_train)
-        testset = datasets.MNIST(args.data_dir, train=False, download=True,
-                                 transform=transform_train)
-
-    trainloader = torch.utils.data.DataLoader(
-        trainset, batch_size=args.batch_size, shuffle=True,
-        num_workers=args.num_workers, drop_last=True
-    )
-    testloader = torch.utils.data.DataLoader(
-        testset, batch_size=args.batch_size, shuffle=False,
-        num_workers=args.num_workers
-    )
-
-    return trainloader, testloader
 
 
 def define_model(args, num_classes, e_model=None):
@@ -167,7 +98,7 @@ def calc_gradient_penalty(args, discriminator, img_real, img_syn):
     interpolates = interpolates.cuda()
     interpolates.requires_grad_(True)
 
-    disc_interpolates, _ = discriminator(interpolates)
+    disc_interpolates, _, _ = discriminator(interpolates)
 
     gradients = torch.autograd.grad(outputs=disc_interpolates, inputs=interpolates,
                                     grad_outputs=torch.ones(disc_interpolates.size()).cuda(),
@@ -211,8 +142,8 @@ def matchloss(args, img_real, img_syn, lab_real, lab_syn, model):
 
     if 'feat' in args.match:
         with torch.no_grad():
-            feat_tg = model.get_feature(img_real, args.idx_from, args.idx_to)
-        feat = model.get_feature(img_syn, args.idx_from, args.idx_to)
+            feat_tg = model.module.get_feature(img_real, args.idx_from, args.idx_to)
+        feat = model.module.get_feature(img_syn, args.idx_from, args.idx_to)
 
         for i in range(len(feat)):
             loss = add_loss(loss, dist(feat_tg[i].mean(0), feat[i].mean(0), method=args.metric) * 0.001)
@@ -289,6 +220,7 @@ def train(args, epoch, generator, discriminator, optim_g, optim_d, trainloader, 
     top5 = AverageMeter()
     if epoch >= args.pretrain_epochs:
         model = define_model(args, args.num_classes).cuda()
+        model = nn.DataParallel(model)
         model.train()
         optim_model = torch.optim.SGD(model.parameters(), args.eval_lr, momentum=args.momentum,
                                       weight_decay=args.weight_decay)
@@ -302,14 +234,14 @@ def train(args, epoch, generator, discriminator, optim_g, optim_d, trainloader, 
         optim_g.zero_grad()
 
         # obtain the noise with one-hot class labels
-        noise = torch.normal(0, 1, (args.batch_size, args.dim_noise))
+        noise = torch.normal(0, 1, (args.batch_size, (args.num_classes + args.dim_noise)))
         lab_onehot = torch.zeros((args.batch_size, args.num_classes))
         lab_onehot[torch.arange(args.batch_size), lab_real] = 1
         noise[torch.arange(args.batch_size), :args.num_classes] = lab_onehot[torch.arange(args.batch_size)]
         noise = noise.cuda()
 
         img_syn = generator(noise)
-        gen_source, gen_class = discriminator(img_syn)
+        gen_source, gen_class, _ = discriminator(img_syn)
         gen_source = gen_source.mean()
         gen_class = criterion(gen_class, lab_real)
 
@@ -332,7 +264,7 @@ def train(args, epoch, generator, discriminator, optim_g, optim_d, trainloader, 
         discriminator.train()
         optim_d.zero_grad()
         lab_syn = torch.randint(args.num_classes, (args.batch_size,))
-        noise = torch.normal(0, 1, (args.batch_size, args.dim_noise))
+        noise = torch.normal(0, 1, (args.batch_size, (args.num_classes + args.dim_noise)))
         lab_onehot = torch.zeros((args.batch_size, args.num_classes))
         lab_onehot[torch.arange(args.batch_size), lab_syn] = 1
         noise[torch.arange(args.batch_size), :args.num_classes] = lab_onehot[torch.arange(args.batch_size)]
@@ -342,11 +274,11 @@ def train(args, epoch, generator, discriminator, optim_g, optim_d, trainloader, 
         with torch.no_grad():
             img_syn = generator(noise)
 
-        disc_fake_source, disc_fake_class = discriminator(img_syn)
+        disc_fake_source, disc_fake_class, _ = discriminator(img_syn)
         disc_fake_source = disc_fake_source.mean()
         disc_fake_class = criterion(disc_fake_class, lab_syn)
 
-        disc_real_source, disc_real_class = discriminator(img_real)
+        disc_real_source, disc_real_class, _ = discriminator(img_real)
         acc1, acc5 = accuracy(disc_real_class.data, lab_real, topk=(1, 5))
         disc_real_source = disc_real_source.mean()
         disc_real_class = criterion(disc_real_class, lab_real)
@@ -362,10 +294,10 @@ def train(args, epoch, generator, discriminator, optim_g, optim_d, trainloader, 
         top1.update(acc1.item())
         top5.update(acc5.item())
 
-        if (batch_idx + 1) % args.print_freq == 0:
-            print('[Train Epoch {} Iter {}] G Loss: {:.3f}({:.3f}) D Loss: {:.3f}({:.3f}) D Acc: {:.3f}({:.3f})'.format(
-                epoch, batch_idx + 1, gen_losses.val, gen_losses.avg, disc_losses.val, disc_losses.avg, top1.val, top1.avg)
-            )
+    if epoch % args.print_freq == 0:
+        print('[Train Epoch {} G Loss: {:.3f}({:.3f}) D Loss: {:.3f}({:.3f}) D Acc: {:.3f}({:.3f})'.format(
+            epoch, gen_losses.val, gen_losses.avg, disc_losses.val, disc_losses.avg, top1.val, top1.avg)
+        )
 
 
 def train_match_model(args, model, optim_model, trainloader, criterion, aug_rand):
@@ -415,6 +347,7 @@ def validate(args, generator, testloader, criterion, aug_rand):
     for e_model in args.eval_model:
         print('Evaluating {}'.format(e_model))
         model = define_model(args, args.num_classes, e_model).cuda()
+        model = nn.DataParallel(model)
         model.train()
         optim_model = torch.optim.SGD(model.parameters(), args.eval_lr, momentum=args.momentum,
                                       weight_decay=args.weight_decay)
@@ -429,7 +362,7 @@ def validate(args, generator, testloader, criterion, aug_rand):
             for batch_idx in range(10 * args.ipc // args.batch_size + 1):
                 # obtain pseudo samples with the generator
                 lab_syn = torch.randint(args.num_classes, (args.batch_size,))
-                noise = torch.normal(0, 1, (args.batch_size, args.dim_noise))
+                noise = torch.normal(0, 1, (args.batch_size, (args.num_classes + args.dim_noise)))
                 lab_onehot = torch.zeros((args.batch_size, args.num_classes))
                 lab_onehot[torch.arange(args.batch_size), lab_syn] = 1
                 noise[torch.arange(args.batch_size), :args.num_classes] = lab_onehot[torch.arange(args.batch_size)]
@@ -480,7 +413,7 @@ def validate(args, generator, testloader, criterion, aug_rand):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--ipc', type=int, default=1) #50
+    parser.add_argument('--ipc', type=int, default=10) #50
     parser.add_argument('--batch-size', type=int, default=128)
     parser.add_argument('--epochs', type=int, default=50) #250
     parser.add_argument('--pretrain-epochs', type=int, default=30) #150
@@ -496,9 +429,9 @@ if __name__ == '__main__':
     parser.add_argument('--match-model', type=str, default='convnet')
     parser.add_argument('--match', type=str, default='logit')
     parser.add_argument('--eval-model', type=str, nargs='+', default=['convnet'])
-    parser.add_argument('--dim-noise', type=int, default=100)
+    parser.add_argument('--dim-noise', type=int, default=90)
     parser.add_argument('--num-workers', type=int, default=4)
-    parser.add_argument('--print-freq', type=int, default=50)
+    parser.add_argument('--print-freq', type=int, default=10)
     parser.add_argument('--eval-interval', type=int, default=10) #10
     parser.add_argument('--test-interval', type=int, default=200)
     parser.add_argument('--fix-disc', action='store_true', default=False)
@@ -517,7 +450,7 @@ if __name__ == '__main__':
     parser.add_argument('--fc', type=str2bool, default=False)
     parser.add_argument('--mix-p', type=float, default=-1.0)
     parser.add_argument('--beta', type=float, default=1.0)
-    parser.add_argument('--tag', type=str, default='all')
+    # parser.add_argument('--tag', type=str, default='all')
     parser.add_argument('--seed', type=int, default=3407)
     args = parser.parse_args()
 
@@ -526,6 +459,7 @@ if __name__ == '__main__':
     torch.manual_seed(args.seed)
     torch.backends.cudnn.deterministic = True
 
+    args.tag = args.data
     if not os.path.exists(args.output_dir):
         os.makedirs(args.output_dir)
     args.output_dir = args.output_dir + args.tag
@@ -541,12 +475,25 @@ if __name__ == '__main__':
         os.makedirs(args.logs_dir)
     sys.stdout = Logger(os.path.join(args.logs_dir, 'logs.txt'))
 
+    channel, im_size, num_classes, class_names, mean, std, dsts = load_data(args)
+    args.num_classes = num_classes
+    args.channel = channel
+    args.mean = mean
+    args.std = std
+    args.num_envs = 2
+
     print(args)
 
-    trainloader, testloader = load_data(args)
+    trainset, testset = dsts
+    trainloader = torch.utils.data.DataLoader(trainset, batch_size=args.batch_size, shuffle=True,
+                                              num_workers=args.num_workers, drop_last=True)
+    testloader = torch.utils.data.DataLoader(testset, batch_size=args.batch_size, shuffle=False,
+                                             num_workers=args.num_workers)
 
     generator = Generator(args).cuda()
     discriminator = Discriminator(args).cuda()
+    generator = nn.DataParallel(generator)
+    discriminator = nn.DataParallel(discriminator)
 
     optim_g = torch.optim.Adam(generator.parameters(), lr=args.lr1, betas=(0, 0.9))
     optim_d = torch.optim.Adam(discriminator.parameters(), lr=args.lr1, betas=(0, 0.9))
@@ -560,8 +507,8 @@ if __name__ == '__main__':
     for epoch in range(args.epochs):
         if epoch == args.pretrain_epochs:
             model_dict = torch.load(os.path.join(args.output_dir, 'model_dict_{}.pth'.format(args.eval_model[0])))
-            generator.load_state_dict(model_dict['generator'])
-            discriminator.load_state_dict(model_dict['discriminator'])
+            generator.module.load_state_dict(model_dict['generator'])
+            discriminator.module.load_state_dict(model_dict['discriminator'])
             optim_g.load_state_dict(model_dict['optim_g'])
             optim_d.load_state_dict(model_dict['optim_d'])
             for g in optim_g.param_groups:
@@ -575,27 +522,28 @@ if __name__ == '__main__':
 
         # save image for visualization
         generator.eval()
-        test_label = torch.tensor(list(range(10)) * 10)
-        test_noise = torch.normal(0, 1, (100, 100))
-        lab_onehot = torch.zeros((100, args.num_classes))
-        lab_onehot[torch.arange(100), test_label] = 1
-        test_noise[torch.arange(100), :args.num_classes] = lab_onehot[torch.arange(100)]
+        test_label = torch.tensor(list(range(args.num_classes)) * 10)
+        num_images = args.num_classes * 10
+        test_noise = torch.normal(0, 1, (num_images, args.num_classes + args.dim_noise))
+        lab_onehot = torch.zeros((num_images, args.num_classes))
+        lab_onehot[torch.arange(num_images), test_label] = 1
+        test_noise[torch.arange(num_images), :args.num_classes] = lab_onehot[torch.arange(num_images)]
         test_noise = test_noise.cuda()
         test_img_syn = (generator(test_noise) + 1.0) / 2.0
-        test_img_syn = make_grid(test_img_syn, nrow=10)
+        test_img_syn = make_grid(test_img_syn, nrow=args.num_classes)
         save_image(test_img_syn, os.path.join(args.output_dir, 'outputs/img_{}.png'.format(epoch)))
         generator.train()
 
         if (epoch + 1) % args.eval_interval == 0:
             top1s, top5s = validate(args, generator, testloader, criterion, aug_rand)
             for e_idx, e_model in enumerate(args.eval_model):
-                if top1s[e_idx] > best_top1s[e_idx]:
+                if top1s[e_idx] > best_top1s[e_idx] + 1.0:
                     best_top1s[e_idx] = top1s[e_idx]
                     best_top5s[e_idx] = top5s[e_idx]
                     best_epochs[e_idx] = epoch
 
-                    model_dict = {'generator': generator.state_dict(),
-                                  'discriminator': discriminator.state_dict(),
+                    model_dict = {'generator': generator.module.state_dict(),
+                                  'discriminator': discriminator.module.state_dict(),
                                   'optim_g': optim_g.state_dict(),
                                   'optim_d': optim_d.state_dict()}
                     torch.save(
