@@ -19,11 +19,11 @@ def load_data(args):
     dsts = None
     if args.data.lower() == 'mnist':
         channel = 1
-        im_size = (28, 28)
+        im_size = (28, 28) #(28, 28)
         num_classes = 10
         mean = [0.1307]
         std = [0.3081]
-        transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize(mean=mean, std=std)])
+        transform = transforms.Compose([transforms.ToTensor()])# , transforms.Normalize(mean=mean, std=std)])
         dst_train = datasets.MNIST(args.data_dir, train=True, download=True, transform=transform) # no augmentation
         dst_test = datasets.MNIST(args.data_dir, train=False, download=True, transform=transform)
         class_names = [str(c) for c in range(num_classes)]
@@ -98,7 +98,7 @@ def load_data(args):
         num_classes = 10
         mean = [0.4914, 0.4822, 0.4465]
         std = [0.2023, 0.1994, 0.2010]
-        transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize(mean=mean, std=std)])
+        transform = transforms.Compose([transforms.ToTensor()])#, transforms.Normalize(mean=mean, std=std)])
         dst_train = datasets.CIFAR10(args.data_dir, train=True, download=True, transform=transform) # no augmentation
         dst_test = datasets.CIFAR10(args.data_dir, train=False, download=True, transform=transform)
         class_names = dst_train.classes
@@ -109,7 +109,7 @@ def load_data(args):
         num_classes = 100
         mean = [0.5071, 0.4866, 0.4409]
         std = [0.2673, 0.2564, 0.2762]
-        transform = transforms.Compose([transforms.ToTensor(), transforms.Normalize(mean=mean, std=std)])
+        transform = transforms.Compose([transforms.ToTensor()])#, transforms.Normalize(mean=mean, std=std)])
         dst_train = datasets.CIFAR100(args.data_dir, train=True, download=True, transform=transform) # no augmentation
         dst_test = datasets.CIFAR100(args.data_dir, train=False, download=True, transform=transform)
         class_names = dst_train.classes

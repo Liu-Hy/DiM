@@ -10,6 +10,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torchvision
 # import torchvision.datasets as datasets
+import torchattacks
 from utils import load_data
 import torchvision.transforms as transforms
 from torchvision.utils import save_image, make_grid
@@ -69,7 +70,7 @@ def str2bool(v):
         raise argparse.ArgumentTypeError('Boolean value expected.')
 
 
-def define_model(args, num_classes, normalize, e_model=None):
+def define_model(args, num_classes, e_model=None):
     '''Obtain model for training, validating and matching
     With no 'e_model' specified, it returns a random model
     '''
@@ -188,10 +189,36 @@ def matchloss(args, img_real, img_syn, lab_real, lab_syn, model):
             loss = add_loss(loss, dist(feat_tg[i].mean(0), feat[i].mean(0), method=args.metric) * 0.001)
 
     elif 'grad' in args.match:
+        h = 0.6
+        lamda = args.lamda
         criterion = nn.CrossEntropyLoss()
-
         output_real = model(img_real)
         loss_real = criterion(output_real, lab_real)
+        if args.cure:
+            img_real.requires_grad_()
+            model.eval()
+            outputs = model(img_real)
+            loss_z = criterion(outputs, lab_real)
+            loss_z.backward()
+            grad = img_real.grad.data
+            z = grad.detach()  # z = torch.sign(grad).detach()
+            z = h * (z + 1e-7) / (z.reshape(z.size(0), -1).norm(dim=1)[:, None, None, None] + 1e-7)
+            img_real.grad.zero_()
+            model.zero_grad()
+
+            outputs_pos = model(img_real + z)
+            outputs_orig = model(img_real)
+
+            loss_pos = criterion(outputs_pos, lab_real)
+            loss_orig = criterion(outputs_orig, lab_real)
+            grad_diff = torch.autograd.grad((loss_pos - loss_orig), img_real,
+                                            create_graph=True)[0]
+            reg = grad_diff.reshape(grad_diff.size(0), -1).norm(dim=1)
+            model.zero_grad()
+            curv_loss = torch.mean(lamda * reg)
+
+            loss_real += curv_loss
+            model.train()
         g_real = torch.autograd.grad(loss_real, model.parameters())
         g_real = list((g.detach() for g in g_real))
 
@@ -290,6 +317,7 @@ def train(args, epoch, generator, discriminator, optim_g, optim_d, trainloader, 
 
         gen_loss.backward()
         optim_g.step()
+        img_real.requires_grad_(requires_grad=True)
 
         # train the discriminator
         discriminator.train()
@@ -349,15 +377,31 @@ def train_match_model(args, model, optim_model, trainloader, criterion, aug_rand
         optim_model.step()
 
 
-def test(args, model, testloader, criterion):
+def test(args, model, testloader, criterion, atk_args=None):
     '''Calculate accuracy
     '''
     losses = AverageMeter()
     top1 = AverageMeter()
     top5 = AverageMeter()
+
+    attack = None
+    if atk_args and atk_args["attack_eval"]:
+        if atk_args["method"].lower() == "pgd":
+            attack = torchattacks.PGD(model, eps=atk_args["eps"], alpha=atk_args["alpha"], steps=atk_args["steps"])
+        elif atk_args["method"].lower() == "fgsm":
+            attack = torchattacks.FGSM(model, eps=atk_args["eps"])
+        elif atk_args["method"].lower() == "pgdl2":
+            attack = torchattacks.PGDL2(model, eps=atk_args["eps"], alpha=atk_args["alpha"], steps=atk_args["steps"])
+        else:
+            raise ValueError
+
     for batch_idx, (img, lab) in enumerate(testloader):
         img = img.cuda()
         lab = lab.cuda()
+
+        if attack:
+            img = attack(img, lab)
+            img = img.contiguous()
 
         with torch.no_grad():
             output = model(img)
@@ -370,71 +414,93 @@ def test(args, model, testloader, criterion):
     return top1.avg, top5.avg, losses.avg
 
 
-def validate(args, generator, testloader, criterion, aug_rand):
+def validate(args, generator, testloader, criterion, aug_rand, epoch):
     '''Validate the generator performance
     '''
-    all_best_top1 = []
-    all_best_top5 = []
-    for e_model in args.eval_model:
-        print('Evaluating {}'.format(e_model))
-        model = define_model(args, args.num_classes, e_model).cuda()
-        model = nn.DataParallel(model)
-        model.train()
-        optim_model = torch.optim.SGD(model.parameters(), args.eval_lr, momentum=args.momentum,
-                                      weight_decay=args.weight_decay)
+    for ipc in [1]: #, 10]: #, 50]:
+        print("-" * 6 + f"Epoch {epoch}, evaluating with {ipc} img/cls")
+        results = [[] for i in range(4)]
+        for it_eval in range(args.num_eval):
+            all_best_top1 = []
+            all_best_top5 = []
+            e_model = args.eval_model[0]
+            model = define_model(args, args.num_classes, e_model).cuda()
+            model = nn.DataParallel(model)
+            model.train()
+            optim_model = torch.optim.SGD(model.parameters(), args.eval_lr, momentum=args.momentum,
+                                          weight_decay=args.weight_decay)
 
-        generator.eval()
-        losses = AverageMeter()
-        top1 = AverageMeter()
-        top5 = AverageMeter()
-        best_top1 = 0.0
-        best_top5 = 0.0
-        for epoch_idx in range(args.epochs_eval):
-            for batch_idx in range(10 * args.ipc // args.batch_size + 1):
-                # obtain pseudo samples with the generator
-                lab_syn = torch.randint(args.num_classes, (args.batch_size,))
-                noise = torch.normal(0, 1, (args.batch_size, (args.num_classes + args.dim_noise)))
-                lab_onehot = torch.zeros((args.batch_size, args.num_classes))
-                lab_onehot[torch.arange(args.batch_size), lab_syn] = 1
-                noise[torch.arange(args.batch_size), :args.num_classes] = lab_onehot[torch.arange(args.batch_size)]
-                noise = noise.cuda()
-                lab_syn = lab_syn.cuda()
+            generator.eval()
+            losses = AverageMeter()
+            top1 = AverageMeter()
+            top5 = AverageMeter()
+            best_top1 = 0.0
+            best_top5 = 0.0
+            for epoch_idx in range(args.epochs_eval):
+                for batch_idx in range(args.num_classes * ipc // args.batch_size + 1):
+                    # obtain pseudo samples with the generator
+                    lab_syn = torch.randint(args.num_classes, (args.batch_size,))
+                    noise = torch.normal(0, 1, (args.batch_size, (args.num_classes + args.dim_noise)))
+                    lab_onehot = torch.zeros((args.batch_size, args.num_classes))
+                    lab_onehot[torch.arange(args.batch_size), lab_syn] = 1
+                    noise[torch.arange(args.batch_size), :args.num_classes] = lab_onehot[torch.arange(args.batch_size)]
+                    noise = noise.cuda()
+                    lab_syn = lab_syn.cuda()
 
-                with torch.no_grad():
-                    img_syn = generator(noise)
-                    img_syn = aug_rand(img_syn)
+                    with torch.no_grad():
+                        img_syn = generator(noise)
+                        img_syn = aug_rand(img_syn)
 
-                if np.random.rand(1) < args.mix_p and args.mixup_net == 'cut':
-                    lam = np.random.beta(args.beta, args.beta)
-                    rand_index = torch.randperm(len(img_syn)).cuda()
+                    if np.random.rand(1) < args.mix_p and args.mixup_net == 'cut':
+                        lam = np.random.beta(args.beta, args.beta)
+                        rand_index = torch.randperm(len(img_syn)).cuda()
 
-                    lab_syn_b = lab_syn[rand_index]
-                    bbx1, bby1, bbx2, bby2 = rand_bbox(img_syn.size(), lam)
-                    img_syn[:, :, bbx1:bbx2, bby1:bby2] = img_syn[rand_index, :, bbx1:bbx2, bby1:bby2]
-                    ratio = 1 - ((bbx2 - bbx1) * (bby2 - bby1) / (img_syn.size()[-1] * img_syn.size()[-2]))
+                        lab_syn_b = lab_syn[rand_index]
+                        bbx1, bby1, bbx2, bby2 = rand_bbox(img_syn.size(), lam)
+                        img_syn[:, :, bbx1:bbx2, bby1:bby2] = img_syn[rand_index, :, bbx1:bbx2, bby1:bby2]
+                        ratio = 1 - ((bbx2 - bbx1) * (bby2 - bby1) / (img_syn.size()[-1] * img_syn.size()[-2]))
 
-                    output = model(img_syn)
-                    loss = criterion(output, lab_syn) * ratio + criterion(output, lab_syn_b) * (1. - ratio)
-                else:
-                    output = model(img_syn)
-                    loss = criterion(output, lab_syn)
+                        output = model(img_syn)
+                        loss = criterion(output, lab_syn) * ratio + criterion(output, lab_syn_b) * (1. - ratio)
+                    else:
+                        output = model(img_syn)
+                        loss = criterion(output, lab_syn)
 
-                acc1, acc5 = accuracy(output.data, lab_syn, topk=(1, 5))
+                    acc1, acc5 = accuracy(output.data, lab_syn, topk=(1, 5))
 
-                losses.update(loss.item(), img_syn.shape[0])
-                top1.update(acc1.item(), img_syn.shape[0])
-                top5.update(acc5.item(), img_syn.shape[0])
+                    losses.update(loss.item(), img_syn.shape[0])
+                    top1.update(acc1.item(), img_syn.shape[0])
+                    top5.update(acc5.item(), img_syn.shape[0])
 
-                optim_model.zero_grad()
-                loss.backward()
-                optim_model.step()
+                    optim_model.zero_grad()
+                    loss.backward()
+                    optim_model.step()
 
-            if (epoch_idx + 1) % args.test_interval == 0:
-                test_top1, test_top5, test_loss = test(args, model, testloader, criterion)
-                print('[Test Epoch {}] Top1: {:.3f} Top5: {:.3f}'.format(epoch_idx + 1, test_top1, test_top5))
-                if test_top1 > best_top1:
+            if 'mnist' in args.data.lower():
+                atk_args_ls = [{"attack_eval": False},
+                               {"attack_eval": True, "method": "pgd", "eps": 0.3, "alpha": 0.1, "steps": 10},
+                               {"attack_eval": True, "method": "pgd", "eps": 0.1, "alpha": 0.03, "steps": 10},
+                               {"attack_eval": True, "method": "pgdl2", "eps": 1, "alpha": 0.3, "steps": 10},
+                               ]
+            else:
+                atk_args_ls = [{"attack_eval": False},
+                               {"attack_eval": True, "method": "pgd", "eps": 8 / 255, "alpha": 2 / 255,
+                                "steps": 10},
+                               {"attack_eval": True, "method": "pgd", "eps": 2 / 255, "alpha": 0.5 / 255,
+                                "steps": 10},
+                               {"attack_eval": True, "method": "pgdl2", "eps": 0.2, "alpha": 0.05, "steps": 10},
+                               ]
+
+            #results = [[] for i in range(4)]
+            for j, atk_args in enumerate(atk_args_ls):
+                test_top1, test_top5, test_loss = test(args, model, testloader, criterion, atk_args)
+                results[j].append(test_top1)
+                print('Round {} setting {} Top1: {:.3f} Top5: {:.3f}'.format(it_eval, j, test_top1, test_top5))
+                if j == 2 and test_top1 > best_top1:  # j=2 is the setting with reduced Linf attack
                     best_top1 = test_top1
                     best_top5 = test_top5
+        for j, rs in enumerate(results):
+            print(f"[Setting {j}], mean: {round(np.mean(rs), 2)}, std: {round(np.std(rs), 2)}")
 
         all_best_top1.append(best_top1)
         all_best_top5.append(best_top5)
@@ -444,12 +510,13 @@ def validate(args, generator, testloader, criterion, aug_rand):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--ipc', type=int, default=10) #50
+    parser.add_argument('--ipc', type=int, default=10)
     parser.add_argument('--batch-size', type=int, default=64)
-    parser.add_argument('--epochs', type=int, default=6) #250
-    parser.add_argument('--pretrain-epochs', type=int, default=4) #150
+    parser.add_argument('--epochs', type=int, default=9)
+    parser.add_argument('--pretrain-epochs', type=int, default=6)
     parser.add_argument('--epochs-eval', type=int, default=1000)
     parser.add_argument('--epochs-match', type=int, default=100)
+    parser.add_argument('--num-eval', type=int, default=20)
     parser.add_argument('--epochs-match-train', type=int, default=16)
     parser.add_argument('--lr1', type=float, default=1e-4)
     parser.add_argument('--lr2', type=float, default=5e-6)
@@ -463,7 +530,7 @@ if __name__ == '__main__':
     parser.add_argument('--dim-noise', type=int, default=90)
     parser.add_argument('--num-workers', type=int, default=4)
     parser.add_argument('--print-freq', type=int, default=50)
-    parser.add_argument('--eval-interval', type=int, default=2) #10
+    parser.add_argument('--eval-interval', type=int, default=3) #10
     parser.add_argument('--test-interval', type=int, default=200)
     parser.add_argument('--fix-disc', action='store_true', default=False)
 
@@ -483,6 +550,8 @@ if __name__ == '__main__':
     parser.add_argument('--beta', type=float, default=1.0)
     # parser.add_argument('--tag', type=str, default='all')
     parser.add_argument('--seed', type=int, default=3407)
+    parser.add_argument('--cure', action='store_true')
+    parser.add_argument('--lamda', type=float, default=100, help='lamda for CURE method')
     args = parser.parse_args()
 
     random.seed(args.seed)
@@ -513,7 +582,7 @@ if __name__ == '__main__':
     args.std = std
     args.num_envs = 2
 
-    # normalize = Normalize(mean=mean, std=std)
+    normalize = Normalize(mean=mean, std=std)
 
     print(args)
 
@@ -563,13 +632,13 @@ if __name__ == '__main__':
         test_noise[torch.arange(num_images), :args.num_classes] = lab_onehot[torch.arange(num_images)]
         test_noise = test_noise.cuda()
         test_img_syn = generator(test_noise)
-        print(test_img_syn.max(), test_img_syn.min())
+        # print(test_img_syn.max(), test_img_syn.min())
         test_img_syn = make_grid(test_img_syn, nrow=args.num_classes)
         save_image(test_img_syn, os.path.join(args.output_dir, 'outputs/img_{}.png'.format(epoch)))
         generator.train()
 
         if (epoch + 1) % args.eval_interval == 0:
-            top1s, top5s = validate(args, generator, testloader, criterion, aug_rand)
+            top1s, top5s = validate(args, generator, testloader, criterion, aug_rand, epoch)
             for e_idx, e_model in enumerate(args.eval_model):
                 if top1s[e_idx] > best_top1s[e_idx]:
                     best_top1s[e_idx] = top1s[e_idx]
@@ -585,5 +654,5 @@ if __name__ == '__main__':
                         os.path.join(args.output_dir, 'model_dict_{}.pth'.format(e_model)))
                     print('Save best model for {}'.format(e_model))
 
-                print('Current Best Epoch for {}: {}, Top1: {:.3f}, Top5: {:.3f}'.format(e_model, best_epochs[e_idx], best_top1s[e_idx], best_top5s[e_idx]))
+                # print('Current Best Epoch for {}: {}, Top1: {:.3f}, Top5: {:.3f}'.format(e_model, best_epochs[e_idx], best_top1s[e_idx], best_top5s[e_idx]))
 
