@@ -19,9 +19,42 @@ import models.convnet as CN
 import models.resnet_ap as RNAP
 import models.densenet_cifar as DN
 from gan_model import Generator, Discriminator
-from utils import AverageMeter, accuracy, Normalize, Logger, rand_bbox
+from utils import AverageMeter, accuracy, Logger, rand_bbox
 from augment import DiffAug
 
+def normalize_fn(tensor, mean, std):
+    """Differentiable version of torchvision.functional.normalize"""
+    # here we assume the color channel is in at dim=1
+    mean = mean[None, :, None, None]
+    std = std[None, :, None, None]
+    return tensor.sub(mean).div(std)
+
+
+class Normalize(nn.Module):
+    def __init__(self, mean=None, std=None, transform=None):
+        super(Normalize, self).__init__()
+        self.transform = None
+        if transform is not None:
+            self.transform = transform  # transform (e.g. ZCA) overrides standard normalization
+        elif mean is not None and std is not None:
+            if not isinstance(mean, torch.Tensor):
+                mean = torch.tensor(mean)
+            if not isinstance(std, torch.Tensor):
+                std = torch.tensor(std)
+            self.register_buffer("mean", mean)
+            self.register_buffer("std", std)
+        else:
+            raise Exception("Input is not complete")
+
+    def forward(self, tensor):
+        if self.transform is not None:
+            normalized = self.transform(tensor)
+        else:
+            normalized = normalize_fn(tensor, self.mean, self.std)
+        return normalized
+
+    def extra_repr(self):
+        return 'mean={}, std={}'.format(self.mean, self.std)
 
 def str2bool(v):
     """Cast string to boolean
@@ -36,7 +69,7 @@ def str2bool(v):
         raise argparse.ArgumentTypeError('Boolean value expected.')
 
 
-def define_model(args, num_classes, e_model=None):
+def define_model(args, num_classes, normalize, e_model=None):
     '''Obtain model for training, validating and matching
     With no 'e_model' specified, it returns a random model
     '''
@@ -48,35 +81,41 @@ def define_model(args, num_classes, e_model=None):
         model = random.choice(model_pool)
         print('Random model: {}'.format(model))
 
-    if args.data == 'mnist' or args.data == 'fashion':
+    if args.data.lower() == 'mnist' or args.data.lower() == 'fashion':
         nch = 1
     else:
         nch = 3
 
     if model == 'convnet':
-        return CN.ConvNet(num_classes, channel=nch)
+        md = CN.ConvNet(num_classes, channel=nch)
     elif model == 'resnet10':
-        return RN.ResNet(args.data, 10, num_classes, nch=nch)
+        md = RN.ResNet(args.data, 10, num_classes, nch=nch)
     elif model == 'resnet18':
-        return RN.ResNet(args.data, 18, num_classes, nch=nch)
+        md = RN.ResNet(args.data, 18, num_classes, nch=nch)
     elif model == 'resnet34':
-        return RN.ResNet(args.data, 34, num_classes, nch=nch)
+        md = RN.ResNet(args.data, 34, num_classes, nch=nch)
     elif model == 'resnet50':
-        return RN.ResNet(args.data, 50, num_classes, nch=nch)
+        md = RN.ResNet(args.data, 50, num_classes, nch=nch)
     elif model == 'resnet101':
-        return RN.ResNet(args.data, 101, num_classes, nch=nch)
+        md = RN.ResNet(args.data, 101, num_classes, nch=nch)
     elif model == 'resnet10_ap':
-        return RNAP.ResNetAP(args.data, 10, num_classes, nch=nch)
+        md = RNAP.ResNetAP(args.data, 10, num_classes, nch=nch)
     elif model == 'resnet18_ap':
-        return RNAP.ResNetAP(args.data, 18, num_classes, nch=nch)
+        md = RNAP.ResNetAP(args.data, 18, num_classes, nch=nch)
     elif model == 'resnet34_ap':
-        return RNAP.ResNetAP(args.data, 34, num_classes, nch=nch)
+        md = RNAP.ResNetAP(args.data, 34, num_classes, nch=nch)
     elif model == 'resnet50_ap':
-        return RNAP.ResNetAP(args.data, 50, num_classes, nch=nch)
+        md = RNAP.ResNetAP(args.data, 50, num_classes, nch=nch)
     elif model == 'resnet101_ap':
-        return RNAP.ResNetAP(args.data, 101, num_classes, nch=nch)
+        md = RNAP.ResNetAP(args.data, 101, num_classes, nch=nch)
     elif model == 'densenet':
-        return DN.densenet_cifar(num_classes)
+        md = DN.densenet_cifar(num_classes)
+    else:
+        raise ValueError
+    normalize = Normalize(mean=args.mean, std=args.std)
+    model = nn.Sequential(normalize, md)
+    return model
+
 
 
 def calc_gradient_penalty(args, discriminator, img_real, img_syn):
@@ -189,23 +228,15 @@ def diffaug(args, device='cuda'):
     """Differentiable augmentation for condensation
     """
     aug_type = args.aug_type
-    if args.data == 'cifar10':
-        normalize = Normalize((0.491, 0.482, 0.447), (0.202, 0.199, 0.201), device='cuda')
-    elif args.data == 'svhn':
-        normalize = Normalize((0.437, 0.444, 0.473), (0.198, 0.201, 0.197), device='cuda')
-    elif args.data == 'fashion':
-        normalize = Normalize((0.286,), (0.353,), device='cuda')
-    elif args.data == 'mnist':
-        normalize = Normalize((0.131,), (0.308,), device='cuda')
     print("Augmentataion Matching: ", aug_type)
     augment = DiffAug(strategy=aug_type, batch=True)
-    aug_batch = transforms.Compose([normalize, augment])
+    aug_batch = transforms.Compose([augment])
 
     if args.mixup_net == 'cut':
         aug_type = remove_aug(aug_type, 'cutout')
     print("Augmentataion Net update: ", aug_type)
     augment_rand = DiffAug(strategy=aug_type, batch=False)
-    aug_rand = transforms.Compose([normalize, augment_rand])
+    aug_rand = transforms.Compose([augment_rand])
 
     return aug_batch, aug_rand
 
@@ -371,7 +402,7 @@ def validate(args, generator, testloader, criterion, aug_rand):
 
                 with torch.no_grad():
                     img_syn = generator(noise)
-                    img_syn = aug_rand((img_syn + 1.0) / 2.0)
+                    img_syn = aug_rand(img_syn)
 
                 if np.random.rand(1) < args.mix_p and args.mixup_net == 'cut':
                     lam = np.random.beta(args.beta, args.beta)
@@ -414,9 +445,9 @@ def validate(args, generator, testloader, criterion, aug_rand):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--ipc', type=int, default=10) #50
-    parser.add_argument('--batch-size', type=int, default=128)
-    parser.add_argument('--epochs', type=int, default=50) #250
-    parser.add_argument('--pretrain-epochs', type=int, default=30) #150
+    parser.add_argument('--batch-size', type=int, default=64)
+    parser.add_argument('--epochs', type=int, default=6) #250
+    parser.add_argument('--pretrain-epochs', type=int, default=4) #150
     parser.add_argument('--epochs-eval', type=int, default=1000)
     parser.add_argument('--epochs-match', type=int, default=100)
     parser.add_argument('--epochs-match-train', type=int, default=16)
@@ -427,12 +458,12 @@ if __name__ == '__main__':
     parser.add_argument('--weight-decay', type=float, default=5e-4)
     parser.add_argument('--match-coeff', type=float, default=0.001)
     parser.add_argument('--match-model', type=str, default='convnet')
-    parser.add_argument('--match', type=str, default='logit')
+    parser.add_argument('--match', type=str, default='grad')
     parser.add_argument('--eval-model', type=str, nargs='+', default=['convnet'])
     parser.add_argument('--dim-noise', type=int, default=90)
     parser.add_argument('--num-workers', type=int, default=4)
-    parser.add_argument('--print-freq', type=int, default=10)
-    parser.add_argument('--eval-interval', type=int, default=10) #10
+    parser.add_argument('--print-freq', type=int, default=50)
+    parser.add_argument('--eval-interval', type=int, default=2) #10
     parser.add_argument('--test-interval', type=int, default=200)
     parser.add_argument('--fix-disc', action='store_true', default=False)
 
@@ -482,6 +513,8 @@ if __name__ == '__main__':
     args.std = std
     args.num_envs = 2
 
+    # normalize = Normalize(mean=mean, std=std)
+
     print(args)
 
     trainset, testset = dsts
@@ -529,7 +562,8 @@ if __name__ == '__main__':
         lab_onehot[torch.arange(num_images), test_label] = 1
         test_noise[torch.arange(num_images), :args.num_classes] = lab_onehot[torch.arange(num_images)]
         test_noise = test_noise.cuda()
-        test_img_syn = (generator(test_noise) + 1.0) / 2.0
+        test_img_syn = generator(test_noise)
+        print(test_img_syn.max(), test_img_syn.min())
         test_img_syn = make_grid(test_img_syn, nrow=args.num_classes)
         save_image(test_img_syn, os.path.join(args.output_dir, 'outputs/img_{}.png'.format(epoch)))
         generator.train()
@@ -537,7 +571,7 @@ if __name__ == '__main__':
         if (epoch + 1) % args.eval_interval == 0:
             top1s, top5s = validate(args, generator, testloader, criterion, aug_rand)
             for e_idx, e_model in enumerate(args.eval_model):
-                if top1s[e_idx] > best_top1s[e_idx] + 1.0:
+                if top1s[e_idx] > best_top1s[e_idx]:
                     best_top1s[e_idx] = top1s[e_idx]
                     best_top5s[e_idx] = top5s[e_idx]
                     best_epochs[e_idx] = epoch
