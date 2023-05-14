@@ -317,7 +317,7 @@ def train(args, epoch, generator, discriminator, optim_g, optim_d, trainloader, 
 
         gen_loss.backward()
         optim_g.step()
-        img_real.requires_grad_(requires_grad=True)
+        img_real.requires_grad_(requires_grad=False)
 
         # train the discriminator
         discriminator.train()
@@ -417,7 +417,7 @@ def test(args, model, testloader, criterion, atk_args=None):
 def validate(args, generator, testloader, criterion, aug_rand, epoch):
     '''Validate the generator performance
     '''
-    for ipc in [1]: #, 10]: #, 50]:
+    for ipc in [1, 10, 50]: #, 10]: #, 50]:
         print("-" * 6 + f"Epoch {epoch}, evaluating with {ipc} img/cls")
         results = [[] for i in range(4)]
         for it_eval in range(args.num_eval):
@@ -512,7 +512,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--ipc', type=int, default=10)
     parser.add_argument('--batch-size', type=int, default=64)
-    parser.add_argument('--epochs', type=int, default=9)
+    parser.add_argument('--epochs', type=int, default=10)
     parser.add_argument('--pretrain-epochs', type=int, default=6)
     parser.add_argument('--epochs-eval', type=int, default=1000)
     parser.add_argument('--epochs-match', type=int, default=100)
@@ -530,7 +530,7 @@ if __name__ == '__main__':
     parser.add_argument('--dim-noise', type=int, default=90)
     parser.add_argument('--num-workers', type=int, default=4)
     parser.add_argument('--print-freq', type=int, default=50)
-    parser.add_argument('--eval-interval', type=int, default=3) #10
+    parser.add_argument('--eval-interval', type=int, default=2) #10
     parser.add_argument('--test-interval', type=int, default=200)
     parser.add_argument('--fix-disc', action='store_true', default=False)
 
