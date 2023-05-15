@@ -417,7 +417,7 @@ def test(args, model, testloader, criterion, atk_args=None):
 def validate(args, generator, testloader, criterion, aug_rand, epoch):
     '''Validate the generator performance
     '''
-    for ipc in [1, 10, 50]: #, 10]: #, 50]:
+    for ipc in [1, 10, 50]:
         print("-" * 6 + f"Epoch {epoch}, evaluating with {ipc} img/cls")
         results = [[] for i in range(4)]
         for it_eval in range(args.num_eval):
@@ -510,10 +510,9 @@ def validate(args, generator, testloader, criterion, aug_rand, epoch):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--ipc', type=int, default=10)
     parser.add_argument('--batch-size', type=int, default=64)
-    parser.add_argument('--epochs', type=int, default=10)
-    parser.add_argument('--pretrain-epochs', type=int, default=6)
+    parser.add_argument('--epochs', type=int, default=16)
+    parser.add_argument('--pretrain-epochs', type=int, default=10)
     parser.add_argument('--epochs-eval', type=int, default=1000)
     parser.add_argument('--epochs-match', type=int, default=100)
     parser.add_argument('--num-eval', type=int, default=20)
@@ -530,7 +529,7 @@ if __name__ == '__main__':
     parser.add_argument('--dim-noise', type=int, default=90)
     parser.add_argument('--num-workers', type=int, default=4)
     parser.add_argument('--print-freq', type=int, default=50)
-    parser.add_argument('--eval-interval', type=int, default=2) #10
+    parser.add_argument('--eval-interval', type=int, default=5) #10
     parser.add_argument('--test-interval', type=int, default=200)
     parser.add_argument('--fix-disc', action='store_true', default=False)
 
@@ -607,7 +606,7 @@ if __name__ == '__main__':
     best_top5s = np.zeros((len(args.eval_model),))
     best_epochs = np.zeros((len(args.eval_model),))
     for epoch in range(args.epochs):
-        if epoch == args.pretrain_epochs:
+        if epoch == args.pretrain_epochs and args.pretrain_epochs:
             model_dict = torch.load(os.path.join(args.output_dir, 'model_dict_{}.pth'.format(args.eval_model[0])))
             generator.module.load_state_dict(model_dict['generator'])
             discriminator.module.load_state_dict(model_dict['discriminator'])
