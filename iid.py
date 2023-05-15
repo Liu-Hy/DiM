@@ -547,7 +547,6 @@ if __name__ == '__main__':
     parser.add_argument('--fc', type=str2bool, default=False)
     parser.add_argument('--mix-p', type=float, default=-1.0)
     parser.add_argument('--beta', type=float, default=1.0)
-    # parser.add_argument('--tag', type=str, default='all')
     parser.add_argument('--seed', type=int, default=3407)
     parser.add_argument('--cure', action='store_true')
     parser.add_argument('--lamda', type=float, default=100, help='lamda for CURE method')
@@ -558,7 +557,7 @@ if __name__ == '__main__':
     torch.manual_seed(args.seed)
     torch.backends.cudnn.deterministic = True
 
-    args.tag = args.data
+    args.tag = args.data + '/' + str(int(args.cure))
     if not os.path.exists(args.output_dir):
         os.makedirs(args.output_dir)
     args.output_dir = args.output_dir + args.tag
